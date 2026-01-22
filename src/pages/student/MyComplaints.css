@@ -1,0 +1,103 @@
+.complaints-root {
+  padding: 40px;
+  min-height: calc(100vh - 64px);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* HEADER */
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 32px;
+  color: #8f94fb;
+}
+
+.page-header h2 {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+/* COMPLAINT CARDS */
+.complaints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.complaint-card {
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: all 0.35s ease;
+}
+
+.complaint-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.complaint-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cat-icon {
+  font-size: 28px;
+}
+
+.status-badge {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: white;
+}
+
+.status-badge.pending { background-color: #f39c12; }
+.status-badge.in-progress { background-color: #3498db; }
+.status-badge.resolved { background-color: #2ecc71; }
+
+/* Description */
+.complaint-desc {
+  margin: 10px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Footer */
+.complaint-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.priority-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.priority-badge.low { background-color: #95a5a6; }
+.priority-badge.normal { background-color: #8f94fb; }
+.priority-badge.critical { background-color: #e74c3c; }
+
+.complaint-date {
+  font-size: 12px;
+  color: #666;
+}

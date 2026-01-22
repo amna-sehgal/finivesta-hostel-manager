@@ -1,0 +1,97 @@
+.signup-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff5f0; /* soft light background for orange theme */
+  padding: 20px;
+}
+
+/* Glassy Card */
+.signup-card {
+  width: 100%;
+  max-width: 620px;
+  padding: 50px 35px; /* more padding for breathing space */
+  border-radius: 45px;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+.signup-card h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.signup-card p {
+  color: #555;
+  margin-bottom: 25px;
+}
+
+/* FORM */
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.input-group {
+  position: relative;
+  border-radius: 42px;
+  height: 53px;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #ff8a5b; /* orange accent */
+  font-size: 18px;
+}
+
+.signup-form input {
+  width: 100%;
+  padding: 18px 18px 18px 44px; /* bigger padding for input */
+  border-radius: 42px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+/* BUTTON */
+.signup-btn {
+  padding: 16px 0;
+  border-radius: 25px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff9a72, #f0612d);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ff8a5b, #ff6f3c);
+  box-shadow: 0 10px 25px rgba(255, 111, 60, 0.35);
+}
+
+/* LOGIN LINK */
+.login-link {
+  margin-top: 18px;
+  font-size: 14px;
+  color: #555;
+}
+
+.login-link a {
+  color: #ff8a5b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
