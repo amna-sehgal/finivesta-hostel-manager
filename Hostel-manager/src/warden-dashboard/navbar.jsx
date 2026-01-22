@@ -18,15 +18,15 @@ function Navbar() {
                         <span className="icon">🏠</span>
                         <span className="label">Home</span>
                     </Link>
-                    <button className="nav-item notification-btn">
+                    <Link to="/warden-dashboard/notification" className="nav-item notification-btn">
                         <span className="icon">🔔</span>
                         <span className="label">Notifications</span>
                         <span className="badge">3</span>
-                    </button>
-                    <button className="nav-item profile-btn">
+                    </Link>
+                    <Link to="/warden-dashboard/profile" className="nav-item profile-btn">
                         <span className="icon">👤</span>
                         <span className="label">Profile</span>
-                    </button>
+                    </Link>
                     <div className="dropdown-container">
                         <button
                             className="nav-item dropdown-toggle"
@@ -48,12 +48,7 @@ function Navbar() {
                         <span className="dropdown-title-icon">📚</span>
                         <span className="dropdown-title-text">StayMate</span>
                     </div>
-                    <Link
-                        to="/warden-dashboard/dropdown/approval"
-                        className="dropdown-item"
-                    >
-                        Go Approval
-                    </Link>
+                   
 
                     <Link to="/warden-dashboard/dropdown/approval" className="dropdown-item">
                         📝 Outpass Approval

@@ -4,42 +4,36 @@ import gsap from 'gsap';
 
 function Mess() {
     const messRef = useRef();
-    const messImgRef = useRef();
-    const taglinesRef = useRef();
+    const leftRef = useRef();
+    const rightRef = useRef();
 
     useEffect(() => {
-        // Image entrance animation
-        gsap.from(messImgRef.current, {
+        gsap.from(leftRef.current, {
             x: -60,
             opacity: 0,
             duration: 0.8,
             ease: 'power3.out',
         });
-
-        // Tagline and rating entrance animation
-        gsap.from(taglinesRef.current.children, {
+        gsap.from('.mess-tagline', {
             y: 30,
             opacity: 0,
             duration: 0.7,
-            stagger: 0.15,
-            delay: 0.3,
+            delay: 0.5,
             ease: 'power2.out',
         });
-
-        // Row sections entrance animation
         gsap.from('.row-section', {
             y: 40,
             opacity: 0,
             duration: 0.7,
             stagger: 0.15,
-            delay: 0.6,
+            delay: 0.7,
             ease: 'power2.out',
         });
     }, []);
 
     const rating = 3;
     const weekMenu = {
-        Monday:    { breakfast: 'Poha 🥣', lunch: 'Dal Rice 🍛', snacks: 'Samosa 🥟', dinner: 'Paneer Masala 🥘' },
+        Monday:    { breakfast: 'Poha 🥣', lunch: 'Dal Rice 🍛', snacks: 'Samosa 🥟', dinner: 'Paneer Butter Masala 🥘' },
         Tuesday:   { breakfast: 'Idli ⚪', lunch: 'Rajma Rice 🍛', snacks: 'Pakora ☕', dinner: 'Chole Bhature 🥯' },
         Wednesday: { breakfast: 'Paratha 🫓', lunch: 'Kadhi Chawal 🍚', snacks: 'Bhel 🥗', dinner: 'Aloo Gobi 🥦' },
         Thursday:  { breakfast: 'Upma 🍛', lunch: 'Sambar Rice 🥣', snacks: 'Cutlet 🍘', dinner: 'Veg Biryani 🍚' },
@@ -65,22 +59,18 @@ function Mess() {
 
     return (
         <div className="mess-container" ref={messRef}>
-            {/* BRANDING SECTION - Image Left, Tagline & Rating Right */}
             <div className="mess-top">
                 <div className="mess-branding-row">
-                    {/* Image on Left */}
                     <img 
-                        ref={messImgRef}
+                        ref={leftRef}
                         className="mess-img" 
                         src="https://t3.ftcdn.net/jpg/05/88/38/88/360_F_588388858_dQCgiLncb8Yijqial32JuXjD8fNcxNNM.jpg" 
                         alt="Mess Food" 
                     />
-                    
-                    {/* Tagline & Rating on Right */}
-                    <div className="mess-header-block" ref={taglinesRef}>
+                    <div className="mess-header-block">
                         <h1 className="mess-tagline">Because You Deserve Homemade Happiness.</h1>
                         <div className="mess-rating-section">
-                            <span className="mess-rating-label">This Week's Rating</span>
+                            <span className="rating-label">This Week's Rating</span>
                             <div className="mess-stars">
                                 {[1, 2, 3, 4, 5].map(i => (
                                     <span key={i} className={i <= rating ? 'star filled' : 'star'}>★</span>
@@ -91,7 +81,6 @@ function Mess() {
                 </div>
             </div>
 
-            {/* FULL WIDTH SECTIONS */}
             <div className="mess-bottom-rows">
                 <section className="row-section menu-box">
                     <h2 className="section-title">📅 Weekly Menu</h2>
