@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import "./complaint.css";
 import gsap from "gsap";
+import Navbar from "../wnavbar";
 
 const Complaint = () => {
   const containerRef = useRef(null);
@@ -16,18 +17,20 @@ const Complaint = () => {
   }, []);
 
   return (
-    <div className="complaint-dashboard" ref={containerRef}>
-      <h1 className="page-title">Complaint Management – Warden Control Panel</h1>
-      <p className="page-subtitle">
-        Centralized monitoring of student grievances, SLA performance, and resolution efficiency.
-      </p>
+    <>
+      <Navbar />
+      <div className="complaint-dashboard" ref={containerRef}>
+        <h1 className="page-title">Complaint Management – Warden Control Panel</h1>
+        <p className="page-subtitle">
+          Centralized monitoring of student grievances, SLA performance, and resolution efficiency.
+        </p>
 
-      {/* KPI CARDS - Dashboard Metrics */}
-      <div className="kpi-grid">
-        <div className="kpi-card blue">
-          <h3>Total Open</h3>
-          <p>48</p>
-          {/* BACKEND INTEGRATION:
+        {/* KPI CARDS - Dashboard Metrics */}
+        <div className="kpi-grid">
+          <div className="kpi-card blue">
+            <h3>Total Open</h3>
+            <p>48</p>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints?status=open
               Method: Fetch all complaints with status='open'
               Response: { count: 48, complaints: [...] }
@@ -37,11 +40,11 @@ const Complaint = () => {
                         .then(res => res.json())
                         .then(data => setOpenCount(data.count)) }, [])
           */}
-        </div>
-        <div className="kpi-card orange">
-          <h3>SLA At Risk</h3>
-          <p>6</p>
-          {/* BACKEND INTEGRATION:
+          </div>
+          <div className="kpi-card orange">
+            <h3>SLA At Risk</h3>
+            <p>6</p>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/sla-breach
               Method: Get complaints approaching or breaching SLA
               Query Params: ?threshold=80 (percentage of SLA time used)
@@ -49,11 +52,11 @@ const Complaint = () => {
               How to Get: Filter complaints where (now - createdAt) > (0.8 * slaTime)
               Implementation: Use date comparison: new Date() - new Date(complaint.createdAt)
           */}
-        </div>
-        <div className="kpi-card green">
-          <h3>Resolved Today</h3>
-          <p>21</p>
-          {/* BACKEND INTEGRATION:
+          </div>
+          <div className="kpi-card green">
+            <h3>Resolved Today</h3>
+            <p>21</p>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/resolved/today
               Method: Count complaints resolved in last 24 hours
               Filters: status='closed' AND closedAt >= today 00:00:00
@@ -61,11 +64,11 @@ const Complaint = () => {
               How to Get: Query database with date range filter
               Example: WHERE status = 'closed' AND DATE(closedAt) = CURDATE()
           */}
-        </div>
-        <div className="kpi-card purple">
-          <h3>Avg Resolution</h3>
-          <p>3.2 hrs</p>
-          {/* BACKEND INTEGRATION:
+          </div>
+          <div className="kpi-card purple">
+            <h3>Avg Resolution</h3>
+            <p>3.2 hrs</p>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/analytics
               Method: Calculate average resolution time
               Formula: AVG(closedAt - createdAt) for all closed complaints
@@ -73,20 +76,20 @@ const Complaint = () => {
               How to Get: Use database aggregation or calculate in-app
               Implementation: Use DATEDIFF() or moment.js for duration calculation
           */}
+          </div>
         </div>
-      </div>
 
-      {/* MAIN COMPLAINT MANAGEMENT PANELS */}
-      <div className="complaint-grid">
-        <div className="complaint-card">
-          <h2>📋 Live Complaint Queue</h2>
-          <ul>
-            <li>Electrical Failure – Block A <span className="status open">Open</span></li>
-            <li>Mess Hygiene Issue <span className="status progress">In Progress</span></li>
-            <li>Laundry Machine Breakdown <span className="status escalated">Escalated</span></li>
-            <li>Water Leakage – Floor 3 <span className="status closed">Closed</span></li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+        {/* MAIN COMPLAINT MANAGEMENT PANELS */}
+        <div className="complaint-grid">
+          <div className="complaint-card">
+            <h2>📋 Live Complaint Queue</h2>
+            <ul>
+              <li>Electrical Failure – Block A <span className="status open">Open</span></li>
+              <li>Mess Hygiene Issue <span className="status progress">In Progress</span></li>
+              <li>Laundry Machine Breakdown <span className="status escalated">Escalated</span></li>
+              <li>Water Leakage – Floor 3 <span className="status closed">Closed</span></li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/live?limit=10&sort=priority
               Method: Fetch real-time complaint queue sorted by urgency
               Status Flow: open → in-progress → escalated → closed
@@ -95,19 +98,19 @@ const Complaint = () => {
               Example: setInterval(() => fetchComplaints(), 30000)
               Additional Fields: Add assignedTo, department, priority for better tracking
           */}
-        </div>
-
-        <div className="complaint-card">
-          <h2>⏱ SLA Monitoring</h2>
-          <div className="progress-group">
-            <p>Within SLA <span>82%</span></p>
-            <div className="bar"><div className="fill green" style={{width:"82%"}}></div></div>
-            <p>Approaching Breach <span>12%</span></p>
-            <div className="bar"><div className="fill orange" style={{width:"12%"}}></div></div>
-            <p>Breached <span>6%</span></p>
-            <div className="bar"><div className="fill red" style={{width:"6%"}}></div></div>
           </div>
-          {/* BACKEND INTEGRATION:
+
+          <div className="complaint-card">
+            <h2>⏱ SLA Monitoring</h2>
+            <div className="progress-group">
+              <p>Within SLA <span>82%</span></p>
+              <div className="bar"><div className="fill green" style={{ width: "82%" }}></div></div>
+              <p>Approaching Breach <span>12%</span></p>
+              <div className="bar"><div className="fill orange" style={{ width: "12%" }}></div></div>
+              <p>Breached <span>6%</span></p>
+              <div className="bar"><div className="fill red" style={{ width: "6%" }}></div></div>
+            </div>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/sla-metrics
               Method: Calculate SLA compliance percentage
               Formula: 
@@ -118,14 +121,14 @@ const Complaint = () => {
               How to Get: Compare current timestamp with (createdAt + slaWindow)
               Implementation: Calculate remainingTime = slaEndTime - now
           */}
-        </div>
+          </div>
 
-        <div className="complaint-card">
-          <h2>🔄 Closure & Reopen Control</h2>
-          <p>Closed Today: <strong>21</strong></p>
-          <p>Reopened: <strong>3</strong></p>
-          <p>Pending Verification: <strong>5</strong></p>
-          {/* BACKEND INTEGRATION:
+          <div className="complaint-card">
+            <h2>🔄 Closure & Reopen Control</h2>
+            <p>Closed Today: <strong>21</strong></p>
+            <p>Reopened: <strong>3</strong></p>
+            <p>Pending Verification: <strong>5</strong></p>
+            {/* BACKEND INTEGRATION:
               Endpoints:
               1. GET /api/complaints/closed/today - Count closed complaints from last 24h
               2. GET /api/complaints/reopened - Count reopened complaints
@@ -142,14 +145,14 @@ const Complaint = () => {
               - Reopened: Count incidents where status changed from closed to open
               - Pending: Count where verificationStatus='pending'
           */}
-        </div>
+          </div>
 
-        <div className="complaint-card">
-          <h2>📈 Department Performance</h2>
-          <p>Mess Dept: ⭐ 4.2 / 5</p>
-          <p>Maintenance: ⭐ 3.8 / 5</p>
-          <p>Housekeeping: ⭐ 4.0 / 5</p>
-          {/* BACKEND INTEGRATION:
+          <div className="complaint-card">
+            <h2>📈 Department Performance</h2>
+            <p>Mess Dept: ⭐ 4.2 / 5</p>
+            <p>Maintenance: ⭐ 3.8 / 5</p>
+            <p>Housekeeping: ⭐ 4.0 / 5</p>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/complaints/department-metrics
               Method: Calculate department performance ratings
               Metrics:
@@ -170,17 +173,17 @@ const Complaint = () => {
               
               How to Get: Aggregate complaint data grouped by departmentId
           */}
+          </div>
         </div>
-      </div>
 
-      {/* AI-POWERED INSIGHTS SECTION */}
-      <div className="ai-section">
-        <h2>🤖 AI-Powered Insights</h2>
-        <div className="ai-grid">
-          <div className="ai-card">
-            <h4>🎯 Urgency Prediction</h4>
-            <p>High Priority Complaints: 9</p>
-            {/* AI INTEGRATION:
+        {/* AI-POWERED INSIGHTS SECTION */}
+        <div className="ai-section">
+          <h2>🤖 AI-Powered Insights</h2>
+          <div className="ai-grid">
+            <div className="ai-card">
+              <h4>🎯 Urgency Prediction</h4>
+              <p>High Priority Complaints: 9</p>
+              {/* AI INTEGRATION:
                 Model: NLP-based Text Classification
                 Technology: TensorFlow.js or OpenAI API
                 How It Works:
@@ -197,11 +200,11 @@ const Complaint = () => {
                 Response: { urgency: 'HIGH', confidence: 0.95, reasons: [...] }
                 Endpoint: POST /api/ai/complaints/{id}/predict-urgency
             */}
-          </div>
-          <div className="ai-card">
-            <h4>💭 Sentiment Analysis</h4>
-            <p>Angry: 14 | Neutral: 22 | Calm: 12</p>
-            {/* AI INTEGRATION:
+            </div>
+            <div className="ai-card">
+              <h4>💭 Sentiment Analysis</h4>
+              <p>Angry: 14 | Neutral: 22 | Calm: 12</p>
+              {/* AI INTEGRATION:
                 Model: Sentiment Classification (BERT, RoBERTa, or OpenAI)
                 Technology: HuggingFace Transformers or Azure Text Analytics
                 Sentiments: Angry (negative), Neutral (factual), Calm (positive/resigned)
@@ -224,11 +227,11 @@ const Complaint = () => {
                 Use Case: Route angry complaints to senior staff, provide empathy templates
                 Endpoint: POST /api/ai/complaints/{id}/analyze-sentiment
             */}
-          </div>
-          <div className="ai-card">
-            <h4>🔀 Auto Department Routing</h4>
-            <p>Electrical, Plumbing, Mess, Laundry</p>
-            {/* AI INTEGRATION:
+            </div>
+            <div className="ai-card">
+              <h4>🔀 Auto Department Routing</h4>
+              <p>Electrical, Plumbing, Mess, Laundry</p>
+              {/* AI INTEGRATION:
                 Model: Multi-label Classification / Zero-shot Classification
                 Technology: OpenAI GPT, HuggingFace Zero-shot Classifier
                 Departments: Electrical, Plumbing, Mess, Laundry, Housekeeping, etc.
@@ -260,11 +263,11 @@ const Complaint = () => {
                 Endpoint: POST /api/ai/complaints/{id}/route-to-department
                 Benefits: 90%+ accuracy, self-learns from corrections
             */}
-          </div>
-          <div className="ai-card">
-            <h4>🔁 Repeat Complaint Detection</h4>
-            <p>Chronic Issue Zones: Block C Washroom</p>
-            {/* AI INTEGRATION:
+            </div>
+            <div className="ai-card">
+              <h4>🔁 Repeat Complaint Detection</h4>
+              <p>Chronic Issue Zones: Block C Washroom</p>
+              {/* AI INTEGRATION:
                 Model: Clustering & Anomaly Detection / Similarity Matching
                 Technology: Semantic similarity (embeddings) + Clustering algorithms
                 
@@ -296,10 +299,11 @@ const Complaint = () => {
                 Endpoint: POST /api/ai/complaints/detect-patterns
                 Frequency: Run daily/weekly to identify trends
             */}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

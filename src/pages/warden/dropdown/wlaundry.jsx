@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
-import "./laundry.css";
+import "./wlaundry.css";
 import gsap from "gsap";
+import Navbar from "../wnavbar";
 
 const Laundry = () => {
   const containerRef = useRef(null);
@@ -10,7 +11,6 @@ const Laundry = () => {
   useEffect(() => {
     // Title animation
     gsap.from(titleRef.current, {
-      opacity: 0,
       y: -40,
       duration: 0.8,
       ease: "power3.out"
@@ -38,59 +38,61 @@ const Laundry = () => {
   }, []);
 
   return (
-    <div className="laundry-container" ref={containerRef}>
-      {/* HEADER SECTION */}
-      <div className="laundry-header" ref={titleRef}>
-        <h1 className="laundry-title">🧺 Laundry Operations Dashboard</h1>
-        <p className="laundry-subtitle">
-          Complete oversight of hostel laundry infrastructure, maintenance cycles, resource optimization, and compliance tracking.
-        </p>
-      </div>
+    <>
+    <Navbar/>
+      <div className="laundry-container" ref={containerRef}>
+        {/* HEADER SECTION */}
+        <div className="laundry-header" ref={titleRef}>
+          <h1 className="laundry-title">🧺 Laundry Operations Dashboard</h1>
+          <p className="laundry-subtitle">
+            Complete oversight of hostel laundry infrastructure, maintenance cycles, resource optimization, and compliance tracking.
+          </p>
+        </div>
 
-      {/* STATS SECTION */}
-      <div className="stats-container" ref={statsRef}>
-        <div className="stat-box blue-stat">
-          <h3>Total Machines</h3>
-          <p className="stat-number">24</p>
-          {/* BACKEND: GET /api/laundry/machines/count
+        {/* STATS SECTION */}
+        <div className="stats-container" ref={statsRef}>
+          <div className="stat-box blue-stat">
+            <h3>Total Machines</h3>
+            <p className="stat-number">24</p>
+            {/* BACKEND: GET /api/laundry/machines/count
               Returns total number of machines in the system */}
-        </div>
-        <div className="stat-box green-stat">
-          <h3>Operational</h3>
-          <p className="stat-number">21</p>
-          {/* BACKEND: GET /api/laundry/machines?status=operational
-              Filter and count machines with status='operational' */}
-        </div>
-        <div className="stat-box orange-stat">
-          <h3>Maintenance</h3>
-          <p className="stat-number">2</p>
-          {/* BACKEND: GET /api/laundry/machines?status=maintenance
-              Count machines currently under maintenance */}
-        </div>
-        <div className="stat-box red-stat">
-          <h3>Out of Service</h3>
-          <p className="stat-number">1</p>
-          {/* BACKEND: GET /api/laundry/machines?status=out-of-service
-              Count machines that are not operational */}
-        </div>
-      </div>
-
-      {/* MAIN CARDS SECTION */}
-      <div className="laundry-grid">
-        {/* Machine Status Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>🧺 Machine Status Overview</h2>
-            <span className="card-badge">Real-time</span>
           </div>
-          <ul>
-            <li><strong>Total Installed:</strong> 24 units</li>
-            <li><strong>Operational:</strong> 21 units (87.5%)</li>
-            <li><strong>Under Maintenance:</strong> 2 units</li>
-            <li><strong>Out of Service:</strong> 1 unit (requires repair)</li>
-            <li><strong>Avg Cycle Time:</strong> 38 minutes</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+          <div className="stat-box green-stat">
+            <h3>Operational</h3>
+            <p className="stat-number">21</p>
+            {/* BACKEND: GET /api/laundry/machines?status=operational
+              Filter and count machines with status='operational' */}
+          </div>
+          <div className="stat-box orange-stat">
+            <h3>Maintenance</h3>
+            <p className="stat-number">2</p>
+            {/* BACKEND: GET /api/laundry/machines?status=maintenance
+              Count machines currently under maintenance */}
+          </div>
+          <div className="stat-box red-stat">
+            <h3>Out of Service</h3>
+            <p className="stat-number">1</p>
+            {/* BACKEND: GET /api/laundry/machines?status=out-of-service
+              Count machines that are not operational */}
+          </div>
+        </div>
+
+        {/* MAIN CARDS SECTION */}
+        <div className="laundry-grid">
+          {/* Machine Status Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>🧺 Machine Status Overview</h2>
+              <span className="card-badge">Real-time</span>
+            </div>
+            <ul>
+              <li><strong>Total Installed:</strong> 24 units</li>
+              <li><strong>Operational:</strong> 21 units (87.5%)</li>
+              <li><strong>Under Maintenance:</strong> 2 units</li>
+              <li><strong>Out of Service:</strong> 1 unit (requires repair)</li>
+              <li><strong>Avg Cycle Time:</strong> 38 minutes</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/machines/status
               Method: Fetch all machines with their current status
               
@@ -117,21 +119,21 @@ const Laundry = () => {
               3. Calculate percentages dynamically
               4. Show status with color coding (green=operational, orange=maintenance, red=out)
           */}
-        </div>
-
-        {/* Maintenance Alerts Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>🛠️ Maintenance & Fault Alerts</h2>
-            <span className="card-badge alert">3 Active</span>
           </div>
-          <ul>
-            <li><span className="alert-level high">HIGH:</span> Washer #7 – Motor vibration abnormal</li>
-            <li><span className="alert-level medium">MEDIUM:</span> Dryer #3 – Heating coil efficiency reduced</li>
-            <li><span className="alert-level low">LOW:</span> Filter Cleaning Due: 6 Machines</li>
-            <li><strong>Next AMC Inspection:</strong> 28 Feb 2026</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Maintenance Alerts Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>🛠️ Maintenance & Fault Alerts</h2>
+              <span className="card-badge alert">3 Active</span>
+            </div>
+            <ul>
+              <li><span className="alert-level high">HIGH:</span> Washer #7 – Motor vibration abnormal</li>
+              <li><span className="alert-level medium">MEDIUM:</span> Dryer #3 – Heating coil efficiency reduced</li>
+              <li><span className="alert-level low">LOW:</span> Filter Cleaning Due: 6 Machines</li>
+              <li><strong>Next AMC Inspection:</strong> 28 Feb 2026</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/maintenance/alerts
               Method: Fetch active maintenance alerts and issues
               
@@ -159,22 +161,22 @@ const Laundry = () => {
               4. Show technician assignment if available
               5. Trigger notification if new high-severity alert appears
           */}
-        </div>
-
-        {/* Peak Load Analytics Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>📊 Peak Load Analytics</h2>
-            <span className="card-badge">Today</span>
           </div>
-          <ul>
-            <li><strong>Peak Usage:</strong> 7 PM – 10 PM (highest demand)</li>
-            <li><strong>Low Usage:</strong> 2 AM – 6 AM (best maintenance window)</li>
-            <li><strong>Avg Daily Cycles:</strong> 186 cycles/day</li>
-            <li><strong>Overload Alerts:</strong> 4 today</li>
-            <li><strong>Queue Wait Time Avg:</strong> 12 minutes</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Peak Load Analytics Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>📊 Peak Load Analytics</h2>
+              <span className="card-badge">Today</span>
+            </div>
+            <ul>
+              <li><strong>Peak Usage:</strong> 7 PM – 10 PM (highest demand)</li>
+              <li><strong>Low Usage:</strong> 2 AM – 6 AM (best maintenance window)</li>
+              <li><strong>Avg Daily Cycles:</strong> 186 cycles/day</li>
+              <li><strong>Overload Alerts:</strong> 4 today</li>
+              <li><strong>Queue Wait Time Avg:</strong> 12 minutes</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/usage/analytics
               Query Params: ?date=2026-01-22&granularity=hourly
               
@@ -199,22 +201,22 @@ const Laundry = () => {
               4. Show forecast for next 24 hours
               5. Display alerts when queue exceeds threshold
           */}
-        </div>
-
-        {/* Resource Optimization Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>⚡ Resource Optimization</h2>
-            <span className="card-badge">Efficiency</span>
           </div>
-          <ul>
-            <li><strong>Electricity Today:</strong> 312 kWh (vs avg 298 kWh)</li>
-            <li><strong>Water Recycling:</strong> 42% (target: 50%)</li>
-            <li><strong>Idle Machine Time:</strong> 27% (optimization opportunity)</li>
-            <li><strong>Recommended Addition:</strong> 2 Washers + 1 Dryer</li>
-            <li><strong>Cost Savings Potential:</strong> $450/month</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Resource Optimization Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>⚡ Resource Optimization</h2>
+              <span className="card-badge">Efficiency</span>
+            </div>
+            <ul>
+              <li><strong>Electricity Today:</strong> 312 kWh (vs avg 298 kWh)</li>
+              <li><strong>Water Recycling:</strong> 42% (target: 50%)</li>
+              <li><strong>Idle Machine Time:</strong> 27% (optimization opportunity)</li>
+              <li><strong>Recommended Addition:</strong> 2 Washers + 1 Dryer</li>
+              <li><strong>Cost Savings Potential:</strong> $450/month</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/resources/metrics
               
               Response Format:
@@ -252,22 +254,22 @@ const Laundry = () => {
               4. Highlight optimization opportunities
               5. Calculate ROI for recommended equipment purchases
           */}
-        </div>
-
-        {/* Compliance & Safety Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>📋 Compliance & Safety</h2>
-            <span className="card-badge green">All Clear</span>
           </div>
-          <ul>
-            <li><strong>Fire Safety:</strong> ✅ Valid (Expires: 15 Apr 2026)</li>
-            <li><strong>Electrical Audit:</strong> ✅ Completed (Last: 10 Jan 2026)</li>
-            <li><strong>Noise Compliance:</strong> ✅ Within Limits (72 dB - threshold: 75 dB)</li>
-            <li><strong>Chemical Storage:</strong> ✅ Secured & Logged</li>
-            <li><strong>Next Inspection:</strong> 28 Feb 2026 (37 days)</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Compliance & Safety Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>📋 Compliance & Safety</h2>
+              <span className="card-badge green">All Clear</span>
+            </div>
+            <ul>
+              <li><strong>Fire Safety:</strong> ✅ Valid (Expires: 15 Apr 2026)</li>
+              <li><strong>Electrical Audit:</strong> ✅ Completed (Last: 10 Jan 2026)</li>
+              <li><strong>Noise Compliance:</strong> ✅ Within Limits (72 dB - threshold: 75 dB)</li>
+              <li><strong>Chemical Storage:</strong> ✅ Secured & Logged</li>
+              <li><strong>Next Inspection:</strong> 28 Feb 2026 (37 days)</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/compliance/status
               
               Response Format:
@@ -300,22 +302,22 @@ const Laundry = () => {
               4. Alert if any compliance is due or overdue
               5. Generate compliance report for management
           */}
-        </div>
-
-        {/* Supply Inventory Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>📦 Supply Inventory</h2>
-            <span className="card-badge warning">2 Low</span>
           </div>
-          <ul>
-            <li><strong>Detergent:</strong> 45 units (⚠️ Low - reorder soon)</li>
-            <li><strong>Fabric Softener:</strong> 28 units (sufficient)</li>
-            <li><strong>Machine Oil:</strong> 12 liters (⚠️ Low - critical)</li>
-            <li><strong>Spare Belts:</strong> 8 units (adequate)</li>
-            <li><strong>Filter Cartridges:</strong> 15 units (good)</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Supply Inventory Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>📦 Supply Inventory</h2>
+              <span className="card-badge warning">2 Low</span>
+            </div>
+            <ul>
+              <li><strong>Detergent:</strong> 45 units (⚠️ Low - reorder soon)</li>
+              <li><strong>Fabric Softener:</strong> 28 units (sufficient)</li>
+              <li><strong>Machine Oil:</strong> 12 liters (⚠️ Low - critical)</li>
+              <li><strong>Spare Belts:</strong> 8 units (adequate)</li>
+              <li><strong>Filter Cartridges:</strong> 15 units (good)</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/supplies/inventory
               
               Response Format:
@@ -344,22 +346,22 @@ const Laundry = () => {
               4. Track consumption trends
               5. Send notifications when reorder date approaches
           */}
-        </div>
-
-        {/* Student Complaints Card */}
-        <div className="laundry-card">
-          <div className="card-header">
-            <h2>⚠️ Complaint Tracking</h2>
-            <span className="card-badge alert">5 Open</span>
           </div>
-          <ul>
-            <li><strong>Total This Month:</strong> 12 complaints</li>
-            <li><strong>Resolved:</strong> 7 (58%)</li>
-            <li><strong>Pending:</strong> 5 (42%)</li>
-            <li><strong>Avg Resolution Time:</strong> 4.2 hours</li>
-            <li><strong>Top Issue:</strong> Machine not drying clothes properly</li>
-          </ul>
-          {/* BACKEND INTEGRATION:
+
+          {/* Student Complaints Card */}
+          <div className="laundry-card">
+            <div className="card-header">
+              <h2>⚠️ Complaint Tracking</h2>
+              <span className="card-badge alert">5 Open</span>
+            </div>
+            <ul>
+              <li><strong>Total This Month:</strong> 12 complaints</li>
+              <li><strong>Resolved:</strong> 7 (58%)</li>
+              <li><strong>Pending:</strong> 5 (42%)</li>
+              <li><strong>Avg Resolution Time:</strong> 4.2 hours</li>
+              <li><strong>Top Issue:</strong> Machine not drying clothes properly</li>
+            </ul>
+            {/* BACKEND INTEGRATION:
               Endpoint: GET /api/laundry/complaints?status=all&month=current
               
               Response Format:
@@ -395,16 +397,16 @@ const Laundry = () => {
               4. Auto-escalate if SLA breach
               5. Link complaints to specific machines for pattern detection
           */}
+          </div>
         </div>
-      </div>
 
-      {/* AI INSIGHTS SECTION */}
-      <h2 className="section-title">🤖 AI-Powered Insights & Predictions</h2>
-      <div className="insights-grid">
-        <div className="insight-card">
-          <h4>⏰ Peak Supervision Hours Prediction</h4>
-          <p>Peak demand forecasted: <strong>7–10 PM</strong>. Recommend additional staff during these hours to manage queue wait times and prevent machine overloading.</p>
-          {/* AI INTEGRATION:
+        {/* AI INSIGHTS SECTION */}
+        <h2 className="section-title">🤖 AI-Powered Insights & Predictions</h2>
+        <div className="insights-grid">
+          <div className="insight-card">
+            <h4>⏰ Peak Supervision Hours Prediction</h4>
+            <p>Peak demand forecasted: <strong>7–10 PM</strong>. Recommend additional staff during these hours to manage queue wait times and prevent machine overloading.</p>
+            {/* AI INTEGRATION:
               Model: Time Series Forecasting (Prophet / LSTM)
               Technology: TensorFlow.js or Prophet library
               
@@ -427,12 +429,12 @@ const Laundry = () => {
               
               Use Case: Schedule maintenance and staff during low-demand periods
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>🔧 Predictive Maintenance Alert</h4>
-          <p>Machine #7 motor health: 68%. Estimated failure in <strong>14 days</strong>. Preventive service recommended to avoid unexpected downtime.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>🔧 Predictive Maintenance Alert</h4>
+            <p>Machine #7 motor health: 68%. Estimated failure in <strong>14 days</strong>. Preventive service recommended to avoid unexpected downtime.</p>
+            {/* AI INTEGRATION:
               Model: Anomaly Detection & Time-to-Failure Prediction
               Technology: Isolation Forest, XGBoost, or Neural Networks
               
@@ -462,12 +464,12 @@ const Laundry = () => {
               
               Use Case: Prevent unexpected breakdowns, reduce emergency repairs
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>💧 Water & Detergent Optimization</h4>
-          <p>Recycled water usage can be improved to <strong>55%</strong>. Estimated annual savings: <strong>$2,100</strong>. Upgrade filtration system recommended.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>💧 Water & Detergent Optimization</h4>
+            <p>Recycled water usage can be improved to <strong>55%</strong>. Estimated annual savings: <strong>$2,100</strong>. Upgrade filtration system recommended.</p>
+            {/* AI INTEGRATION:
               Model: Consumption Pattern Analysis & Optimization
               Technology: Regression Analysis, Clustering
               
@@ -498,12 +500,12 @@ const Laundry = () => {
               
               Use Case: Sustainability goals, cost reduction
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>📈 Load Balancing Recommendation</h4>
-          <p>Shift <strong>15% of evening load</strong> to afternoon hours (3-5 PM). Reduces peak congestion by 22% and improves overall utilization.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>📈 Load Balancing Recommendation</h4>
+            <p>Shift <strong>15% of evening load</strong> to afternoon hours (3-5 PM). Reduces peak congestion by 22% and improves overall utilization.</p>
+            {/* AI INTEGRATION:
               Model: Optimization Algorithm (Linear Programming)
               Technology: PuLP, OR-Tools
               
@@ -529,12 +531,12 @@ const Laundry = () => {
               
               Use Case: Improve student experience, reduce infrastructure strain
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>🎯 Issue Pattern Detection</h4>
-          <p>Dryer machines show 3.5x higher complaint rate than average. Root cause: heating element degradation. Batch replacement recommended.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>🎯 Issue Pattern Detection</h4>
+            <p>Dryer machines show 3.5x higher complaint rate than average. Root cause: heating element degradation. Batch replacement recommended.</p>
+            {/* AI INTEGRATION:
               Model: Clustering & Root Cause Analysis
               Technology: K-Means, Apriori Algorithm, LDA (Latent Dirichlet Allocation)
               
@@ -565,12 +567,12 @@ const Laundry = () => {
               
               Use Case: Proactive maintenance, quality improvement
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>📅 Equipment Lifespan Analysis</h4>
-          <p>3 machines approaching end-of-life (8+ years). Budget <strong>$18,000</strong> for replacement next quarter. AI recommends immediate procurement.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>📅 Equipment Lifespan Analysis</h4>
+            <p>3 machines approaching end-of-life (8+ years). Budget <strong>$18,000</strong> for replacement next quarter. AI recommends immediate procurement.</p>
+            {/* AI INTEGRATION:
               Model: Lifespan Prediction & Asset Management
               Technology: Regression, Maintenance Data Analysis
               
@@ -602,12 +604,12 @@ const Laundry = () => {
               
               Use Case: Capital budgeting, asset replacement planning
           */}
-        </div>
+          </div>
 
-        <div className="insight-card">
-          <h4>🔐 Compliance Risk Assessment</h4>
-          <p>Electrical audit delayed by 5 days. Risk level: <strong>Medium</strong>. Schedule immediately to avoid regulatory penalties.</p>
-          {/* AI INTEGRATION:
+          <div className="insight-card">
+            <h4>🔐 Compliance Risk Assessment</h4>
+            <p>Electrical audit delayed by 5 days. Risk level: <strong>Medium</strong>. Schedule immediately to avoid regulatory penalties.</p>
+            {/* AI INTEGRATION:
               Model: Risk Assessment & Compliance Monitoring
               Technology: Rule Engine, Temporal Logic
               
@@ -637,9 +639,10 @@ const Laundry = () => {
               
               Use Case: Compliance assurance, risk mitigation
           */}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

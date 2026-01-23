@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { FaRegClipboard, FaUtensils, FaIdCard, FaTshirt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // ✅ import useNavigate
 import "./Home.css";
 
 function Home() {
+    const navigate = useNavigate(); // ✅ get navigate function
+
     const taglines = [
         "Your ultimate hostel companion",
         "Track complaints, outpasses & mess easily",
@@ -41,10 +44,8 @@ function Home() {
             {/* HERO SECTION */}
             <section className="hero-section">
                 <div className="hero-left">
-                    {/* Static main heading */}
                     <h1 className="main-heading">STAYMATE</h1>
 
-                    {/* Typing tagline below */}
                     <div className="typing-container">
                         <h2 className="typing-effect">
                             {currentText}
@@ -62,11 +63,20 @@ function Home() {
                 </div>
             </section>
 
-
             {/* BUTTONS BELOW HERO */}
             <div className="hero-buttons">
-                <button className="btn student-btn">Register as Student</button>
-                <button className="btn warden-btn">Register as Warden</button>
+                <button
+                    className="btn student-btn"
+                    onClick={() => navigate("/student/signup")} // ✅ add path
+                >
+                    Register as Student
+                </button>
+                <button
+                    className="btn warden-btn"
+                    onClick={() => navigate("/warden/register")} // ✅ add path
+                >
+                    Register as Warden
+                </button>
             </div>
 
             {/* ABOUT SECTION */}
@@ -100,3 +110,4 @@ function Home() {
 }
 
 export default Home;
+

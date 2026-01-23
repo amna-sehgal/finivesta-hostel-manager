@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
-import "./Login.css";
+import { useNavigate } from "react-router-dom";
+import "./wlogin.css";
 import { FiMail, FiLock } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
 
@@ -16,12 +16,12 @@ export default function Login() {
     setError("");
 
     if (!email || !password) {
-      setError("Please fill in both fields");
+      setError("Please fill all fields");
       return;
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/student/login", {
+      const res = await fetch("http://localhost:5000/api/warden/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -30,44 +30,27 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Something went wrong");
-        return;
+        setError(data.message || "Login failed");
+      } else {
+        navigate("/warden/dashboard");
       }
-
-      console.log("Login success:", data);
-
-      // ✅ Save all student info to localStorage
-      localStorage.setItem(
-        "student",
-        JSON.stringify({
-          fullName: data.fullName || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          hostel: data.hostel || "",
-          branch: data.branch || "",
-          birthDate: data.birthDate || "",
-          roomno: data.roomno || "",
-        })
-      );
-
-      // Redirect to profile/dashboard
-      navigate("/student/dashboard");
-
     } catch (err) {
-      console.error(err);
-      setError("Failed to connect to backend");
+      setError("Backend not connected");
     }
   };
 
   return (
     <div className="login-page">
       <div className="login-card">
+
+        {/* Header */}
         <div className="login-header">
           <HiSparkles className="sparkle-icon" />
           <h1>Welcome Back</h1>
-          <p>Login to manage your hostel services</p>
+          <p>Login to manage hostel services</p>
         </div>
 
+        {/* Form */}
         <form className="login-form" onSubmit={handleSubmit}>
           <div className="input-group">
             <FiMail className="input-icon" />
@@ -89,19 +72,17 @@ export default function Login() {
             />
           </div>
 
-          {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
 
           <button type="submit" className="login-btn">
             Login
           </button>
         </form>
 
+        {/* Footer */}
         <div className="login-footer">
           <span>New here?</span>
-          <strong
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/student/signup")}
-          >
+          <strong onClick={() => navigate("/warden/signup")}>
             Create an account
           </strong>
         </div>

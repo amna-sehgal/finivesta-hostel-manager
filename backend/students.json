@@ -1,0 +1,92 @@
+[
+  {
+    "fullName": "Test Student",
+    "email": "test@student.com",
+    "password": "123456",
+    "phone": "1234567890",
+    "hostel": "Hostel A",
+    "branch": "CSE",
+    "birthDate": "2005-01-01",
+    "roomno": "101"
+  },
+  {
+    "fullName": "PQR",
+    "email": "pqr@abc.com",
+    "password": "123456",
+    "phone": "",
+    "hostel": "Hostel C",
+    "branch": "CSE",
+    "birthDate": "2006-08-23",
+    "roomno": "308"
+  },
+  {
+    "fullName": "UVX",
+    "email": "rty@wxy.com",
+    "password": "3456",
+    "phone": "",
+    "hostel": "Hostel B",
+    "branch": "CSE",
+    "birthDate": "2006-12-23",
+    "roomno": "102"
+  },
+  {
+    "fullName": "BSA",
+    "email": "abc@wxy.com",
+    "password": "3456",
+    "phone": "",
+    "hostel": "Hostel C",
+    "branch": "CSE",
+    "birthDate": "2006-11-12",
+    "roomno": "102"
+  },
+  {
+    "fullName": "BSA",
+    "email": "abc@abc.com",
+    "password": "2345",
+    "phone": "",
+    "hostel": "Hostel A",
+    "branch": "CSE",
+    "birthDate": "2026-01-21",
+    "roomno": "102"
+  },
+  {
+    "fullName": "d",
+    "email": "dd@dd.com",
+    "password": "1",
+    "phone": "",
+    "hostel": "Hostel A",
+    "branch": "cse",
+    "birthDate": "2026-01-12",
+    "roomno": "123"
+  },
+  {
+    "fullName": "Test Student1",
+    "email": "test1@student.com",
+    "password": "12346",
+    "phone": "123456780",
+    "hostel": "Hostel B",
+    "branch": "CSE",
+    "birthDate": "2005-01-01",
+    "roomno": "101"
+  },
+  {
+    "fullName": "SDC",
+    "email": "sdc@sdc.com",
+    "password": "1234",
+    "phone": "",
+    "hostel": "Hostel C",
+    "branch": "CSE-AI",
+    "birthDate": "2026-01-11",
+    "roomno": "235"
+  },
+  {
+    "fullName": "SDF",
+    "email": "sdf@sdf.com",
+    "password": "5678",
+    "phone": "",
+    "hostel": "Hostel A",
+    "branch": "CSE",
+    "birthDate": "2006-11-11",
+    "roomno": "567"
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "fullName": "ABC",
+    "email": "abc@wxr.com",
+    "password": "5678",
+    "phone": "",
+    "hostel": "Hostel B"
+  },
+  {
+    "fullName": "SDA",
+    "email": "sda@sda.com",
+    "password": "3456",
+    "phone": "",
+    "hostel": "Hostel A"
+  },
+  {
+    "fullName": "GHI",
+    "email": "ghi@ghi.com",
+    "password": "3456",
+    "phone": "",
+    "hostel": "Hostel C"
+  },
+  {
+    "fullName": "SDA",
+    "email": "sda@sdf.com",
+    "password": "34567",
+    "phone": "",
+    "hostel": "Hostel B"
+  },
+  {
+    "fullName": "ASD",
+    "email": "asd@asd.com",
+    "password": "234",
+    "phone": "",
+    "hostel": "Hostel A"
+  },
+  {
+    "fullName": "fgh",
+    "email": "fgh@fgh.com",
+    "password": "000",
+    "phone": "",
+    "hostel": "Hostel A"
+  }
+]

@@ -8,15 +8,17 @@ import {
 import { FaIdCard, FaUserCircle } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
 
-import "./Navbar.css";
+import "./sNavbar.css";
 
 function Navbar() {
   return (
     <nav className="navbar">
       {/* Left */}
-      <div className="nav-logo">
-        StayMate
-      </div>
+      <NavLink to="/" className="icon">
+        <div className="nav-logo">
+          StayMate
+        </div>
+      </NavLink>
 
       {/* Center */}
       <div className="nav-links">
@@ -53,9 +55,11 @@ function Navbar() {
       </div>
 
       {/* Right */}
-      <div className="nav-profile">
-        <FaUserCircle size={28} />
-      </div>
+      <NavLink to="/student/Sprofile" className="icon">
+        <div className="nav-profile">
+          <FaUserCircle size={28} />
+        </div>
+      </NavLink>
     </nav>
   );
 }

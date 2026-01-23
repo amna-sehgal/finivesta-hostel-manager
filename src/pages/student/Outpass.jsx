@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../../components/common/Navbar";
+import Navbar from "../../components/common/sNavbar";
 import { FaIdCard } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";

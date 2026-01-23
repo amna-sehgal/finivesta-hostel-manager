@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../../components/common/Navbar";
+import Navbar from "../../components/common/sNavbar";
 import {
     MdOutlineWater,
     MdOutlineElectricalServices,
@@ -114,7 +114,7 @@ function RaiseComplaint() {
                 />
 
                 {/* SUBMIT BUTTON */}
-                <button className="submit-btn" onClick={handleSubmit}>
+                <button className="submit-btn1" onClick={handleSubmit}>
                     Submit Complaint
                 </button>
             </div>

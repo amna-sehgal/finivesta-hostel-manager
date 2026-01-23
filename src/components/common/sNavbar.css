@@ -10,7 +10,10 @@
 
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
-
+.icon{
+  text-decoration: none;
+  color:white;
+}
 .nav-logo {
   font-size: 18px;
   font-weight: 600;

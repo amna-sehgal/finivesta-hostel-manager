@@ -1,4 +1,5 @@
-import Navbar from "../../components/common/Navbar";
+import { useEffect, useState } from "react";
+import Navbar from "../../components/common/sNavbar";
 import {
   MdReportProblem,
   MdNotificationsActive,
@@ -10,6 +11,19 @@ import { HiBadgeCheck, HiSparkles } from "react-icons/hi";
 import "./Dashboard.css";
 
 function Dashboard() {
+  const [student, setStudent] = useState(null);
+
+  useEffect(() => {
+    const storedStudent = localStorage.getItem("student");
+    if (storedStudent) {
+      setStudent(JSON.parse(storedStudent));
+    }
+  }, []);
+
+  if (!student) {
+    return <p style={{ padding: "20px" }}>Loading...</p>;
+  }
+
   return (
     <>
       <Navbar />
@@ -21,10 +35,13 @@ function Dashboard() {
           <div className="welcome-text">
             <FaUserCircle className="welcome-icon" />
             <h1>
-              Welcome, Amna <HiSparkles className="sparkle" />
+              Welcome, {student.fullName} <HiSparkles className="sparkle" />
             </h1>
           </div>
-          <p>Room 214 · Block B</p>
+
+          <p>
+            Room {student.roomno} · {student.hostel}
+          </p>
 
           <div className="hero-status">
             <span className="safe">
@@ -110,3 +127,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

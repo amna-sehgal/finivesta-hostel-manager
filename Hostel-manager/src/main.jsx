@@ -1,14 +1,14 @@
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
-import Navbar from './warden-dashboard/navbar.jsx';
-import Dashboard from './warden-dashboard/dashboard.jsx';
-import Mess from './warden-dashboard/dropdown/mess.jsx';
-import Laundry from './warden-dashboard/dropdown/laundry.jsx';
-import Complaint from './warden-dashboard/dropdown/complaint.jsx';
-import Approval from './warden-dashboard/dropdown/approval.jsx';
-import Notification from './warden-dashboard/notification.jsx'; 
-import Profile from './warden-dashboard/profile.jsx';
+import Navbar from '../../src/pages/warden/wnavbar.jsx';
+import Dashboard from '../../src/pages/warden/wdashboard.jsx';
+import Mess from '../../src/pages/warden/dropdown/wmess.jsx';
+import Laundry from '../../src/pages/warden/dropdown/wlaundry.jsx';
+import Complaint from '../../src/pages/warden/dropdown/complaint.js';
+import Approval from '../../src/pages/warden/dropdown/approval.js';
+import Notification from '../../src/pages/warden/notification.jsx'; 
+import Profile from '../../src/pages/warden/wprofile.jsx';
 
 function Layout() {
   return (
