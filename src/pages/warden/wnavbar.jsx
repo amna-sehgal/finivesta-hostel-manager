@@ -1,17 +1,25 @@
 import './wnavbar.css';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   // Close dropdown when a link is clicked
-  const handleLinkClick = () => {
-    setIsDropdownOpen(false);
+  const handleLinkClick = () => setIsDropdownOpen(false);
+
+  // Warden logout
+  const handleLogout = () => {
+    localStorage.removeItem("warden");
+    localStorage.removeItem("student"); // remove student too
+    navigate("/");
   };
+
 
   return (
     <>
+      {/* Top Navbar */}
       <nav className="navbar navbar-top">
         <div className="navbar-logo">
           <Link to='/'>
@@ -36,6 +44,7 @@ function Navbar() {
             <span className="label">Profile</span>
           </Link>
 
+          {/* Hamburger dropdown */}
           <button
             className="nav-item dropdown-toggle"
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -75,19 +84,24 @@ function Navbar() {
             🧺 Laundry Management
           </Link>
 
-          <Link to="#" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.25s' }}>
+          <Link to="/warden/safety" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.25s' }}>
             🛡️ Safety Control Room
           </Link>
 
           <div className="dropdown-divider"></div>
 
-          <Link to="#" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.30s' }}>
+          <Link to="/warden/settings" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.30s' }}>
             ⚙️ Settings
           </Link>
 
-          <Link to="#" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.35s' }}>
+          {/* Logout */}
+          <button
+            className="dropdown-item dropdown-anim logout-btn"
+            onClick={handleLogout}
+            style={{ animationDelay: '0.35s' }}
+          >
             🚪 Log Out
-          </Link>
+          </button>
         </div>
 
         {/* Backdrop to close dropdown */}
@@ -98,3 +112,4 @@ function Navbar() {
 }
 
 export default Navbar;
+

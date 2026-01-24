@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { FiMail, FiLock } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
@@ -39,16 +39,9 @@ export default function Login() {
       // ✅ Save all student info to localStorage
       localStorage.setItem(
         "student",
-        JSON.stringify({
-          fullName: data.fullName || "",
-          email: data.email || "",
-          phone: data.phone || "",
-          hostel: data.hostel || "",
-          branch: data.branch || "",
-          birthDate: data.birthDate || "",
-          roomno: data.roomno || "",
-        })
+        JSON.stringify(data.student)
       );
+
 
       // Redirect to profile/dashboard
       navigate("/student/dashboard");

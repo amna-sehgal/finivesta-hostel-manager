@@ -100,9 +100,8 @@ function Signup() {
             <FaHome className="input-icon" />
             <select name="hostel" value={formData.hostel} onChange={handleChange}>
               <option value="">Select Hostel</option>
-              <option value="Hostel A">Hostel A</option>
-              <option value="Hostel B">Hostel B</option>
-              <option value="Hostel C">Hostel C</option>
+              <option value="Hostel A">Krishna</option>
+              <option value="Hostel B">Kaveri</option>
             </select>
           </div>
 

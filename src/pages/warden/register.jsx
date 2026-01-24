@@ -53,11 +53,12 @@ export default function Signup() {
                 // ✅ Save warden data to localStorage
                 // Make sure data contains at least fullName and hostel
                 localStorage.setItem("warden", JSON.stringify({
-                    fullName: data.fullName,
-                    hostel: data.hostel,
-                    phone: data.phone || "",
-                    email: data.email || "",
+                    fullName: data.warden.fullName,
+                    hostel: data.warden.hostel,
+                    phone: data.warden.phone || "",
+                    email: data.warden.email || "",
                 }));
+
 
                 // Redirect to dashboard/profile
                 navigate("/warden/dashboard");

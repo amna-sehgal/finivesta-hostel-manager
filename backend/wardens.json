@@ -40,5 +40,19 @@
     "password": "000",
     "phone": "",
     "hostel": "Hostel A"
+  },
+  {
+    "fullName": "JKL",
+    "email": "jkl@jkl.com",
+    "password": "456",
+    "phone": "",
+    "hostel": "Hostel B"
+  },
+  {
+    "fullName": "HGJ",
+    "email": "hgj@hgj.com",
+    "password": "2345",
+    "phone": "",
+    "hostel": "Hostel C"
   }
 ]

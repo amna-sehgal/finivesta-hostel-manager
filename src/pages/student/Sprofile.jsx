@@ -23,8 +23,10 @@ function Sprofile() {
 
   const handleLogout = () => {
     localStorage.removeItem("student");
-    navigate("/student/login");
+    localStorage.removeItem("warden"); // 👈 IMPORTANT
+    navigate("/");
   };
+
 
   if (!student) {
     return <p style={{ padding: "20px" }}>Loading...</p>;

@@ -88,5 +88,15 @@
     "branch": "CSE",
     "birthDate": "2006-11-11",
     "roomno": "567"
+  },
+  {
+    "fullName": "Riya",
+    "email": "xyz@xyz.com",
+    "password": "987",
+    "phone": "",
+    "hostel": "Hostel B",
+    "branch": "MAE",
+    "birthDate": "2005-05-24",
+    "roomno": "567"
   }
 ]
