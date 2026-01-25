@@ -54,5 +54,19 @@
     "password": "2345",
     "phone": "",
     "hostel": "Hostel C"
+  },
+  {
+    "fullName": "Mina",
+    "email": "mina23@gm.com",
+    "password": "456",
+    "phone": "",
+    "hostel": "Hostel B"
+  },
+  {
+    "fullName": "ghf",
+    "email": "ghf@ghf.com",
+    "password": "289",
+    "phone": "",
+    "hostel": "Hostel A"
   }
 ]

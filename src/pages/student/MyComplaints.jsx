@@ -6,13 +6,13 @@ import {
   MdWifi,
   MdCleaningServices,
   MdReportProblem,
+  MdDeleteOutline,
 } from "react-icons/md";
 import { FaFan } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
 import "./MyComplaints.css";
 
 function MyComplaints() {
-  // Dummy complaints data
   const [complaints, setComplaints] = useState([
     {
       id: 1,
@@ -40,6 +40,17 @@ function MyComplaints() {
     },
   ]);
 
+  const [filter, setFilter] = useState("All");
+
+  const handleDelete = (id) => {
+    setComplaints((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  const filteredComplaints =
+    filter === "All"
+      ? complaints
+      : complaints.filter((c) => c.category === filter);
+
   const getCategoryIcon = (cat) => {
     switch (cat) {
       case "Water":
@@ -62,31 +73,72 @@ function MyComplaints() {
       <Navbar />
 
       <div className="complaints-root">
+        {/* HEADER */}
         <div className="page-header">
           <GiNotebook className="header-icon" />
           <h2>My Complaints</h2>
         </div>
 
-        <div className="complaints-list">
-          {complaints.map((c) => (
-            <div key={c.id} className="complaint-card">
-              <div className="complaint-top">
-                <div className="cat-icon">{getCategoryIcon(c.category)}</div>
-                <h3>{c.category}</h3>
-                <span className={`status-badge ${c.status.toLowerCase().replace(" ", "-")}`}>
-                  {c.status}
-                </span>
-              </div>
-              <p className="complaint-desc">{c.description}</p>
-              <div className="complaint-footer">
-                <span className={`priority-badge ${c.priority.toLowerCase()}`}>
-                  {c.priority}
-                </span>
-                <span className="complaint-date">{c.date}</span>
-              </div>
-            </div>
+        {/* FILTER BAR */}
+        <div className="filter-bar">
+          {["All", "Water", "WiFi", "Cleanliness", "Fan", "Electrical", "Other"].map((cat) => (
+            <button
+              key={cat}
+              className={filter === cat ? "active" : ""}
+              onClick={() => setFilter(cat)}
+            >
+              {cat}
+            </button>
           ))}
         </div>
+
+        {/* EMPTY STATE */}
+        {filteredComplaints.length === 0 ? (
+          <div className="empty-state">
+            <img
+              src="/Screenshot 2026-01-25 120147.png"
+              alt="No complaints"
+            />
+            <p>No complaints found!</p>
+          </div>
+        ) : (
+          <div className="complaints-list">
+            {filteredComplaints.map((c) => (
+              <div key={c.id} className="complaint-card">
+                <div className="complaint-top">
+                  <div className="cat-icon">{getCategoryIcon(c.category)}</div>
+                  <h3>{c.category}</h3>
+
+                  <span
+                    className={`status-badge ${c.status
+                      .toLowerCase()
+                      .replace(" ", "-")}`}
+                  >
+                    {c.status}
+                  </span>
+                </div>
+
+                <p className="complaint-desc">{c.description}</p>
+
+                <div className="complaint-footer">
+                  <span
+                    className={`priority-badge ${c.priority.toLowerCase()}`}
+                  >
+                    {c.priority}
+                  </span>
+
+                  <div className="footer-right">
+                    <span className="complaint-date">{c.date}</span>
+                    <MdDeleteOutline
+                      className="delete-icon"
+                      onClick={() => handleDelete(c.id)}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

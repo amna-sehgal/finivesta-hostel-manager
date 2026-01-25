@@ -9,6 +9,8 @@ import {
   FaHome,
 } from "react-icons/fa";
 import "./Sprofile.css";
+import { FaCalendarAlt } from "react-icons/fa";
+
 
 function Sprofile() {
   const [student, setStudent] = useState(null);
@@ -58,8 +60,8 @@ function Sprofile() {
           </div>
 
           <div className="detail-item">
-            <FaBirthdayCake className="detail-icon" />
-            <span>Born: {student.birthDate}</span>
+            <FaCalendarAlt className="detail-icon" />
+            <span>Entry Date: {student.birthDate}</span>
           </div>
 
           <div className="detail-item">

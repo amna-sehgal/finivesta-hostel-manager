@@ -1,0 +1,16 @@
+[
+  {
+    "studentName": "Amy",
+    "rating": 5,
+    "feedback": "Too Salty 🧂",
+    "pollChoice": "Momos",
+    "date": "2026-01-25T10:25:55.954Z"
+  },
+  {
+    "studentName": "Amy",
+    "rating": 4,
+    "feedback": "Tasty 😋",
+    "pollChoice": "Chole Bhature",
+    "date": "2026-01-25T11:15:48.084Z"
+  }
+]

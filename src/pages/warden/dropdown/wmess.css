@@ -79,7 +79,7 @@
 }
 
 .menu-box { border-top: 6px solid #4f46e5; }
-.poll-box { border-top: 6px solid #10b981; }
+.poll-box { border-top: 6px solid #108fb9; }
 .demand-box { border-top: 6px solid #f59e0b; }
 
 .section-title { font-size: 1.6rem; margin-bottom: 20px; }
@@ -106,4 +106,110 @@
     .mess-branding-row { flex-direction: column; text-align: center; gap: 40px; }
     .mess-img { width: 250px; height: 250px; }
     .mess-tagline { font-size: 1.8rem; }
+}
+/* Edit / Save Menu Buttons */
+.edit-btn, .save-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.edit-btn {
+    background-color: #4f46e5;
+    color: #fff;
+}
+
+.edit-btn:hover {
+    background-color: #3730a3;
+}
+
+.save-btn {
+    background-color: #10b981;
+    color: #fff;
+}
+
+.save-btn:hover {
+    background-color: #047857;
+}
+
+/* Input fields inside the menu table */
+.mess-table input {
+    width: 90%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Average Rating Stars */
+.avg-rating-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 2.4rem;
+    color: #FFD700;
+    margin-bottom: 10px;
+}
+
+/* Shiny star animation */
+.avg-rating-stars .star {
+    position: relative;
+    display: inline-block;
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% { text-shadow: 0 0 5px #FFD700, 0 0 10px #FFD700; }
+    50% { text-shadow: 0 0 10px #fff, 0 0 20px #FFD700; }
+}
+.reset-btn {
+    height: 50px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    margin-top: 20px;
+    position: relative;
+    z-index: 9999;
+}
+
+.reset-btn {
+    background-color: #4f46e5;
+    color: #fff;
+}
+
+.reset-btn:hover {
+    background-color: #3730a3;
+}
+.mess-bottom-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 22px; /* 🔥 spacing between all cards */
+}
+/* Poll input styling */
+.poll-box input {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  margin-bottom: 12px;
+
+  border-radius: 12px;
+  border: 1.5px solid #ddd;
+  font-size: 0.95rem;
+  outline: none;
+
+  transition: all 0.25s ease;
+}
+
+.poll-box input:focus {
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+.demand-box{
+    margin-top: 40px;
 }

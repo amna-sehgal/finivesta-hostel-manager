@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaUserCircle, FaEnvelope, FaLock, FaPhone, FaHome, FaBuilding, FaDoorOpen, FaHeart } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
 import "./Signup.css";
+import { FaCalendarAlt } from "react-icons/fa";
 
 function Signup() {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ function Signup() {
     phone: "",
     hostel: "",
     branch: "",
-    birthDate: "",
+    entryDate: "",
     roomno: "",
   });
 
@@ -100,8 +101,8 @@ function Signup() {
             <FaHome className="input-icon" />
             <select name="hostel" value={formData.hostel} onChange={handleChange}>
               <option value="">Select Hostel</option>
-              <option value="Hostel A">Krishna</option>
-              <option value="Hostel B">Kaveri</option>
+              <option value="Krishna">Krishna</option>
+              <option value="Kaveri">Kaveri</option>
             </select>
           </div>
 
@@ -117,10 +118,10 @@ function Signup() {
             <input type="text" name="roomno" placeholder="Room Number" value={formData.roomno} onChange={handleChange} />
           </div>
 
-          {/* Birth Date */}
+          {/* Entry Date */}
           <div className="input-group">
-            <FaHeart className="input-icon" />
-            <input type="date" name="birthDate" value={formData.birthDate} onChange={handleChange} />
+            <FaCalendarAlt className="input-icon" />
+            <input type="date" name="entryDate" value={formData.entryDate} onChange={handleChange} />
           </div>
 
           <button type="submit" className="signup-btn">Sign Up</button>

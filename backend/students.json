@@ -98,5 +98,25 @@
     "branch": "MAE",
     "birthDate": "2005-05-24",
     "roomno": "567"
+  },
+  {
+    "fullName": "Sia",
+    "email": "sia123@gm.com",
+    "password": "4567",
+    "phone": "",
+    "hostel": "Hostel B",
+    "branch": "MAC",
+    "birthDate": "2006-05-15",
+    "roomno": "234"
+  },
+  {
+    "fullName": "Amy",
+    "email": "amy23@gm.com",
+    "password": "321",
+    "phone": "",
+    "hostel": "Krishna",
+    "branch": "CSE-AI",
+    "entryDate": "2026-05-19",
+    "roomno": "210"
   }
 ]

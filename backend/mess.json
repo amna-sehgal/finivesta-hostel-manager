@@ -1,0 +1,50 @@
+{
+  "weekly": {
+    "Monday": {
+      "breakfast": "Poha 🥣",
+      "lunch": "Dal Rice 🍛",
+      "dinner": "Paneer Butter Masala 🥘"
+    },
+    "Tuesday": {
+      "breakfast": "Idli ⚪",
+      "lunch": "Rajma Rice 🍛",
+      "dinner": "Chole Bhature 🥯"
+    },
+    "Wednesday": {
+      "breakfast": "Paratha 🫓",
+      "lunch": "Kadhi Chawal 🍚",
+      "dinner": "Aloo Gobi 🥦"
+    },
+    "Thursday": {
+      "breakfast": "Upma 🍛",
+      "lunch": "Sambar Rice 🥣",
+      "dinner": "Veg Biryani 🍚"
+    },
+    "Friday": {
+      "breakfast": "Dosa 🥞",
+      "lunch": "Dal Makhani 🍲",
+      "dinner": "Mix Veg 🥗"
+    },
+    "Saturday": {
+      "breakfast": "Chole Kulche 🥯",
+      "lunch": "Paneer Rice 🍚",
+      "dinner": "Malai Kofta 🍲"
+    },
+    "Sunday": {
+      "breakfast": "Aloo Puri 🥘",
+      "lunch": "Jeera Rice 🍚",
+      "dinner": "Shahi Paneer 🧀"
+    }
+  },
+  "pollOptions": [
+    "pasta",
+    "rajma rice",
+    "shahi paneer",
+    "chole kulche"
+  ],
+  "demandBox": [
+    "More fruits in breakfast",
+    "Less oily food",
+    "Ice cream on Sundays"
+  ]
+}

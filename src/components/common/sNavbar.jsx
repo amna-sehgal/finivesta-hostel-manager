@@ -7,6 +7,9 @@ import {
 } from "react-icons/md";
 import { FaIdCard, FaUserCircle } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
+import { MdCampaign } from "react-icons/md";
+import { MdNotifications } from "react-icons/md";
+
 
 import "./sNavbar.css";
 
@@ -28,19 +31,14 @@ function Navbar() {
         </NavLink>
 
         {/* Replacing Complaints with two separate links */}
-        <NavLink to="/student/raise-complaint">
-          <MdReportProblem />
-          Raise Complaint
+        <NavLink to="/student/notices">
+          <MdCampaign />
+          Notices
         </NavLink>
 
-        <NavLink to="/student/my-complaints">
-          <GiNotebook />
-          My Complaints
-        </NavLink>
-
-        <NavLink to="/student/outpass">
-          <FaIdCard />
-          Outpass
+        <NavLink to="/student/notification">
+          <MdNotifications />
+          Notifications
         </NavLink>
 
         <NavLink to="/student/mess">
