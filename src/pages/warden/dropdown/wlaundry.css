@@ -524,4 +524,137 @@
 .stat-box {
   animation: slideUp 0.8s ease-out forwards;
 }
+/* LIVE REQUESTS */
+.live-requests {
+  grid-column: span 2;
+}
 
+.request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.request-item {
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.request-info h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.instruction {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.status-pill {
+  display: inline-block;
+  margin-top: 0.4rem;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.status-pill.pending {
+  background: rgba(255, 193, 7, 0.18);
+  color: #ffc107;
+}
+
+.status-pill.processing {
+  background: rgba(33, 150, 243, 0.18);
+  color: #2196f3;
+}
+
+.status-pill.delivered {
+  background: rgba(76, 175, 80, 0.18);
+  color: #4caf50;
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.action-btn {
+  padding: 0.45rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  border: none;
+}
+
+.action-btn.process {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+.action-btn.deliver {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.empty-text {
+  opacity: 0.6;
+  margin-top: 0.8rem;
+}
+.stat-edit-btn {
+  color: #fff;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.stat-edit-btn:hover {
+  opacity: 1;
+}
+
+.stat-input {
+  width: 70px;
+  padding: 6px 8px;
+  font-size: 1.2rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  text-align: center;
+  outline: none;
+}
+.stat-box {
+  position: relative;
+  pointer-events: auto;
+}
+
+.stat-edit-btn {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+.laundry-container,
+.stats-container {
+  pointer-events: auto;
+}
+.stat-box::before,
+.laundry-card::before,
+.insight-card::before {
+  pointer-events: none;
+}
+.stat-input {
+  pointer-events: auto;
+  z-index: 20;
+  position: relative;
+}
+.laundry-card {
+  cursor: default;
+}

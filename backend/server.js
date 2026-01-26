@@ -239,9 +239,94 @@ app.post("/api/mess/warden/poll", (req, res) => {
   res.json({ message: "Poll options updated" });
 });
 
+const laundryDataPath = "laundry.json";
 
+// Ensure JSON file exists
+if (!fs.existsSync(laundryDataPath)) {
+  fs.writeFileSync(laundryDataPath, JSON.stringify({ requests: [] }, null, 2));
+}
 
-app.listen(PORT, () => console.log(`Backend running on http://localhost:${PORT}`));
+// GET all laundry requests for a student
+app.get("/api/laundry/student/:email", (req, res) => {
+  try {
+    const { email } = req.params;
+    const laundryData = JSON.parse(fs.readFileSync(laundryDataPath, "utf-8"));
+    const studentRequests = laundryData.requests.filter(
+      (r) => r.studentEmail === email
+    );
+    res.status(200).json({ requests: studentRequests });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 
+// POST new laundry request
+app.post("/api/laundry/student/request", (req, res) => {
+  try {
+    const { studentEmail, type, instructions } = req.body;
+    if (!studentEmail || !type) {
+      return res
+        .status(400)
+        .json({ message: "Student email and laundry type are required" });
+    }
 
+    const laundryData = JSON.parse(fs.readFileSync(laundryDataPath, "utf-8"));
 
+    const newRequest = {
+      id: Date.now().toString(),
+      studentEmail,
+      type,
+      instructions: instructions || "",
+      status: "Pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    laundryData.requests.push(newRequest);
+    fs.writeFileSync(laundryDataPath, JSON.stringify(laundryData, null, 2));
+
+    res.status(201).json({ message: "Laundry request created", request: newRequest });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// GET all laundry requests (warden)
+app.get("/api/laundry/warden", (req, res) => {
+  try {
+    const laundryData = JSON.parse(fs.readFileSync(laundryDataPath, "utf-8"));
+    res.status(200).json({ requests: laundryData.requests });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// PATCH update laundry request status (warden)
+app.patch("/api/laundry/warden/update/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    if (!status)
+      return res.status(400).json({ message: "Status is required" });
+
+    const laundryData = JSON.parse(fs.readFileSync(laundryDataPath, "utf-8"));
+    const requestIndex = laundryData.requests.findIndex((r) => r.id === id);
+    if (requestIndex === -1)
+      return res.status(404).json({ message: "Request not found" });
+
+    laundryData.requests[requestIndex].status = status;
+    fs.writeFileSync(laundryDataPath, JSON.stringify(laundryData, null, 2));
+
+    res
+      .status(200)
+      .json({ message: "Request status updated", request: laundryData.requests[requestIndex] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Start server
+app.listen(5000, () => console.log("Server running on port 5000"));

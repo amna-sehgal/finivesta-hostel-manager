@@ -174,3 +174,51 @@
 .status.delivered {
   background: rgba(46, 196, 182, 0.25);
 }
+/* STATUS TAGS */
+.status-tag {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.6rem;
+  width: fit-content;
+}
+
+.status-tag.pending {
+  background: rgba(255, 193, 7, 0.18);
+  color: #ffb300;
+  border: 1px solid rgba(255, 193, 7, 0.35);
+}
+
+.status-tag.processing {
+  background: rgba(33, 150, 243, 0.18);
+  color: #2196f3;
+  border: 1px solid rgba(33, 150, 243, 0.35);
+}
+
+.status-tag.delivered {
+  background: rgba(76, 175, 80, 0.18);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.35);
+}
+
+/* CANCEL BUTTON */
+.cancel-btn {
+  margin-top: 0.7rem;
+  margin-left: 10px;
+  height: 30px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.75rem;
+  border-radius: 18px;
+  background: rgba(244, 67, 54, 0.15);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background: rgba(244, 67, 54, 0.25);
+}
+

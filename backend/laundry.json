@@ -1,0 +1,52 @@
+{
+  "requests": [
+    {
+      "id": "1769351689269",
+      "studentEmail": "amna@example.com",
+      "type": "Regular Clothes",
+      "instructions": "Use mild detergent",
+      "status": "In Progress",
+      "createdAt": "2026-01-25T14:34:49.269Z"
+    },
+    {
+      "id": "1769358893245",
+      "studentEmail": "amna@example.com",
+      "type": "Regular Clothes",
+      "instructions": "Use mild detergent",
+      "status": "Pending",
+      "createdAt": "2026-01-25T16:34:53.245Z"
+    },
+    {
+      "id": "1769359202677",
+      "studentEmail": "amna@example.com",
+      "type": "Regular Clothes",
+      "instructions": "Use mild detergent",
+      "status": "Pending",
+      "createdAt": "2026-01-25T16:40:02.677Z"
+    },
+    {
+      "id": "1769359586183",
+      "studentEmail": "amna@example.com",
+      "type": "Regular Clothes",
+      "instructions": "Use mild detergent",
+      "status": "Pending",
+      "createdAt": "2026-01-25T16:46:26.183Z"
+    },
+    {
+      "id": "1769412160082",
+      "studentEmail": "student@example.com",
+      "type": "Delicates",
+      "instructions": "light wash",
+      "status": "Pending",
+      "createdAt": "2026-01-26T07:22:40.082Z"
+    },
+    {
+      "id": "1769425698546",
+      "studentEmail": "student@example.com",
+      "type": "Regular Clothes",
+      "instructions": "normal-wash",
+      "status": "Pending",
+      "createdAt": "2026-01-26T11:08:18.546Z"
+    }
+  ]
+}

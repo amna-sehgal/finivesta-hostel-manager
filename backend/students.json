@@ -118,5 +118,15 @@
     "branch": "CSE-AI",
     "entryDate": "2026-05-19",
     "roomno": "210"
+  },
+  {
+    "fullName": "SAM",
+    "email": "sam123@gm.com",
+    "password": "123",
+    "phone": "",
+    "hostel": "Kaveri",
+    "branch": "CSE",
+    "entryDate": "2026-10-21",
+    "roomno": "33"
   }
 ]
