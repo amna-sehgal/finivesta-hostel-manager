@@ -307,7 +307,7 @@ app.get("/api/laundry/warden", (req, res) => {
 app.patch("/api/laundry/warden/update/:id", (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const { status, pickupDate } = req.body;
     if (!status)
       return res.status(400).json({ message: "Status is required" });
 
@@ -317,6 +317,7 @@ app.patch("/api/laundry/warden/update/:id", (req, res) => {
       return res.status(404).json({ message: "Request not found" });
 
     laundryData.requests[requestIndex].status = status;
+    if (pickupDate) laundryData.requests[requestIndex].pickupDate = pickupDate;
     fs.writeFileSync(laundryDataPath, JSON.stringify(laundryData, null, 2));
 
     res
@@ -327,6 +328,115 @@ app.patch("/api/laundry/warden/update/:id", (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+const outpassDataPath = "outpass.json";
+
+// Ensure JSON exists
+if (!fs.existsSync(outpassDataPath)) {
+  fs.writeFileSync(
+    outpassDataPath,
+    JSON.stringify({ requests: [] }, null, 2)
+  );
+}
+
+const readOutpass = () =>
+  JSON.parse(fs.readFileSync(outpassDataPath, "utf-8"));
+
+const writeOutpass = (data) =>
+  fs.writeFileSync(outpassDataPath, JSON.stringify(data, null, 2));
+
+/* ================= STUDENT ================= */
+
+app.post("/api/outpass/student/request", (req, res) => {
+  try {
+    const {
+      studentName,
+      studentEmail,
+      roomno,
+      reason,
+      fromDate,
+      toDate,
+      parentApproval,
+    } = req.body;
+
+    if (!studentName || !studentEmail || !reason || !fromDate || !toDate) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const outpassData = readOutpass();
+
+    const newRequest = {
+      id: Date.now().toString(),
+      studentName,
+      studentEmail,
+      roomno,
+      reason,
+      fromDate,
+      toDate,
+      parentApproval: parentApproval || false,
+      status: "Pending",
+      createdAt: new Date().toISOString(),
+    };
+
+    outpassData.requests.unshift(newRequest);
+    writeOutpass(outpassData);
+
+    res.status(201).json({ request: newRequest });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/api/outpass/student/:email", (req, res) => {
+  try {
+    const outpassData = readOutpass();
+    const requests = outpassData.requests.filter(
+      (r) => r.studentEmail === req.params.email
+    );
+    res.json({ requests });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+/* ================= WARDEN ================= */
+
+app.get("/api/outpass/warden/pending", (req, res) => {
+  try {
+    const outpassData = readOutpass();
+    res.json({
+      requests: outpassData.requests.filter(
+        (r) => r.status === "Pending"
+      ),
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.patch("/api/outpass/warden/update/:id", (req, res) => {
+  try {
+    const { status } = req.body;
+    const outpassData = readOutpass();
+
+    const index = outpassData.requests.findIndex(
+      (r) => r.id === req.params.id
+    );
+
+    if (index === -1)
+      return res.status(404).json({ message: "Not found" });
+
+    outpassData.requests[index].status = status;
+    writeOutpass(outpassData);
+
+    res.json({ request: outpassData.requests[index] });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 
 // Start server
 app.listen(5000, () => console.log("Server running on port 5000"));

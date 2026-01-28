@@ -65,6 +65,7 @@ const Laundry = () => {
 
 
   const updateStatus = async (id, newStatus, pickupDate = null) => {
+    console.log("UPDATE CLICKED", id, newStatus);
     try {
       const res = await fetch(`/api/laundry/warden/update/${id}`, {
         method: "PATCH",
@@ -109,14 +110,15 @@ const Laundry = () => {
               className="stat-edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                if (editStats === "total") {
-                  setEditStats(null); // SAVE
+                if (editStats === 'total') {
+                  setEditStats(null);  // ✅ SAVE
+                  // localStorage already saves via useEffect
                 } else {
-                  setEditStats("total"); // EDIT
+                  setEditStats('total');  // ✅ EDIT MODE
                 }
               }}
             >
-              {editStats === "total" ? "Save" : "Edit"}
+              {editStats === 'total' ? '✅ Save' : '✏️ Edit'}
             </button>
             <h3>Total Machines</h3>
             {editStats === "total" ? (
@@ -139,14 +141,15 @@ const Laundry = () => {
               className="stat-edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                if (editStats === "operational") {
-                  setEditStats(null); // SAVE
+                if (editStats === 'operational') {
+                  setEditStats(null);  // ✅ SAVE
+                  // localStorage already saves via useEffect
                 } else {
-                  setEditStats("operational"); // EDIT
+                  setEditStats('operational');  // ✅ EDIT MODE
                 }
               }}
             >
-              {editStats === "operational" ? "Save" : "Edit"}
+              {editStats === 'operational' ? '✅ Save' : '✏️ Edit'}
             </button>
             <h3>Operational</h3>
             {editStats === "operational" ? (
@@ -169,14 +172,15 @@ const Laundry = () => {
               className="stat-edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                if (editStats === "maintenance") {
-                  setEditStats(null); // SAVE
+                if (editStats === 'maintenance') {
+                  setEditStats(null);  // ✅ SAVE
+                  // localStorage already saves via useEffect
                 } else {
-                  setEditStats("maintenance"); // EDIT
+                  setEditStats('maintenance');  // ✅ EDIT MODE
                 }
               }}
             >
-              {editStats === "maintenance" ? "Save" : "Edit"}
+              {editStats === 'maintenance' ? '✅ Save' : '✏️ Edit'}
             </button>
             <h3>Maintenance</h3>
             {editStats === "maintenance" ? (
@@ -193,22 +197,23 @@ const Laundry = () => {
             )}
           </div>
 
-          {/* OUT OF SERVICE */}
+          {/* outOfService */}
           <div className="stat-box red-stat">
             <button
               className="stat-edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                if (editStats === "out of service") {
-                  setEditStats(null); // SAVE
+                if (editStats === 'outOfService') {
+                  setEditStats(null);  // ✅ SAVE
+                  // localStorage already saves via useEffect
                 } else {
-                  setEditStats("out of service"); // EDIT
+                  setEditStats('outOfService');  // ✅ EDIT MODE
                 }
               }}
             >
-              {editStats === "out of service" ? "Save" : "Edit"}
+              {editStats === 'outOfService' ? '✅ Save' : '✏️ Edit'}
             </button>
-            <h3>Out of Service</h3>
+            <h3>outOfService</h3>
             {editStats === "outOfService" ? (
               <input
                 className="stat-input"
@@ -240,7 +245,7 @@ const Laundry = () => {
             ) : (
               <div className="request-list">
                 {requests.map((req) => (
-                  <div key={req._id} className="request-item">
+                  <div key={req.id} className="request-item">
                     <div className="request-info">
                       <h4>{req.type}</h4>
                       <p><strong>Student:</strong> {req.studentEmail}</p>
@@ -257,10 +262,13 @@ const Laundry = () => {
                     <div className="request-actions">
                       {req.status === "Pending" && (
                         <button
+                          type="button"
                           className="action-btn process"
-                          onClick={() =>
-                            updateStatus(req._id, "Processing")
-                          }
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateStatus(req.id, "Processing");
+                          }}
                         >
                           Mark Processing
                         </button>
@@ -268,13 +276,15 @@ const Laundry = () => {
 
                       {req.status === "Processing" && (
                         <button
-                          className="action-btn deliver"
-                          onClick={() => {
-                            setSelectedRequestId(req._id);
-                            setShowPickupModal(true);
+                          type="button"
+                          className="action-btn process"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateStatus(req.id, "Processing");
                           }}
                         >
-                          Mark Done
+                          Mark Processing
                         </button>
                       )}
 
@@ -294,7 +304,7 @@ const Laundry = () => {
               <li><strong>Total Installed:</strong> 24 units</li>
               <li><strong>Operational:</strong> 21 units (87.5%)</li>
               <li><strong>Under Maintenance:</strong> 2 units</li>
-              <li><strong>Out of Service:</strong> 1 unit (requires repair)</li>
+              <li><strong>outOfService:</strong> 1 unit (requires repair)</li>
               <li><strong>Avg Cycle Time:</strong> 38 minutes</li>
             </ul>
           </div>

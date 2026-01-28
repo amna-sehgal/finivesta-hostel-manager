@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/common/sNavbar";
 import { FaIdCard } from "react-icons/fa";
 import DatePicker from "react-datepicker";
@@ -14,17 +14,55 @@ function Outpass() {
     parentApproval: false,
   });
 
-  const handleSubmit = (e) => {
+  // 🔹 get logged-in student (adjust keys if needed)
+  const student = JSON.parse(localStorage.getItem("student"));
+
+  /* ================= FETCH STUDENT OUTPASSES ================= */
+  useEffect(() => {
+    if (!student?.email) return;
+
+    fetch(`http://localhost:5000/api/outpass/student/${student.email}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setLeaveRequests(data.requests || []);
+      })
+      .catch((err) => console.error(err));
+  }, [student]);
+
+  /* ================= SUBMIT OUTPASS ================= */
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.fromDate || !formData.toDate) return;
-    const newRequest = {
-      ...formData,
-      status: "Pending",
-      id: Date.now(),
-    };
-    setLeaveRequests([newRequest, ...leaveRequests]);
-    setFormData({ reason: "", fromDate: null, toDate: null, parentApproval: false });
+
+    const res = await fetch(
+      "http://localhost:5000/api/outpass/student/request",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          studentName: student.name,
+          studentEmail: student.email,
+          roomno: student.roomno,
+          reason: formData.reason,
+          fromDate: formData.fromDate,
+          toDate: formData.toDate,
+          parentApproval: formData.parentApproval,
+        }),
+      }
+    );
+
+    const data = await res.json();
+    setLeaveRequests([data.request, ...leaveRequests]);
+
+    setFormData({
+      reason: "",
+      fromDate: null,
+      toDate: null,
+      parentApproval: false,
+    });
   };
+
+
 
   return (
     <>
@@ -35,7 +73,9 @@ function Outpass() {
           <FaIdCard className="header-icon" />
           <div>
             <h2>Outpass / Leave Requests</h2>
-            <p className="header-subtitle">Request your leave and track approvals</p>
+            <p className="header-subtitle">
+              Request your leave and track approvals
+            </p>
           </div>
         </div>
 
@@ -45,7 +85,9 @@ function Outpass() {
           <textarea
             placeholder="Enter your reason for leave..."
             value={formData.reason}
-            onChange={(e) => setFormData({ ...formData, reason: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, reason: e.target.value })
+            }
             required
             className="reason-input"
           />
@@ -55,7 +97,9 @@ function Outpass() {
               <label>Start Date</label>
               <DatePicker
                 selected={formData.fromDate}
-                onChange={(date) => setFormData({ ...formData, fromDate: date })}
+                onChange={(date) =>
+                  setFormData({ ...formData, fromDate: date })
+                }
                 placeholderText="Select start date"
                 className="custom-datepicker"
                 dateFormat="dd/MM/yyyy"
@@ -66,7 +110,9 @@ function Outpass() {
               <label>End Date</label>
               <DatePicker
                 selected={formData.toDate}
-                onChange={(date) => setFormData({ ...formData, toDate: date })}
+                onChange={(date) =>
+                  setFormData({ ...formData, toDate: date })
+                }
                 placeholderText="Select end date"
                 className="custom-datepicker"
                 dateFormat="dd/MM/yyyy"
@@ -79,12 +125,19 @@ function Outpass() {
             <input
               type="checkbox"
               checked={formData.parentApproval}
-              onChange={(e) => setFormData({ ...formData, parentApproval: e.target.checked })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  parentApproval: e.target.checked,
+                })
+              }
             />
             Parent Approval Obtained
           </label>
 
-          <button type="submit" className="submit-btn">Submit Leave Request</button>
+          <button type="submit" className="submit-btn">
+            Submit Leave Request
+          </button>
         </form>
 
         {/* LEAVE REQUESTS */}
@@ -93,17 +146,20 @@ function Outpass() {
             <div key={req.id} className="leave-card">
               <h4>{req.reason}</h4>
               <p>
-                <strong>From:</strong>{" "}
-                {req.fromDate?.toLocaleDateString()}
+                <strong>From:</strong> {req.fromDate}
               </p>
               <p>
-                <strong>To:</strong>{" "}
-                {req.toDate?.toLocaleDateString()}
+                <strong>To:</strong> {req.toDate}
               </p>
-              <p>Parent Approval: {req.parentApproval ? "✅" : "❌"}</p>
+              <p>
+                Parent Approval: {req.parentApproval ? "✅" : "❌"}
+              </p>
               <span className={`status-badge ${req.status.toLowerCase()}`}>
-                {req.status === "Pending" ? "⏳ Pending" :
-                 req.status === "Approved" ? "✅ Approved" : "❌ Rejected"}
+                {req.status === "Pending"
+                  ? "⏳ Pending"
+                  : req.status === "Approved"
+                    ? "✅ Approved"
+                    : "❌ Rejected"}
               </span>
             </div>
           ))}
@@ -114,5 +170,6 @@ function Outpass() {
 }
 
 export default Outpass;
+
 
 

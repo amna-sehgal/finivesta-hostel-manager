@@ -140,8 +140,8 @@ export default function Signup() {
                             onChange={handleChange}
                         >
                             <option value="">Select Hostel</option>
-                            <option value="Hostel A">Krishna</option>
-                            <option value="Hostel B">Kaveri</option>
+                            <option value="Krishna">Krishna</option>
+                            <option value="Kaveri">Kaveri</option>
                         </select>
                     </div>
 

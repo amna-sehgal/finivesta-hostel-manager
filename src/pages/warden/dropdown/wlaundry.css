@@ -1,4 +1,16 @@
 /* CONTAINER & BACKGROUND */
+* {
+  pointer-events: auto;
+}
+.request-item,
+.request-actions,
+.action-btn {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+
 .laundry-container {
   padding: 2rem;
   background: linear-gradient(135deg, #f6f9ff 0%, #e8f1ff 100%);
@@ -526,6 +538,7 @@
 }
 /* LIVE REQUESTS */
 .live-requests {
+  z-index: 10;
   grid-column: span 2;
 }
 
@@ -586,6 +599,7 @@
 }
 
 .action-btn {
+  z-index: 10;
   padding: 0.45rem 0.9rem;
   border-radius: 8px;
   font-size: 0.75rem;
@@ -658,3 +672,7 @@
 .laundry-card {
   cursor: default;
 }
+.stat-box {
+  pointer-events: auto;
+}
+

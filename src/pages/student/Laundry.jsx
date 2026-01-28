@@ -211,7 +211,7 @@ function Laundry() {
 
           <div className="laundry-cards">
             {requests.map((req) => (
-              <div key={req._id} className="glass laundry-card">
+              <div key={req.id} className="glass laundry-card">
                 <h3>{req.type}</h3>
 
                 <p>
@@ -225,7 +225,7 @@ function Laundry() {
                 {req.status === "Pending" && (
                   <button
                     className="cancel-btn"
-                    onClick={() => handleCancelRequest(req._id)}
+                    onClick={() => handleCancelRequest(req.id)}
                   >
                     Cancel
                   </button>
