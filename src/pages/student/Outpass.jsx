@@ -14,54 +14,62 @@ function Outpass() {
     parentApproval: false,
   });
 
-  // 🔹 get logged-in student (adjust keys if needed)
   const student = JSON.parse(localStorage.getItem("student"));
 
   /* ================= FETCH STUDENT OUTPASSES ================= */
   useEffect(() => {
     if (!student?.email) return;
-
     fetch(`http://localhost:5000/api/outpass/student/${student.email}`)
       .then((res) => res.json())
-      .then((data) => {
-        setLeaveRequests(data.requests || []);
-      })
-      .catch((err) => console.error(err));
+      .then((data) => setLeaveRequests(data.requests || []))
+      .catch(console.error);
   }, [student]);
 
   /* ================= SUBMIT OUTPASS ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.fromDate || !formData.toDate) return;
+    if (!formData.reason || !formData.fromDate || !formData.toDate) return;
 
-    const res = await fetch(
-      "http://localhost:5000/api/outpass/student/request",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          studentName: student.name,
-          studentEmail: student.email,
-          roomno: student.roomno,
-          reason: formData.reason,
-          fromDate: formData.fromDate,
-          toDate: formData.toDate,
-          parentApproval: formData.parentApproval,
-        }),
+    try {
+      const res = await fetch(
+        "http://localhost:5000/api/outpass/student/request",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            reason: formData.reason,
+            fromDate: formData.fromDate.toISOString().split("T")[0],
+            toDate: formData.toDate.toISOString().split("T")[0],
+            parentApproval: formData.parentApproval,
+            studentEmail: student.email, // 🔥 THIS WAS MISSING
+          }),
+
+        }
+      );
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(err.message || "Failed to submit leave request");
+        return;
       }
-    );
 
-    const data = await res.json();
-    setLeaveRequests([data.request, ...leaveRequests]);
+      const data = await res.json();
+      setLeaveRequests([data.request, ...leaveRequests]);
 
-    setFormData({
-      reason: "",
-      fromDate: null,
-      toDate: null,
-      parentApproval: false,
-    });
+      // ✅ Alert on successful submission
+      alert("Leave request submitted successfully!");
+
+      setFormData({
+        reason: "",
+        fromDate: null,
+        toDate: null,
+        parentApproval: false,
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong. Please try again.");
+    }
   };
-
 
 
   return (
@@ -170,6 +178,7 @@ function Outpass() {
 }
 
 export default Outpass;
+
 
 
 

@@ -7,6 +7,7 @@ const Approval = () => {
   const titleRef = useRef();
   const analyticsRef = useRef();
 
+  const [requests, setRequests] = useState([]); // all requests
   const [pending, setPending] = useState([]);
 
   useEffect(() => {
@@ -36,10 +37,14 @@ const Approval = () => {
       ease: "power3.out",
     });
 
-    // Fetch pending outpasses
+    // Fetch all pending requests
     fetch("http://localhost:5000/api/outpass/warden/pending")
       .then((res) => res.json())
-      .then((data) => setPending(data.requests || []))
+      .then((data) => {
+        const allPending = data.requests || [];
+        setPending(allPending);
+        setRequests(allPending); // for analytics & filtering
+      })
       .catch(console.error);
   }, []);
 
@@ -48,10 +53,21 @@ const Approval = () => {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
-    }).then(() =>
-      setPending((prev) => prev.filter((p) => p.id !== id))
-    );
+    })
+      .then((res) => res.json())
+      .then((updated) => {
+        setPending((prev) => prev.filter((p) => p.id !== id));
+        setRequests((prev) =>
+          prev.map((r) => (r.id === id ? updated.request : r))
+        );
+      })
+      .catch(console.error);
   };
+
+  // Analytics counts
+  const approvedCount = requests.filter((r) => r.status === "Approved").length;
+  const rejectedCount = requests.filter((r) => r.status === "Rejected").length;
+  const aiFlaggedCount = requests.filter((r) => r.status === "High Risk").length;
 
   return (
     <>
@@ -72,28 +88,28 @@ const Approval = () => {
           </div>
           <div className="analytics-card green">
             <h3>Approved</h3>
-            <p>—</p>
+            <p>{approvedCount}</p>
           </div>
           <div className="analytics-card red">
             <h3>Rejected</h3>
-            <p>—</p>
+            <p>{rejectedCount}</p>
           </div>
           <div className="analytics-card purple">
             <h3>AI Flagged</h3>
-            <p>—</p>
+            <p>{aiFlaggedCount}</p>
           </div>
         </div>
 
-        {/* ================== PENDING REQUESTS ================== */}
+        {/* ================== FEATURE CARDS ================== */}
         <div className="approval-grid">
+          {/* ================= PENDING REQUESTS ================= */}
           <div className="approval-card">
             <h2>Pending Outpass Requests</h2>
             <p>Requests awaiting your approval with reason and duration.</p>
-
             <ul className="status-list">
               {pending.map((req) => (
                 <li key={req.id}>
-                  {req.studentName} – {req.reason}
+                  {req.studentName} – {req.reason} ({req.fromDate} to {req.toDate})
                   <div className="action-buttons">
                     <button
                       className="approve"
@@ -113,7 +129,39 @@ const Approval = () => {
             </ul>
           </div>
 
-          {/* ALL YOUR OTHER CARDS STAY AS-IS */}
+          {/* ================= PARENT VERIFICATION ================= */}
+          <div className="approval-card">
+            <h2>Parent Verification</h2>
+            <p>Check whether guardian has approved the outpass request.</p>
+            <ul className="status-list">
+              {requests.map((req) => (
+                <li key={req.id}>
+                  {req.parentApproval ? "✔ Verified" : "⏳ Awaiting Consent"} – {req.studentName}
+                </li>
+              ))}
+            </ul>
+            <button className="secondary-btn">Resend Verification</button>
+          </div>
+
+          {/* ================= AI RISK / EXCEPTIONS ================= */}
+          <div className="approval-card">
+            <h2>AI Risk & Exceptions</h2>
+            <p>Automatically flags unusual patterns or overdue requests.</p>
+            <div className="risk-box low">Low Risk – Routine Leave</div>
+            <div className="risk-box medium">Medium Risk – Long Duration</div>
+            <div className="risk-box high">High Risk – Repeated Late Night Outs</div>
+            <div className="alert-box">
+              {requests.filter((r) => r.status === "High Risk").length} Overstay Alerts Pending Review
+            </div>
+          </div>
+
+          {/* ================= QR PASS PREVIEW ================= */}
+          <div className="approval-card">
+            <h2>QR Outpass</h2>
+            <p>Encrypted QR for approved students, usable at gates.</p>
+            <div className="qr-mock">[ QR Code Preview ]</div>
+            <button className="secondary-btn">Generate QR Pass</button>
+          </div>
         </div>
       </div>
     </>
@@ -121,4 +169,3 @@ const Approval = () => {
 };
 
 export default Approval;
-

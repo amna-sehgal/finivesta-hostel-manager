@@ -1,0 +1,24 @@
+{
+  "students": {
+    "student001": {
+      "monthlyBudget": 0,
+      "expenses": []
+    },
+    "sam123@gm.com": {
+      "monthlyBudget": 8000,
+      "expenses": [
+        {
+          "id": 1769703471242,
+          "amount": 700,
+          "category": "Utilities",
+          "note": "",
+          "date": "2026-01-29T16:17:51.187Z"
+        }
+      ]
+    },
+    "sia123@gm.com": {
+      "monthlyBudget": 0,
+      "expenses": []
+    }
+  }
+}

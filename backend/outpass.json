@@ -1,3 +1,23 @@
 {
-  "requests": []
+  "requests": [
+    {
+      "id": "1769687279753",
+      "studentEmail": "sam123@gm.com",
+      "reason": "internship",
+      "fromDate": "2026-01-29",
+      "toDate": "2026-01-30",
+      "parentApproval": true,
+      "status": "Approved",
+      "createdAt": "2026-01-29T11:47:59.753Z"
+    },
+    {
+      "id": "1769617635125",
+      "reason": "internship",
+      "fromDate": "2026-01-28",
+      "toDate": "2026-01-30",
+      "parentApproval": true,
+      "status": "Approved",
+      "createdAt": "2026-01-28T16:27:15.125Z"
+    }
+  ]
 }

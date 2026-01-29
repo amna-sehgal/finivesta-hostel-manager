@@ -3,13 +3,54 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import fs from "fs";
 
+
+const notificationPath = "notifications.json";
+
+if (!fs.existsSync(notificationPath)) {
+  fs.writeFileSync(
+    notificationPath,
+    JSON.stringify({ notifications: [] }, null, 2)
+  );
+}
+
+const readNotifications = () =>
+  JSON.parse(fs.readFileSync(notificationPath, "utf-8"));
+
+const writeNotifications = (data) =>
+  fs.writeFileSync(notificationPath, JSON.stringify(data, null, 2));
+
+const createNotification = ({
+  type,
+  title,
+  message,
+  receiver,
+  studentEmail,
+}) => {
+  const data = readNotifications();
+
+  data.notifications.unshift({
+    id: Date.now().toString(),
+    type,
+    title,
+    message,
+    receiver,
+    studentEmail: studentEmail || null,
+    read: false,
+    createdAt: new Date().toISOString(),
+  });
+
+  writeNotifications(data);
+};
+
 const app = express();
 const PORT = 5000;
 
+
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
 app.use(express.json());
+
+
 
 // Ensure JSON files exist
 if (!fs.existsSync("students.json")) fs.writeFileSync("students.json", "[]");
@@ -349,27 +390,16 @@ const writeOutpass = (data) =>
 
 app.post("/api/outpass/student/request", (req, res) => {
   try {
-    const {
-      studentName,
-      studentEmail,
-      roomno,
-      reason,
-      fromDate,
-      toDate,
-      parentApproval,
-    } = req.body;
+    const { reason, fromDate, toDate, parentApproval, studentEmail } = req.body;
 
-    if (!studentName || !studentEmail || !reason || !fromDate || !toDate) {
+    if (!reason || !fromDate || !toDate) {
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     const outpassData = readOutpass();
-
     const newRequest = {
       id: Date.now().toString(),
-      studentName,
       studentEmail,
-      roomno,
       reason,
       fromDate,
       toDate,
@@ -377,6 +407,11 @@ app.post("/api/outpass/student/request", (req, res) => {
       status: "Pending",
       createdAt: new Date().toISOString(),
     };
+
+    if (!reason || !fromDate || !toDate || !studentEmail) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
 
     outpassData.requests.unshift(newRequest);
     writeOutpass(outpassData);
@@ -388,17 +423,29 @@ app.post("/api/outpass/student/request", (req, res) => {
   }
 });
 
-app.get("/api/outpass/student/:email", (req, res) => {
+app.get("/api/notifications/student/:email", (req, res) => {
   try {
-    const outpassData = readOutpass();
-    const requests = outpassData.requests.filter(
-      (r) => r.studentEmail === req.params.email
-    );
-    res.json({ requests });
+    const { email } = req.params;
+    const data = readNotifications();
+
+    const studentNotifications = data.notifications.filter((n) => {
+      if (n.receiver === "students") return true; // everyone
+      if (n.receiver === "student" && n.studentEmail) {
+        return n.studentEmail === email;
+      }
+      return false;
+    });
+
+    // Sort newest first
+    studentNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json({ notifications: studentNotifications });
   } catch (err) {
+    console.error("STUDENT NOTIFICATION ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 /* ================= WARDEN ================= */
 
@@ -415,6 +462,44 @@ app.get("/api/outpass/warden/pending", (req, res) => {
   }
 });
 
+app.post("/api/notifications/warden", (req, res) => {
+  try {
+    const { title, message, studentEmail } = req.body;
+
+    if (!title || !message) {
+      return res.status(400).json({ message: "Title and message required" });
+    }
+
+    createNotification({
+      type: "manual",
+      title,
+      message,
+      receiver: studentEmail ? "student" : "students",
+      studentEmail: studentEmail || null,
+    });
+
+    res.status(201).json({ message: "Notification sent successfully" });
+  } catch (err) {
+    console.error("WARDEN NOTIFICATION ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/api/outpass/student/:email", (req, res) => {
+  try {
+    const { email } = req.params;
+    const outpassData = readOutpass();
+    const studentRequests = outpassData.requests.filter(
+      (r) => r.studentEmail === email
+    );
+    res.json({ requests: studentRequests });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 app.patch("/api/outpass/warden/update/:id", (req, res) => {
   try {
     const { status } = req.body;
@@ -430,12 +515,160 @@ app.patch("/api/outpass/warden/update/:id", (req, res) => {
     outpassData.requests[index].status = status;
     writeOutpass(outpassData);
 
-    res.json({ request: outpassData.requests[index] });
+    const reqData = outpassData.requests[index];
+
+    // 🔔 CREATE NOTIFICATION
+    createNotification({
+      type: "outpass",
+      title: status === "Approved" ? "Outpass Approved" : "Outpass Rejected",
+      message:
+        status === "Approved"
+          ? `Your outpass from ${reqData.fromDate} to ${reqData.toDate} has been approved.`
+          : `Your outpass request has been rejected.`,
+      receiver: "student",
+      studentEmail: reqData.studentEmail,
+    });
+
+    res.json({ request: reqData });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
 
+app.get("/api/notifications/warden", (req, res) => {
+  try {
+    const data = readNotifications();
+    res.json({ notifications: data.notifications });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.delete("/api/notifications/warden/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = readNotifications();
+
+    const originalLength = data.notifications.length;
+
+    data.notifications = data.notifications.filter(
+      (n) => n.id !== id
+    );
+
+    if (data.notifications.length === originalLength) {
+      return res.status(404).json({ message: "Notice not found" });
+    }
+
+    writeNotifications(data);
+
+    res.status(200).json({ message: "Notice deleted successfully" });
+  } catch (err) {
+    console.error("DELETE NOTICE ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+const EXPENSES_FILE = "./expenses.json";
+
+
+if (!fs.existsSync(EXPENSES_FILE)) {
+  fs.writeFileSync(
+    EXPENSES_FILE,
+    JSON.stringify({ students: {} }, null, 2)
+  );
+}
+
+
+/* ---------- helpers ---------- */
+const readExpenses = () => {
+  const data = fs.readFileSync(EXPENSES_FILE, "utf-8");
+  return JSON.parse(data);
+};
+
+const writeExpenses = (data) => {
+  fs.writeFileSync(EXPENSES_FILE, JSON.stringify(data, null, 2));
+};
+
+/* ---------- GET expenses ---------- */
+app.get("/api/expenses/:studentId", (req, res) => {
+  const { studentId } = req.params;
+  const data = readExpenses();
+
+  if (!data.students[studentId]) {
+    data.students[studentId] = {
+      monthlyBudget: 0,
+      expenses: [],
+    };
+    writeExpenses(data);
+  }
+
+  res.json(data.students[studentId]);
+});
+
+/* ---------- SET monthly budget ---------- */
+app.post("/api/expenses/:studentId/budget", (req, res) => {
+  const { studentId } = req.params;
+  const { monthlyBudget } = req.body;
+
+  const data = readExpenses();
+
+  if (!data.students[studentId]) {
+    data.students[studentId] = {
+      monthlyBudget: 0,
+      expenses: [],
+    };
+  }
+
+  data.students[studentId].monthlyBudget = monthlyBudget;
+  writeExpenses(data);
+
+  res.json({ success: true });
+});
+
+/* ---------- ADD expense ---------- */
+app.post("/api/expenses/:studentId/add", (req, res) => {
+  const { studentId } = req.params;
+  const { amount, category, note, date } = req.body;
+
+  const data = readExpenses();
+
+  if (!data.students[studentId]) {
+    data.students[studentId] = {
+      monthlyBudget: 0,
+      expenses: [],
+    };
+  }
+
+  const newExpense = {
+    id: Date.now(),
+    amount,
+    category,
+    note,
+    date,
+  };
+
+  data.students[studentId].expenses.push(newExpense);
+  writeExpenses(data);
+
+  res.json(newExpense);
+});
+
+/* ---------- DELETE expense (optional but good) ---------- */
+app.delete("/api/expenses/:studentId/:expenseId", (req, res) => {
+  const { studentId, expenseId } = req.params;
+  const data = readExpenses();
+
+  if (!data.students[studentId]) {
+    return res.status(404).json({ error: "Student not found" });
+  }
+
+  data.students[studentId].expenses = data.students[studentId].expenses.filter(
+    (e) => e.id != expenseId
+  );
+
+  writeExpenses(data);
+  res.json({ success: true });
+});
 
 
 // Start server

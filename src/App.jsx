@@ -17,6 +17,7 @@ import Notices from "./pages/student/Notices";
 
 // ---------------- Warden Pages (Lazy) ----------------
 import { lazy, Suspense } from "react";
+import Expenses from "./pages/student/Expenses";
 
 // Lazy load warden components
 const WardenDashboard = lazy(() => import("./pages/warden/wdashboard"));
@@ -47,6 +48,7 @@ function App() {
         <Route path="/student/signup" element={<Signup />} />
         <Route path='/student/Sprofile' element={<Sprofile />} />
         <Route path= '/student/Notices' element={<Notices />} />
+        <Route path= '/student/expenses' element={<Expenses />} />
 
         {/* ---------------- Warden Routes ---------------- */}
         <Route

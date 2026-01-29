@@ -9,6 +9,7 @@ import { FaIdCard, FaUserCircle } from "react-icons/fa";
 import { GiNotebook } from "react-icons/gi";
 import { MdCampaign } from "react-icons/md";
 import { MdNotifications } from "react-icons/md";
+import { MdAccountBalanceWallet } from "react-icons/md";
 
 
 import "./sNavbar.css";
@@ -36,7 +37,7 @@ function Navbar() {
           Notices
         </NavLink>
 
-        <NavLink to="/student/notification">
+        <NavLink to="/student/notices">
           <MdNotifications />
           Notifications
         </NavLink>
@@ -49,6 +50,11 @@ function Navbar() {
         <NavLink to="/student/laundry">
           <MdLocalLaundryService />
           Laundry
+        </NavLink>
+
+        <NavLink to="/student/expenses">
+          <MdAccountBalanceWallet />
+          Expenses
         </NavLink>
       </div>
 
