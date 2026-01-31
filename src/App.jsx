@@ -14,7 +14,8 @@ import Login from "./pages/student/Login";
 import Signup from "./pages/student/Signup";
 import Sprofile from "./pages/student/Sprofile";
 import Notices from "./pages/student/Notices";
-
+import Utilities from "./pages/student/Utilities";
+import EmergencySOS from "./pages/student/Emergency";
 // ---------------- Warden Pages (Lazy) ----------------
 import { lazy, Suspense } from "react";
 import Expenses from "./pages/student/Expenses";
@@ -29,6 +30,7 @@ const Profile = lazy(() => import("./pages/warden/wprofile"));
 const Notification = lazy(() => import("./pages/warden/notification"));
 const LoginWarden = lazy(() => import("./pages/warden/wlogin"));
 const RegisterWarden = lazy(() => import("./pages/warden/register"));
+const Safety = lazy(() => import("./pages/warden/dropdown/safety"));
 
 function App() {
   return (
@@ -49,6 +51,7 @@ function App() {
         <Route path='/student/Sprofile' element={<Sprofile />} />
         <Route path= '/student/Notices' element={<Notices />} />
         <Route path= '/student/expenses' element={<Expenses />} />
+        <Route path= '/student/utilities' element={<Utilities />} />
 
         {/* ---------------- Warden Routes ---------------- */}
         <Route
@@ -120,6 +123,14 @@ function App() {
           element={
             <Suspense fallback={<div>Loading...</div>}>
               <RegisterWarden />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/warden/safety"
+          element={
+            <Suspense fallback={<div>Loading...</div>}>
+              <Safety />
             </Suspense>
           }
         />

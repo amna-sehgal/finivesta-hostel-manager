@@ -1,0 +1,74 @@
+.utilities-container {
+  padding: 2rem;
+  background: #fff5f7;
+  min-height: 100vh;
+}
+
+/* Header */
+.utility-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.utility-icon {
+  font-size: 2.6rem;
+  color: #ec4899;
+}
+
+/* Overview */
+.utility-stats {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.utility-stats .owe {
+  color: #be123c;
+}
+
+.utility-stats .get {
+  color: #9d174d;
+}
+
+/* Checkbox grid */
+.checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.6rem;
+  margin: 1rem 0;
+}
+
+/* Bill item */
+.utility-bill {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px dashed #fbcfe8;
+}
+
+.utility-bill p {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+/* Payer */
+.payer {
+  font-size: 0.85rem;
+  color: #9d174d;
+}
+.bill-btn{
+    background: linear-gradient(135deg, #daa7c7, #e32282);
+}
+.bill-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(185, 16, 126, 0.35);
+}
+.delete-btn{
+    background: linear-gradient(135deg, #fca5a5, #ef4444);
+}
+.card input:focus, select:focus{
+  border-color: #ec4899 !important;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.3) !important;
+}

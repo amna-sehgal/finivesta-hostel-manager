@@ -670,6 +670,179 @@ app.delete("/api/expenses/:studentId/:expenseId", (req, res) => {
   res.json({ success: true });
 });
 
+const UTILITIES_FILE = "./utilities.json";
+
+if (!fs.existsSync(UTILITIES_FILE)) {
+  fs.writeFileSync(
+    UTILITIES_FILE,
+    JSON.stringify({ rooms: {} }, null, 2)
+  );
+}
+
+const readUtilities = () => {
+  try {
+    const data = JSON.parse(fs.readFileSync(UTILITIES_FILE, "utf-8"));
+    if (!data.rooms) data.rooms = {};
+    return data;
+  } catch (err) {
+    console.error("Failed to read utilities.json:", err);
+    return { rooms: {} };
+  }
+};
+
+
+const writeUtilities = (data) => {
+  fs.writeFileSync(UTILITIES_FILE, JSON.stringify(data, null, 2));
+};
+
+app.get("/api/utilities/:roomId", (req, res) => {
+  const { roomId } = req.params;
+  const data = readUtilities();
+
+  if (!data.rooms[roomId]) {
+    data.rooms[roomId] = [];
+    writeUtilities(data);
+  }
+
+  res.json(data.rooms[roomId]);
+});
+
+// GET all roommates for a given room
+app.get("/api/utilities/roommates/:roomId", (req, res) => {
+  try {
+    const { roomId } = req.params;
+    const studentsData = JSON.parse(fs.readFileSync("students.json", "utf-8"));
+
+    // Get all students with the same room number
+    const roommates = studentsData
+      .filter(s => s.roomno === roomId)
+      .map(s => ({ name: s.fullName, email: s.email }));
+
+    res.json({ roommates });
+  } catch (err) {
+    console.error("Error fetching roommates:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+app.post("/api/utilities/:roomId/add", (req, res) => {
+  const { roomId } = req.params;
+  const { title, totalAmount, paidBy, participants } = req.body;
+
+  if (!title || !totalAmount || !paidBy || !participants?.length) {
+    return res.status(400).json({ message: "Missing fields" });
+  }
+
+  const data = readUtilities();
+
+  if (!data.rooms[roomId]) {
+    data.rooms[roomId] = [];
+  }
+
+  const splitAmount = totalAmount / participants.length;
+
+  const newBill = {
+    id: Date.now(),
+    title,
+    totalAmount,
+    paidBy,
+    participants,
+    splitAmount,
+    createdAt: new Date().toISOString(),
+  };
+
+  data.rooms[roomId].push(newBill);
+  writeUtilities(data);
+
+  res.status(201).json(newBill);
+});
+
+app.delete("/api/utilities/:roomId/:billId", (req, res) => {
+  const { roomId, billId } = req.params;
+  const data = readUtilities();
+
+  if (!data.rooms[roomId]) {
+    return res.status(404).json({ message: "Room not found" });
+  }
+
+  data.rooms[roomId] = data.rooms[roomId].filter(
+    (b) => b.id != billId
+  );
+
+  writeUtilities(data);
+  res.json({ success: true });
+});
+
+const SOS_FILE = "./sos.json";
+
+// helpers
+const readSOS = () => {
+  if (!fs.existsSync(SOS_FILE)) {
+    fs.writeFileSync(SOS_FILE, JSON.stringify({ sos: [] }, null, 2));
+  }
+  return JSON.parse(fs.readFileSync(SOS_FILE, "utf-8"));
+};
+
+const writeSOS = (data) =>
+  fs.writeFileSync(SOS_FILE, JSON.stringify(data, null, 2));
+
+// health check
+app.get("/", (req, res) => {
+  res.send("SOS Backend Running");
+});
+
+app.post("/api/sos", (req, res) => {
+  const { studentName, roomNumber, hostel, issue, message } = req.body;
+
+  if (!studentName || !roomNumber || !issue || !message) {
+    return res.status(400).json({ success: false });
+  }
+
+  const data = readSOS();
+
+  const newSOS = {
+    id: `sos_${Date.now()}`,
+    studentName,
+    roomNumber,
+    hostel,
+    issue,
+    message,
+    status: "active",
+    createdAt: new Date().toISOString()
+  };
+
+  data.sos.unshift(newSOS);
+  writeSOS(data);
+
+  res.status(201).json({ success: true, sos: newSOS });
+});
+
+app.get("/api/sos", (req, res) => {
+  const data = readSOS();
+  res.json(data.sos);
+});
+
+app.get("/api/sos/active", (req, res) => {
+  const data = readSOS();
+  res.json(data.sos.filter(s => s.status === "active"));
+});
+
+app.patch("/api/sos/:id", (req, res) => {
+  const { id } = req.params;
+  const data = readSOS();
+
+  const sos = data.sos.find(s => s.id === id);
+  if (!sos) return res.status(404).json({ success: false });
+
+  sos.status = "resolved";
+  writeSOS(data);
+
+  res.json({ success: true });
+});
+
+
+
 
 // Start server
 app.listen(5000, () => console.log("Server running on port 5000"));

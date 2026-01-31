@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
 import "./wdashboard.css";
 import Navbar from "./wnavbar";
@@ -19,6 +20,8 @@ function Dashboard() {
         { label: "Critical Alerts", value: 2, max: 10, color: "#F59E0B" },
         { label: "Mess Rating", value: 3, max: 5, color: "#10B981" },
     ];
+    const navigate = useNavigate();
+    const [sosAlert, setSosAlert] = useState(null);
 
     useEffect(() => {
         if (!svgRef.current) return;
@@ -69,6 +72,23 @@ function Dashboard() {
             0.2
         );
     }, []);
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            try {
+                const res = await fetch("http://localhost:5000/api/sos/active");
+                const data = await res.json();
+
+                if (data.length > 0) {
+                    setSosAlert(data[0]); // latest SOS
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }, 5000); // every 5 seconds
+
+        return () => clearInterval(interval);
+    }, []);
+
 
     return (
         <>
@@ -189,6 +209,30 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
+                {sosAlert && (
+                    <div className="sos-toast">
+                        <span>
+                            🚨 Emergency in Room {sosAlert.roomNumber}
+                        </span>
+
+                        <div>
+                            <button
+                                className="view-btn"
+                                onClick={() => navigate("/warden/safety")}
+                            >
+                                View
+                            </button>
+
+                            <button
+                                className="close-btn"
+                                onClick={() => setSosAlert(null)}
+                            >
+                                ❌
+                            </button>
+                        </div>
+                    </div>
+                )}
+
             </div>
         </>
     );

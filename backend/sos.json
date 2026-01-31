@@ -1,0 +1,34 @@
+{
+  "sos": [
+    {
+      "id": "sos_1769872589569",
+      "studentName": "dfc",
+      "roomNumber": "33",
+      "hostel": "Kaveri",
+      "issue": "Medical",
+      "message": "arm fracture",
+      "status": "resolved",
+      "createdAt": "2026-01-31T15:16:29.569Z"
+    },
+    {
+      "id": "sos_1769871853953",
+      "studentName": "dfc",
+      "roomNumber": "33",
+      "hostel": "Kaveri",
+      "issue": "Medical",
+      "message": "leg fracture",
+      "status": "resolved",
+      "createdAt": "2026-01-31T15:04:13.953Z"
+    },
+    {
+      "id": "sos_1769871217306",
+      "studentName": "dfc",
+      "roomNumber": "33",
+      "hostel": "Kaveri",
+      "issue": "Fire",
+      "message": "mess fire",
+      "status": "resolved",
+      "createdAt": "2026-01-31T14:53:37.306Z"
+    }
+  ]
+}

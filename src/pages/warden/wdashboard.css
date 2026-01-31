@@ -624,4 +624,34 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: #764ba2;
 }
+.sos-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #fff;
+  border-left: 5px solid #e53935;
+  padding: 14px 16px;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 999;
+}
+
+.sos-toast span {
+  font-weight: 600;
+}
+
+.sos-toast button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.view-btn {
+  color: #e53935;
+}
+
 

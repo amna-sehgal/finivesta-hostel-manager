@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/common/sNavbar";
+import EmergencySOS from "./Emergency";
 
 import {
   MdReportProblem,
@@ -20,6 +21,7 @@ import "./Dashboard.css";
 function Dashboard() {
   const [student, setStudent] = useState(null);
   const [animate, setAnimate] = useState(false);
+  const [openSOS, setOpenSOS] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,8 +37,9 @@ function Dashboard() {
   }
 
   const handleSOS = () => {
-    alert("🚨 SOS alert sent to warden and security!");
+    setOpenSOS(true);
   };
+
 
   return (
     <>
@@ -160,7 +163,10 @@ function Dashboard() {
         <button className="sos-button" onClick={handleSOS}>
           🚨 Emergency Assistance
         </button>
-
+        <EmergencySOS
+          isOpen={openSOS}
+          onClose={() => setOpenSOS(false)}
+        />
       </div>
     </>
   );

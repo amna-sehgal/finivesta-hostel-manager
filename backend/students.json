@@ -128,5 +128,15 @@
     "branch": "CSE",
     "entryDate": "2026-10-21",
     "roomno": "33"
+  },
+  {
+    "fullName": "dfc",
+    "email": "dfc@dfc.com",
+    "password": "012",
+    "phone": "",
+    "hostel": "Kaveri",
+    "branch": "CSE",
+    "entryDate": "2026-08-26",
+    "roomno": "33"
   }
 ]
