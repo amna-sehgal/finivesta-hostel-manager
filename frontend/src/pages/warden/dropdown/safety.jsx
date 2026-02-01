@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Safety.css";
+import "./safety.css";
 import Navbar from "../wnavbar";
 
 const Safety = () => {
