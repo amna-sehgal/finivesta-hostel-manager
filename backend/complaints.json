@@ -1,0 +1,43 @@
+{
+  "complaints": [
+    {
+      "id": "cmp_1769952999527",
+      "studentEmail": "student@mail.com",
+      "studentName": "Student",
+      "hostel": "A Block",
+      "roomNumber": "203",
+      "category": "Cleanliness",
+      "description": "dirt",
+      "priority": "Low",
+      "status": "Resolved",
+      "createdAt": "2026-02-01T13:36:39.527Z",
+      "resolvedAt": "2026-02-01T13:37:00.251Z"
+    },
+    {
+      "id": "cmp_1769952406668",
+      "studentEmail": "student@mail.com",
+      "studentName": "Student",
+      "hostel": "A Block",
+      "roomNumber": "203",
+      "category": "Cleanliness",
+      "description": "lot of dirt in room",
+      "priority": "Low",
+      "status": "Resolved",
+      "createdAt": "2026-02-01T13:26:46.668Z",
+      "resolvedAt": "2026-02-01T13:27:38.858Z"
+    },
+    {
+      "id": "cmp_1769950843492",
+      "studentEmail": "student@mail.com",
+      "studentName": "Student",
+      "hostel": "A Block",
+      "roomNumber": "203",
+      "category": "Water",
+      "description": "water shortage",
+      "priority": "Critical",
+      "status": "Resolved",
+      "createdAt": "2026-02-01T13:00:43.492Z",
+      "resolvedAt": "2026-02-01T13:27:20.255Z"
+    }
+  ]
+}

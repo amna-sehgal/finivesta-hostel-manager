@@ -120,6 +120,31 @@ app.post("/api/warden/login", (req, res) => {
   res.status(200).json({ message: "Login successful", warden });
 });
 
+// PATCH student profile
+app.patch("/api/student/update/:email", (req, res) => {
+  try {
+    const { email } = req.params;
+    const updates = req.body; // { fullName, phone, hostel, branch, roomno, birthDate }
+
+    const studentsData = JSON.parse(fs.readFileSync("students.json", "utf-8"));
+    const studentIndex = studentsData.findIndex(s => s.email === email);
+
+    if (studentIndex === -1) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Update only provided fields
+    studentsData[studentIndex] = { ...studentsData[studentIndex], ...updates };
+    fs.writeFileSync("students.json", JSON.stringify(studentsData, null, 2));
+
+    res.status(200).json({ message: "Profile updated", student: studentsData[studentIndex] });
+  } catch (err) {
+    console.error("UPDATE STUDENT ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
 // ------------------ Mess Backend ------------------
 const messDataPath = "mess.json";
 const studentFeedbackPath = "studentFeedback.json";
@@ -370,6 +395,84 @@ app.patch("/api/laundry/warden/update/:id", (req, res) => {
   }
 });
 
+// DELETE/PATCH cancel laundry request (student) - only if Pending
+app.patch("/api/laundry/student/cancel/:id", (req, res) => {
+  try {
+    const { id } = req.params;
+    const laundryData = JSON.parse(fs.readFileSync(laundryDataPath, "utf-8"));
+    const requestIndex = laundryData.requests.findIndex((r) => r.id === id);
+    
+    if (requestIndex === -1) {
+      return res.status(404).json({ message: "Request not found" });
+    }
+
+    const request = laundryData.requests[requestIndex];
+    
+    // Only allow cancellation if status is Pending
+    if (request.status !== "Pending") {
+      return res.status(400).json({ message: "Can only cancel pending requests" });
+    }
+
+    laundryData.requests.splice(requestIndex, 1);
+    fs.writeFileSync(laundryDataPath, JSON.stringify(laundryData, null, 2));
+
+    res.status(200).json({ message: "Laundry request cancelled successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// Machine Stats Persistence
+const MACHINE_STATS_FILE = "./machineStats.json";
+
+if (!fs.existsSync(MACHINE_STATS_FILE)) {
+  fs.writeFileSync(
+    MACHINE_STATS_FILE,
+    JSON.stringify({
+      total: 24,
+      operational: 21,
+      maintenance: 2,
+      outOfService: 1,
+    }, null, 2)
+  );
+}
+
+// GET machine stats (warden)
+app.get("/api/laundry/machine-stats", (req, res) => {
+  try {
+    const stats = JSON.parse(fs.readFileSync(MACHINE_STATS_FILE, "utf-8"));
+    res.status(200).json(stats);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// POST/PATCH update machine stats (warden)
+app.post("/api/laundry/machine-stats", (req, res) => {
+  try {
+    const { total, operational, maintenance, outOfService } = req.body;
+    
+    if (total === undefined || operational === undefined || maintenance === undefined || outOfService === undefined) {
+      return res.status(400).json({ message: "All stats fields are required" });
+    }
+
+    const stats = {
+      total,
+      operational,
+      maintenance,
+      outOfService,
+    };
+
+    fs.writeFileSync(MACHINE_STATS_FILE, JSON.stringify(stats, null, 2));
+    res.status(200).json({ message: "Machine stats updated", stats });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 const outpassDataPath = "outpass.json";
 
 // Ensure JSON exists
@@ -429,22 +532,23 @@ app.get("/api/notifications/student/:email", (req, res) => {
     const data = readNotifications();
 
     const studentNotifications = data.notifications.filter((n) => {
-      if (n.receiver === "students") return true; // everyone
-      if (n.receiver === "student" && n.studentEmail) {
-        return n.studentEmail === email;
-      }
+      if (n.receiver === "students" && n.type !== "complaint") return true;
+
+      if (n.receiver === "student" && n.studentEmail === email) return true;
+
       return false;
     });
 
-    // Sort newest first
-    studentNotifications.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    studentNotifications.sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
 
     res.json({ notifications: studentNotifications });
   } catch (err) {
-    console.error("STUDENT NOTIFICATION ERROR:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 /* ================= WARDEN ================= */
@@ -538,11 +642,17 @@ app.patch("/api/outpass/warden/update/:id", (req, res) => {
 app.get("/api/notifications/warden", (req, res) => {
   try {
     const data = readNotifications();
-    res.json({ notifications: data.notifications });
+
+    const wardenNotifications = data.notifications.filter(
+      (n) => n.receiver === "warden" || n.type === "manual"
+    );
+
+    res.json({ notifications: wardenNotifications });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 app.delete("/api/notifications/warden/:id", (req, res) => {
   try {
@@ -567,6 +677,25 @@ app.delete("/api/notifications/warden/:id", (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+app.get("/api/notifications/student/:email", (req, res) => {
+  try {
+    const { email } = req.params;
+    const data = readNotifications();
+
+    const studentNotifications = data.notifications.filter(
+      (n) => 
+        (n.receiver === "student" && n.studentEmail === email) ||
+        (n.receiver === "students") // broadcast to all
+    );
+
+    res.json({ notifications: studentNotifications });
+  } catch (err) {
+    console.error("STUDENT NOTIFICATIONS ERROR:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 const EXPENSES_FILE = "./expenses.json";
 
@@ -841,6 +970,138 @@ app.patch("/api/sos/:id", (req, res) => {
   res.json({ success: true });
 });
 
+const COMPLAINTS_FILE = "./complaints.json";
+
+if (!fs.existsSync(COMPLAINTS_FILE)) {
+  fs.writeFileSync(
+    COMPLAINTS_FILE,
+    JSON.stringify({ complaints: [] }, null, 2)
+  );
+}
+
+const readComplaints = () =>
+  JSON.parse(fs.readFileSync(COMPLAINTS_FILE, "utf-8"));
+
+const writeComplaints = (data) =>
+  fs.writeFileSync(COMPLAINTS_FILE, JSON.stringify(data, null, 2));
+
+app.post("/api/complaints/student", (req, res) => {
+  try {
+    const {
+      studentEmail,
+      studentName,
+      hostel,
+      roomNumber,
+      category,
+      description,
+      priority
+    } = req.body;
+
+    if (!studentEmail || !category || !description) {
+      return res.status(400).json({ message: "Missing fields" });
+    }
+
+    const data = readComplaints();
+
+    const newComplaint = {
+      id: `cmp_${Date.now()}`,
+      studentEmail,
+      studentName,
+      hostel,
+      roomNumber,
+      category,
+      description,
+      priority: priority || "Normal",
+      status: "Pending",
+      createdAt: new Date().toISOString(),
+      resolvedAt: null
+    };
+
+    data.complaints.unshift(newComplaint);
+    writeComplaints(data);
+
+    // 🔔 notify warden
+    createNotification({
+      type: "complaint",
+      title: "New Complaint Raised",
+      message: `${category} complaint raised by ${studentName}`,
+      receiver: "warden" // warden sees all
+    });
+
+    res.status(201).json({ complaint: newComplaint });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/api/complaints/student/:email", (req, res) => {
+  const { email } = req.params;
+  const data = readComplaints();
+
+  const myComplaints = data.complaints.filter(
+    c => c.studentEmail === email
+  );
+
+  res.json({ complaints: myComplaints });
+});
+
+app.get("/api/complaints/warden", (req, res) => {
+  const data = readComplaints();
+  res.json({ complaints: data.complaints });
+});
+
+app.patch("/api/complaints/warden/:id", (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const data = readComplaints();
+  const complaint = data.complaints.find(c => c.id === id);
+
+  if (!complaint) {
+    return res.status(404).json({ message: "Complaint not found" });
+  }
+
+  complaint.status = status;
+
+  if (status === "Resolved") {
+    complaint.resolvedAt = new Date().toISOString();
+
+    // 🔔 notify student
+    createNotification({
+      type: "complaint",
+      title: "Complaint Resolved",
+      message: `Your ${complaint.category} complaint has been resolved.`,
+      receiver: "student",
+      studentEmail: complaint.studentEmail
+    });
+  }
+
+  writeComplaints(data);
+  res.json({ complaint });
+});
+
+app.get("/api/complaints/warden/active-count", (req, res) => {
+  const data = readComplaints();
+  const active = data.complaints.filter(
+    c => c.status !== "Resolved"
+  );
+  res.json({ count: active.length });
+});
+app.delete("/api/complaints/student/:id", (req, res) => {
+  const { id } = req.params;
+  const data = readComplaints();
+
+  const originalLength = data.complaints.length;
+  data.complaints = data.complaints.filter(c => c.id !== id);
+
+  if (data.complaints.length === originalLength) {
+    return res.status(404).json({ message: "Complaint not found" });
+  }
+
+  writeComplaints(data);
+  res.json({ success: true });
+});
 
 
 

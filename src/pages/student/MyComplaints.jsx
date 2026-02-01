@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/common/sNavbar";
 import {
   MdOutlineWater,
@@ -13,38 +13,19 @@ import { GiNotebook } from "react-icons/gi";
 import "./MyComplaints.css";
 
 function MyComplaints() {
-  const [complaints, setComplaints] = useState([
-    {
-      id: 1,
-      category: "Water",
-      description: "Water leakage in bathroom",
-      status: "Pending",
-      priority: "Critical",
-      date: "2026-01-22",
-    },
-    {
-      id: 2,
-      category: "WiFi",
-      description: "WiFi not working in room",
-      status: "In Progress",
-      priority: "Normal",
-      date: "2026-01-21",
-    },
-    {
-      id: 3,
-      category: "Cleanliness",
-      description: "Washroom not cleaned properly",
-      status: "Resolved",
-      priority: "Low",
-      date: "2026-01-20",
-    },
-  ]);
-
+  const [complaints, setComplaints] = useState([]);
   const [filter, setFilter] = useState("All");
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = (id) => {
-    setComplaints((prev) => prev.filter((c) => c.id !== id));
-  };
+  useEffect(() => {
+    fetch("http://localhost:5000/api/complaints/student/student@mail.com")
+      .then((res) => res.json())
+      .then((data) => {
+        setComplaints(data.complaints || []);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
 
   const filteredComplaints =
     filter === "All"
@@ -67,19 +48,24 @@ function MyComplaints() {
         return <MdReportProblem style={{ color: "#95a5a6" }} />;
     }
   };
+  const handleDelete = async (id) => {
+    await fetch(`http://localhost:5000/api/complaints/student/${id}`, {
+      method: "DELETE",
+    });
+    setComplaints(prev => prev.filter(c => c.id !== id));
+  };
+
 
   return (
     <>
       <Navbar />
 
       <div className="complaints-root">
-        {/* HEADER */}
         <div className="page-header">
           <GiNotebook className="header-icon" />
           <h2>My Complaints</h2>
         </div>
 
-        {/* FILTER BAR */}
         <div className="filter-bar">
           {["All", "Water", "WiFi", "Cleanliness", "Fan", "Electrical", "Other"].map((cat) => (
             <button
@@ -92,13 +78,11 @@ function MyComplaints() {
           ))}
         </div>
 
-        {/* EMPTY STATE */}
-        {filteredComplaints.length === 0 ? (
+        {loading ? (
+          <p style={{ textAlign: "center" }}>Loading...</p>
+        ) : filteredComplaints.length === 0 ? (
           <div className="empty-state">
-            <img
-              src="/Screenshot 2026-01-25 120147.png"
-              alt="No complaints"
-            />
+            <img src="/Screenshot 2026-01-25 120147.png" alt="No complaints" />
             <p>No complaints found!</p>
           </div>
         ) : (
@@ -128,7 +112,9 @@ function MyComplaints() {
                   </span>
 
                   <div className="footer-right">
-                    <span className="complaint-date">{c.date}</span>
+                    <span className="complaint-date">
+                      {new Date(c.createdAt).toLocaleDateString()}
+                    </span>
                     <MdDeleteOutline
                       className="delete-icon"
                       onClick={() => handleDelete(c.id)}
@@ -145,3 +131,4 @@ function MyComplaints() {
 }
 
 export default MyComplaints;
+

@@ -1,6 +1,106 @@
 {
   "notifications": [
     {
+      "id": "1769953020251",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your Cleanliness complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-01T13:37:00.251Z"
+    },
+    {
+      "id": "1769952999533",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "Cleanliness complaint raised by Student",
+      "receiver": "warden",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-01T13:36:39.533Z"
+    },
+    {
+      "id": "1769952458858",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your Cleanliness complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-01T13:27:38.858Z"
+    },
+    {
+      "id": "1769952440255",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your Water complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-01T13:27:20.255Z"
+    },
+    {
+      "id": "1769952406670",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "Cleanliness complaint raised by Student",
+      "receiver": "warden",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-01T13:26:46.670Z"
+    },
+    {
+      "id": "1769950843500",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "Water complaint raised by Student",
+      "receiver": "students",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-01T13:00:43.500Z"
+    },
+    {
+      "id": "1769950810338",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your Electrical complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-01T13:00:10.338Z"
+    },
+    {
+      "id": "1769937023854",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "Electrical complaint raised by Student",
+      "receiver": "students",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-01T09:10:23.854Z"
+    },
+    {
+      "id": "1769936945869",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your WiFi complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-01T09:09:05.869Z"
+    },
+    {
+      "id": "1769936868899",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "WiFi complaint raised by Student",
+      "receiver": "students",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-01T09:07:48.899Z"
+    },
+    {
       "id": "1769687292778",
       "type": "outpass",
       "title": "Outpass Approved",

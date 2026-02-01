@@ -52,14 +52,32 @@ const Laundry = () => {
   }, []);
 
   useEffect(() => {
-    const savedStats = localStorage.getItem("machineStats");
-    if (savedStats) {
-      setMachineStats(JSON.parse(savedStats));
-    }
+    // Fetch machine stats from backend
+    fetch("/api/laundry/machine-stats")
+      .then((res) => res.json())
+      .then((data) => setMachineStats(data))
+      .catch((err) => console.error("Error fetching stats:", err));
   }, []);
 
+  // Save machine stats to backend when they change with debounce
   useEffect(() => {
-    localStorage.setItem("machineStats", JSON.stringify(machineStats));
+    // Only save if we have all required fields
+    if (machineStats.total !== undefined && machineStats.operational !== undefined) {
+      const timer = setTimeout(() => {
+        fetch("/api/laundry/machine-stats", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(machineStats)
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Stats saved successfully:", data);
+          })
+          .catch((err) => console.error("Error saving stats:", err));
+      }, 500); // Debounce for 500ms
+      
+      return () => clearTimeout(timer);
+    }
   }, [machineStats]);
 
 
@@ -75,7 +93,27 @@ const Laundry = () => {
       const data = await res.json();
       if (res.ok) {
         setRequests((prev) =>
-          prev.map((r) => (r._id === id ? data.request : r))
+          prev.map((r) => (r.id === id ? data.request : r))
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Save pickup date without changing status
+  const savePickupDate = async (id, pickupDate) => {
+    console.log("SAVE PICKUP DATE", id, pickupDate);
+    try {
+      const res = await fetch(`/api/laundry/warden/update/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pickupDate })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setRequests((prev) =>
+          prev.map((r) => (r.id === id ? data.request : r))
         );
       }
     } catch (err) {
@@ -275,17 +313,59 @@ const Laundry = () => {
                       )}
 
                       {req.status === "Processing" && (
-                        <button
-                          type="button"
-                          className="action-btn process"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            updateStatus(req.id, "Processing");
-                          }}
-                        >
-                          Mark Processing
-                        </button>
+                        <>
+                          <button
+                            type="button"
+                            className="action-btn process"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedRequestId(req.id);
+                              setShowPickupModal(true);
+                            }}
+                          >
+                            Add Pickup Date
+                          </button>
+                          <button
+                            type="button"
+                            className="action-btn process"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              updateStatus(req.id, "Done");
+                            }}
+                          >
+                            Done
+                          </button>
+                        </>
+                      )}
+
+                      {req.status === "Done" && (
+                        <>
+                          <button
+                            type="button"
+                            className="action-btn process"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              setSelectedRequestId(req.id);
+                              setShowPickupModal(true);
+                            }}
+                          >
+                            Add Pickup Date
+                          </button>
+                          <button
+                            type="button"
+                            className="action-btn process"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              updateStatus(req.id, "Done");
+                            }}
+                          >
+                            Done
+                          </button>
+                        </>
                       )}
 
                     </div>
@@ -451,7 +531,7 @@ const Laundry = () => {
             />
             <button
               onClick={() => {
-                updateStatus(selectedRequestId, "Delivered", pickupDate);
+                savePickupDate(selectedRequestId, pickupDate);
                 setShowPickupModal(false);
                 setPickupDate("");
               }}

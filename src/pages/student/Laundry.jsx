@@ -33,10 +33,17 @@ function Laundry() {
 
   // Fetch student laundry requests
   useEffect(() => {
-    fetch(`/api/laundry/student/${studentEmail}`)
-      .then((res) => res.json())
-      .then((data) => setRequests(data.requests))
-      .catch((err) => console.error(err));
+    const fetchRequests = () => {
+      fetch(`/api/laundry/student/${studentEmail}`)
+        .then((res) => res.json())
+        .then((data) => setRequests(data.requests))
+        .catch((err) => console.error(err));
+    };
+
+    fetchRequests();
+    // Auto-refresh every 10 seconds to get updates from warden
+    const interval = setInterval(fetchRequests, 10000);
+    return () => clearInterval(interval);
   }, [studentEmail]);
 
   // Schedule new laundry pickup
@@ -85,7 +92,7 @@ function Laundry() {
 
       if (res.ok) {
         setRequests((prev) =>
-          prev.filter((r) => r._id !== requestId)
+          prev.filter((r) => r.id !== requestId)
         );
         alert("Laundry request cancelled");
       } else {
@@ -127,7 +134,7 @@ function Laundry() {
           <div className="status-item">
             <HiOutlineTruck />
             <span>Processing</span>
-            <strong>{processingCount ? "Yes" : "No"}</strong>
+            <strong>{processingCount > 0 ? "Yes" : "No"}</strong>
           </div>
 
           <div className="status-item">
@@ -135,11 +142,12 @@ function Laundry() {
             <span>Next Pickup</span>
             <strong>
               {(() => {
-                const nextPending = requests.find(
-                  (r) => r.status === "Pending"
+                // Find the first request with pickupDate (Processing or Done status)
+                const nextWithDate = requests.find(
+                  (r) => r.pickupDate && (r.status === "Processing" || r.status === "Done")
                 );
-                return nextPending
-                  ? new Date(nextPending.createdAt).toLocaleDateString()
+                return nextWithDate
+                  ? new Date(nextWithDate.pickupDate).toLocaleDateString()
                   : "N/A";
               })()}
             </strong>
@@ -213,10 +221,6 @@ function Laundry() {
             {requests.map((req) => (
               <div key={req.id} className="glass laundry-card">
                 <h3>{req.type}</h3>
-
-                <p>
-                  Pickup: {new Date(req.createdAt).toLocaleDateString()}
-                </p>
 
                 <span className={`status-tag ${req.status.toLowerCase()}`}>
                   {req.status}

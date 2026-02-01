@@ -22,8 +22,11 @@ function Dashboard() {
   const [student, setStudent] = useState(null);
   const [animate, setAnimate] = useState(false);
   const [openSOS, setOpenSOS] = useState(false);
+  const [activeCount, setActiveCount] = useState(0);
+
   const navigate = useNavigate();
 
+  // 1️⃣ Load student
   useEffect(() => {
     const storedStudent = localStorage.getItem("student");
     if (storedStudent) {
@@ -32,13 +35,27 @@ function Dashboard() {
     }
   }, []);
 
+  // 2️⃣ Fetch complaints (HOOK IS ALWAYS CALLED)
+  useEffect(() => {
+    if (!student) return;
+
+    fetch(`http://localhost:5000/api/complaints/student/${student.email}`)
+      .then(res => res.json())
+      .then(data => {
+        const active = data.complaints.filter(
+          c => c.status !== "Resolved"
+        );
+        setActiveCount(active.length);
+      })
+      .catch(err => console.error(err));
+  }, [student]);
+
+  // ❗ Return comes AFTER all hooks
   if (!student) {
     return <p style={{ padding: "20px" }}>Loading...</p>;
   }
 
-  const handleSOS = () => {
-    setOpenSOS(true);
-  };
+  const handleSOS = () => setOpenSOS(true);
 
 
   return (
@@ -76,7 +93,7 @@ function Dashboard() {
           <div className="stat-box stat-hover">
             <MdReportProblem className="stat-icon" />
             <div>
-              <strong>2</strong>
+              <strong>{activeCount}</strong>
               <p>Active Complaints</p>
             </div>
           </div>

@@ -15,7 +15,7 @@ const Notification = () => {
   const fetchNotices = () => {
     fetch("http://localhost:5000/api/notifications/warden")
       .then((res) => res.json())
-      .then((data) => setNotices(data.notifications))
+      .then((data) => setNotices(data.notifications || []))
       .catch(console.error);
   };
 
@@ -67,7 +67,14 @@ const Notification = () => {
       .catch(console.error);
   };
 
+  /* 🔹 SEPARATION LOGIC */
+  const incomingNotifications = notices.filter(
+    (n) => n.type === "complaint" && n.receiver === "warden"
+  );
 
+  const postedNotices = notices.filter(
+    (n) => n.type === "manual"
+  );
 
   return (
     <>
@@ -118,6 +125,29 @@ const Notification = () => {
             </form>
           </div>
 
+          {/* INCOMING COMPLAINTS */}
+          <div className="notification-card alert">
+            <div className="notification-header">
+              <span className="notification-icon">📥</span>
+              <h2>Incoming Complaints</h2>
+            </div>
+
+            {incomingNotifications.length === 0 ? (
+              <p className="notification-item">No incoming complaints</p>
+            ) : (
+              <ul className="notification-list">
+                {incomingNotifications.map((n) => (
+                  <li key={n.id} className="notification-item">
+                    <div className="notice-text">
+                      <strong>{n.title}</strong>
+                      <p>{n.message}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
           {/* POSTED NOTICES */}
           <div className="notification-card alert">
             <div className="notification-header">
@@ -125,11 +155,11 @@ const Notification = () => {
               <h2>Posted Notices</h2>
             </div>
 
-            {notices.length === 0 ? (
+            {postedNotices.length === 0 ? (
               <p className="notification-item">No notices posted yet</p>
             ) : (
               <ul className="notification-list">
-                {notices.map((n) => (
+                {postedNotices.map((n) => (
                   <li key={n.id} className="notification-item">
                     <div className="notice-text">
                       <strong>{n.title}</strong>
@@ -145,7 +175,6 @@ const Notification = () => {
                     </button>
                   </li>
                 ))}
-
               </ul>
             )}
           </div>
@@ -156,3 +185,4 @@ const Notification = () => {
 };
 
 export default Notification;
+

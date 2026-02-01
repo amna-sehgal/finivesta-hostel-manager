@@ -18,6 +18,7 @@ function RaiseComplaint() {
     const [filePreview, setFilePreview] = useState(null);
     const [description, setDescription] = useState("");
     const [priority, setPriority] = useState("Normal");
+    const [loading, setLoading] = useState(false);
 
     const categories = [
         { name: "Water", icon: <MdOutlineWater style={{ color: "#3498db" }} /> },
@@ -35,26 +36,52 @@ function RaiseComplaint() {
     };
 
     const handleCategoryClick = (name) => {
-        // Toggle selection: if already selected, deselect
         if (selectedCategory === name) {
-            setSelectedCategory(""); // deselect
-            setPriority("Normal");   // reset priority
+            setSelectedCategory("");
+            setPriority("Normal");
         } else {
             setSelectedCategory(name);
-            // Temporary AI priority placeholder
             if (name === "Water" || name === "Electrical") setPriority("Critical");
             else if (name === "Cleanliness") setPriority("Low");
             else setPriority("Normal");
         }
     };
 
+    const handleSubmit = async () => {
+        if (!selectedCategory || !description.trim()) {
+            alert("Please select a category and enter description");
+            return;
+        }
 
-    const handleSubmit = () => {
-        alert(`Complaint submitted!\nCategory: ${selectedCategory}\nPriority: ${priority}`);
-        setSelectedCategory("");
-        setFilePreview(null);
-        setDescription("");
-        setPriority("Normal");
+        try {
+            setLoading(true);
+
+            await fetch("http://localhost:5000/api/complaints/student", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    studentEmail: "student@mail.com", // later from auth
+                    studentName: "Student",
+                    hostel: "A Block",
+                    roomNumber: "203",
+                    category: selectedCategory,
+                    description,
+                    priority,
+                }),
+            });
+
+            alert("Complaint submitted successfully!");
+
+            setSelectedCategory("");
+            setFilePreview(null);
+            setDescription("");
+            setPriority("Normal");
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -62,13 +89,11 @@ function RaiseComplaint() {
             <Navbar />
             <div className="raise-root">
 
-                {/* HEADING */}
                 <div className="page-header">
                     <GiNotebook className="header-icon" />
                     <h2>Raise a Complaint <HiSparkles className="sparkle" /></h2>
                 </div>
 
-                {/* CATEGORY SELECTION AS CARDS */}
                 <div className="category-grid">
                     {categories.map((cat) => (
                         <div
@@ -82,7 +107,6 @@ function RaiseComplaint() {
                     ))}
                 </div>
 
-                {/* PRIORITY DROPDOWN */}
                 <div className="priority-dropdown">
                     <label>Priority:</label>
                     <select value={priority} onChange={(e) => setPriority(e.target.value)}>
@@ -92,7 +116,6 @@ function RaiseComplaint() {
                     </select>
                 </div>
 
-                {/* FILE UPLOAD */}
                 <div className="upload-section">
                     <label htmlFor="file-upload" className="upload-label">
                         <FiUpload className="upload-icon" /> Upload Image/Video
@@ -105,7 +128,6 @@ function RaiseComplaint() {
                     )}
                 </div>
 
-                {/* DESCRIPTION */}
                 <textarea
                     className="desc-input"
                     placeholder="Describe your complaint..."
@@ -113,9 +135,8 @@ function RaiseComplaint() {
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
-                {/* SUBMIT BUTTON */}
-                <button className="submit-btn1" onClick={handleSubmit}>
-                    Submit Complaint
+                <button className="submit-btn1" onClick={handleSubmit} disabled={loading}>
+                    {loading ? "Submitting..." : "Submit Complaint"}
                 </button>
             </div>
         </>
@@ -123,4 +144,3 @@ function RaiseComplaint() {
 }
 
 export default RaiseComplaint;
-

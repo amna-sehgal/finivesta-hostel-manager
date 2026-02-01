@@ -5,7 +5,7 @@
       "studentEmail": "amna@example.com",
       "type": "Regular Clothes",
       "instructions": "Use mild detergent",
-      "status": "In Progress",
+      "status": "Pending",
       "createdAt": "2026-01-25T14:34:49.269Z"
     },
     {
@@ -13,7 +13,7 @@
       "studentEmail": "amna@example.com",
       "type": "Regular Clothes",
       "instructions": "Use mild detergent",
-      "status": "Pending",
+      "status": "Processing",
       "createdAt": "2026-01-25T16:34:53.245Z"
     },
     {
@@ -21,15 +21,16 @@
       "studentEmail": "amna@example.com",
       "type": "Regular Clothes",
       "instructions": "Use mild detergent",
-      "status": "Pending",
-      "createdAt": "2026-01-25T16:40:02.677Z"
+      "status": "Processing",
+      "createdAt": "2026-01-25T16:40:02.677Z",
+      "pickupDate": "2026-02-05"
     },
     {
       "id": "1769359586183",
       "studentEmail": "amna@example.com",
       "type": "Regular Clothes",
       "instructions": "Use mild detergent",
-      "status": "Pending",
+      "status": "Processing",
       "createdAt": "2026-01-25T16:46:26.183Z"
     },
     {
@@ -37,16 +38,41 @@
       "studentEmail": "student@example.com",
       "type": "Delicates",
       "instructions": "light wash",
-      "status": "Pending",
-      "createdAt": "2026-01-26T07:22:40.082Z"
+      "status": "Done",
+      "createdAt": "2026-01-26T07:22:40.082Z",
+      "pickupDate": "2026-02-17"
     },
     {
       "id": "1769425698546",
       "studentEmail": "student@example.com",
       "type": "Regular Clothes",
       "instructions": "normal-wash",
-      "status": "Pending",
+      "status": "Done",
       "createdAt": "2026-01-26T11:08:18.546Z"
+    },
+    {
+      "id": "1769955096300",
+      "studentEmail": "student@example.com",
+      "type": "Delicates",
+      "instructions": "light wash",
+      "status": "Done",
+      "createdAt": "2026-02-01T14:11:36.300Z"
+    },
+    {
+      "id": "1769957338137",
+      "studentEmail": "student@example.com",
+      "type": "Bedsheets",
+      "instructions": "white",
+      "status": "Done",
+      "createdAt": "2026-02-01T14:48:58.137Z"
+    },
+    {
+      "id": "1769958422578",
+      "studentEmail": "student@example.com",
+      "type": "Delicates",
+      "instructions": "light wash",
+      "status": "Done",
+      "createdAt": "2026-02-01T15:07:02.578Z"
     }
   ]
 }
