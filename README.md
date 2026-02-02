@@ -136,7 +136,7 @@ A single app to manage all hostel needs:
 - Express.js  
 
 ## 📂 Project Structure
-HostelHive/
+StayMate/
 │
 ├── backend/ # Backend server (APIs, DB, Auth)
 ├── frontend/ # Frontend application
