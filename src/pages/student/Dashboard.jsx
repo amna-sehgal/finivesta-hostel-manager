@@ -7,6 +7,7 @@ import {
   MdReportProblem,
   MdSecurity,
   MdCampaign,
+  MdElectricalServices,
 } from "react-icons/md";
 import {
   FaIdCard,
@@ -35,7 +36,7 @@ function Dashboard() {
     }
   }, []);
 
-  // 2️⃣ Fetch complaints (HOOK IS ALWAYS CALLED)
+  // 2️⃣ Fetch complaints
   useEffect(() => {
     if (!student) return;
 
@@ -50,13 +51,11 @@ function Dashboard() {
       .catch(err => console.error(err));
   }, [student]);
 
-  // ❗ Return comes AFTER all hooks
   if (!student) {
     return <p style={{ padding: "20px" }}>Loading...</p>;
   }
 
   const handleSOS = () => setOpenSOS(true);
-
 
   return (
     <>
@@ -109,7 +108,7 @@ function Dashboard() {
                 <span className="circle"></span>
                 <span className="circle"></span>
               </div>
-              <small style={{ color: "#555555" }}>3 / 5 remaining</small>
+              <small style={{ color: "#555" }}>3 / 5 remaining</small>
             </div>
           </div>
 
@@ -123,7 +122,7 @@ function Dashboard() {
                 <FaStar className="star faded" />
               </div>
               <p>Mess Rating</p>
-              <small style={{ color: "#555555" }}>4.2 avg (Today)</small>
+              <small style={{ color: "#555" }}>4.2 avg (Today)</small>
             </div>
           </div>
         </div>
@@ -157,6 +156,16 @@ function Dashboard() {
             <span>Apply for leave</span>
           </div>
 
+          {/* 🆕 UTILITIES CARD */}
+          <div
+            className="action-card orange"
+            onClick={() => navigate("/student/utilities")}
+          >
+            <MdElectricalServices />
+            <h3>Utilities</h3>
+            <span>Electricity · Water · WiFi</span>
+          </div>
+
           <div
             className="action-card gray"
             onClick={() => navigate("/student/notices")}
@@ -180,6 +189,7 @@ function Dashboard() {
         <button className="sos-button" onClick={handleSOS}>
           🚨 Emergency Assistance
         </button>
+
         <EmergencySOS
           isOpen={openSOS}
           onClose={() => setOpenSOS(false)}
@@ -190,6 +200,3 @@ function Dashboard() {
 }
 
 export default Dashboard;
-
-
-
