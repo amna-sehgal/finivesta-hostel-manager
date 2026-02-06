@@ -7,7 +7,7 @@ import {
     FaVoteYea,
 } from "react-icons/fa";
 import { MdBreakfastDining, MdLunchDining, MdDinnerDining } from "react-icons/md";
-import "./Mess.css";
+import styles from "./Mess.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -26,6 +26,12 @@ function Mess() {
         { label: "Late Serving 🕒", color: "orange" },
         { label: "Clean & Hygienic 🧼", color: "teal" },
     ];
+    const [visible, setVisible] = useState(false);
+
+    useEffect(() => {
+        setTimeout(() => setVisible(true), 200);
+    }, []);
+
 
     // Fetch today's menu
     useEffect(() => {
@@ -81,10 +87,10 @@ function Mess() {
         <>
             <Navbar />
 
-            <div className="mess-root">
+            <div className={styles.messRoot}>
                 {/* HEADER */}
-                <div className="mess-header">
-                    <FaUtensils className="mess-icon" />
+                <div className={styles.messHeader}>
+                    <FaUtensils className={styles.messIcon} />
                     <div>
                         <h1>Mess & Dining</h1>
                         <p>Today’s menu, ratings & feedback</p>
@@ -92,8 +98,8 @@ function Mess() {
                 </div>
 
                 {/* MENU */}
-                <div className="menu-card glass">
-                    <div className="menu-section">
+                <div className={`${styles.menuCard} ${styles.glass} ${visible ? styles.fadeIn : ""}`}>
+                    <div className={styles.menuSection}>
                         <MdBreakfastDining />
                         <div>
                             <h3>Breakfast</h3>
@@ -101,7 +107,7 @@ function Mess() {
                         </div>
                     </div>
 
-                    <div className="menu-section">
+                    <div className={styles.menuSection}>
                         <MdLunchDining />
                         <div>
                             <h3>Lunch</h3>
@@ -109,7 +115,7 @@ function Mess() {
                         </div>
                     </div>
 
-                    <div className="menu-section">
+                    <div className={styles.menuSection}>
                         <MdDinnerDining />
                         <div>
                             <h3>Dinner</h3>
@@ -117,35 +123,34 @@ function Mess() {
                         </div>
                     </div>
 
-                    <div className="timing">
+                    <div className={styles.timing}>
                         <FaClock />
                         <span>Mess Timings: 7–9 AM | 12–2 PM | 7–9 PM</span>
                     </div>
                 </div>
 
                 {/* RATING */}
-                <div className="rating-card glass">
+                <div className={`${styles.ratingCard} ${styles.glass} ${visible ? styles.fadeIn : ""}`}>
                     <h2>Rate Today’s Food</h2>
-                    <div className="stars">
+                    <div className={styles.stars}>
                         {[1, 2, 3, 4, 5].map((num) =>
                             num <= rating ? (
-                                <FaStar key={num} className="star filled" onClick={() => setRating(num)} />
+                                <FaStar key={num} className={`${styles.star} ${styles.filled}`} onClick={() => setRating(num)} />
                             ) : (
-                                <FaRegStar key={num} className="star" onClick={() => setRating(num)} />
+                                <FaRegStar key={num} className={styles.star} onClick={() => setRating(num)} />
                             )
                         )}
                     </div>
                 </div>
 
                 {/* FEEDBACK */}
-                <div className="feedback-card glass">
+                <div className={`${styles.feedbackCard} ${styles.glass} ${visible ? styles.fadeIn : ""}`}>
                     <h2>Quick Feedback</h2>
-                    <div className="chip-container">
+                    <div className={styles.chipContainer}>
                         {feedbackChips.map((chip, i) => (
                             <button
                                 key={i}
-                                className={`chip ${chip.color} ${selectedChip === chip.label ? "active" : ""
-                                    }`}
+                                className={`${styles.chip} ${styles[chip.color]} ${selectedChip === chip.label ? styles.active : ""}`}
                                 onClick={() => setSelectedChip(chip.label)}
                             >
                                 {chip.label}
@@ -155,19 +160,19 @@ function Mess() {
                 </div>
 
                 {/* POLL */}
-                <div className="poll-card glass">
+                <div className={`${styles.pollCard} ${styles.glass} ${visible ? styles.fadeIn : ""}`}>
                     <h2>
                         <FaVoteYea /> What should we have tomorrow?
                     </h2>
 
-                    <div className="poll-options">
+                    <div className={styles.pollOptions}>
                         {pollOptions.length === 0 ? (
-                            <p className="muted">Poll not set yet</p>
+                            <p className={styles.muted}>Poll not set yet</p>
                         ) : (
                             pollOptions.map((food, i) => (
                                 <button
                                     key={i}
-                                    className={`poll-btn ${selectedFood === food ? "active" : ""}`}
+                                    className={`${styles.pollBtn} ${selectedFood === food ? styles.active : ""}`}
                                     onClick={() => setSelectedFood(food)}
                                     type="button"
                                 >
@@ -176,8 +181,8 @@ function Mess() {
                             ))
                         )}
                     </div>
-                    
-                    <button className="submit-feedback-btn" onClick={submitFeedback}>
+
+                    <button className={`${styles.submitBtn}`} onClick={submitFeedback}>
                         Submit Feedback
                     </button>
                 </div>

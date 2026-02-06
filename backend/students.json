@@ -139,5 +139,15 @@
     "entryDate": "2026-08-26",
     "roomno": "33",
     "birthDate": ""
+  },
+  {
+    "fullName": "Riya",
+    "email": "abc@gm.com",
+    "password": "345",
+    "phone": "",
+    "hostel": "Kaveri",
+    "branch": "CSE",
+    "entryDate": "2026-02-12",
+    "roomno": "354"
   }
 ]

@@ -1,7 +1,7 @@
 import Navbar from "../../components/common/sNavbar";
 import { useEffect, useState } from "react";
 import { FiBell } from "react-icons/fi";
-import "./Notices.css";
+import styles from "./Notices.module.css";
 
 function Notices() {
   const [notices, setNotices] = useState([]);
@@ -44,30 +44,30 @@ function Notices() {
     <>
       <Navbar />
 
-      <div className="notices-root">
-        <div className="notices-header">
-          <FiBell className="notice-icon" />
+      <div className={styles.noticesRoot}>
+        <div className={styles.noticesHeader}>
+          <FiBell className={styles.noticeIcon} />
           <h1>Notices</h1>
           {notices.length > 0 && (
-            <button className="clear-btn" onClick={handleClearAll}>
+            <button className={styles.clearBtn} onClick={handleClearAll}>
               Clear All
             </button>
           )}
         </div>
 
         {notices.length === 0 ? (
-          <div className="empty-state">
+          <div className={styles.emptyState}>
             <p>No notices available 🎉</p>
           </div>
         ) : (
-          <div className="notices-grid">
+          <div className={styles.noticesGrid}>
             {notices.map((notice) => (
               <div
                 key={notice.id}
-                className={`notice-card glass ${visible ? "fade-in" : ""}`}
+                className={`${styles.noticeCard} ${styles.glass} ${visible ? styles.fadeIn : ""}`}
               >
                 <h3>{notice.title}</h3>
-                <span className="notice-date">{notice.date}</span>
+                <span className={styles.noticeDate}>{notice.date}</span>
                 <p>{notice.description}</p>
               </div>
             ))}

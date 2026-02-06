@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle, FaEnvelope, FaLock, FaPhone, FaHome, FaBuilding, FaDoorOpen, FaHeart } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
@@ -20,6 +20,55 @@ function Signup() {
   });
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    // Trigger animations on scroll using Intersection Observer
+    const observerOptions = {
+      threshold: 0.2,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, idx) => {
+        if (entry.isIntersecting) {
+          // Staggered animation for each input
+          setTimeout(() => {
+            entry.target.classList.add("animate");
+          }, idx * 60);
+        }
+      });
+    }, observerOptions);
+
+    // Animate card on load
+    const card = document.querySelector(".signup-card");
+    if (card) {
+      card.classList.add("animate");
+    }
+
+    // Observe all input groups
+    const inputGroups = document.querySelectorAll(".input-group");
+    inputGroups.forEach((group) => {
+      observer.observe(group);
+    });
+
+    // Observe button
+    const btn = document.querySelector(".signup-btn");
+    if (btn) {
+      observer.observe(btn);
+    }
+
+    // Observe login link
+    const link = document.querySelector(".login-link");
+    if (link) {
+      observer.observe(link);
+    }
+
+    return () => {
+      inputGroups.forEach((group) => observer.unobserve(group));
+      if (btn) observer.unobserve(btn);
+      if (link) observer.unobserve(link);
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

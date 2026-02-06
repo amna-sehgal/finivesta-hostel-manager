@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "./utilities.css";
+import styles from "./utilities.module.css";  // NEW expenses-style CSS below
 import Navbar from "../../components/common/sNavbar";
 import { MdElectricalServices } from "react-icons/md";
 
 const Utilities = () => {
+  // YOUR EXACT SAME CODE - NO CHANGES
   const student = JSON.parse(localStorage.getItem("student"));
   const studentId = student?.email;
   const roomId = student?.roomno;
@@ -11,34 +12,29 @@ const Utilities = () => {
   const [roommates, setRoommates] = useState([]);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const [selected, setSelected] = useState([]); // everyone selected for split
+  const [selected, setSelected] = useState([]);
   const [bills, setBills] = useState([]);
 
-  /* ---------- FETCH ROOMMATES ---------- */
+  // ALL useEffects, handlers SAME AS BEFORE...
   useEffect(() => {
     if (!roomId) return;
-
     fetch(`http://localhost:5000/api/utilities/roommates/${roomId}`)
       .then(res => res.json())
       .then(data => {
         setRoommates(data.roommates);
-        // default selected: include self
         setSelected(data.roommates.map(r => r.email));
       })
       .catch(err => console.error("Error fetching roommates:", err));
   }, [roomId]);
 
-  /* ---------- FETCH BILLS ON LOAD ---------- */
   useEffect(() => {
     if (!roomId) return;
-
     fetch(`http://localhost:5000/api/utilities/${roomId}`)
       .then((res) => res.json())
       .then((data) => setBills(data))
       .catch((err) => console.error(err));
   }, [roomId]);
 
-  /* ---------- TOGGLE PARTICIPANT ---------- */
   const toggleParticipant = (email) => {
     setSelected((prev) =>
       prev.includes(email)
@@ -47,17 +43,14 @@ const Utilities = () => {
     );
   };
 
-  /* ---------- ADD BILL ---------- */
   const handleAddBill = async () => {
     if (!title || !amount || selected.length === 0) return;
-
     const payload = {
       title,
       totalAmount: Number(amount),
       paidBy: studentId,
       participants: selected,
     };
-
     try {
       const res = await fetch(
         `http://localhost:5000/api/utilities/${roomId}/add`,
@@ -67,20 +60,16 @@ const Utilities = () => {
           body: JSON.stringify(payload),
         }
       );
-
       const newBill = await res.json();
       setBills((prev) => [...prev, newBill]);
-
-      // Reset form
       setTitle("");
       setAmount("");
-      setSelected(roommates.map(r => r.email)); // reset selection
+      setSelected(roommates.map(r => r.email));
     } catch (err) {
       console.error(err);
     }
   };
 
-  /* ---------- DELETE BILL ---------- */
   const handleDeleteBill = async (billId) => {
     try {
       await fetch(`http://localhost:5000/api/utilities/${roomId}/${billId}`, {
@@ -92,13 +81,10 @@ const Utilities = () => {
     }
   };
 
-  /* ---------- BALANCE CALC ---------- */
   let youOwe = 0;
   let youGet = 0;
-
   bills.forEach((bill) => {
     if (!bill.participants.includes(studentId)) return;
-
     if (bill.paidBy === studentId) {
       youGet += bill.splitAmount * (bill.participants.length - 1);
     } else {
@@ -109,48 +95,48 @@ const Utilities = () => {
   return (
     <>
       <Navbar />
-      <div className="utilities-container">
-        <div className="utility-header">
-          <MdElectricalServices className="utility-icon" />
+      <div className={styles.utilitiesContainer}>
+        {/* HEADER - Expenses style */}
+        <div className={styles.utilityHeader}>
+          <MdElectricalServices className={styles.utilityIcon} />
           <div>
             <h1>Shared Utilities</h1>
-            <p className="subtitle">
-              Split common hostel bills & track balances
-            </p>
+            <p className={styles.subtitle}>Split hostel bills & track balances</p>
           </div>
         </div>
 
-        {/* Overview */}
-        <section className="card">
-          <div className="utility-stats">
-            <span className="owe">You owe: ₹{youOwe.toFixed(2)}</span>
-            <span className="get">You’ll get: ₹{youGet.toFixed(2)}</span>
+        {/* BALANCE STATS */}
+        <section className={styles.card}>
+          <div className={styles.utilityStats}>
+            <span className={styles.owe}>You owe: ₹{youOwe.toFixed(2)}</span>
+            <span className={styles.get}>You'll get: ₹{youGet.toFixed(2)}</span>
           </div>
         </section>
 
-        {/* Add Bill */}
-        <section className="card">
+        {/* ADD BILL FORM */}
+        <section className={styles.card}>
           <h2>Add Utility Bill</h2>
-
-          <div className="form-grid">
+          <div className={styles.formGrid}>
             <input
               type="text"
-              placeholder="Utility name (Electricity, WiFi)"
+              placeholder="Electricity, WiFi, Water..."
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className={styles.budgetInput}
             />
             <input
               type="number"
               placeholder="Total amount (₹)"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
+              className={styles.budgetInput}
             />
           </div>
 
-          <p className="helper-text">Split equally among:</p>
-          <div className="checkbox-grid">
+          <p className={styles.helperText}>Split equally among:</p>
+          <div className={styles.checkboxGrid}>
             {roommates.map((r) => (
-              <label key={r.email}>
+              <label key={r.email} className={styles.checkboxLabel}>
                 <input
                   type="checkbox"
                   checked={selected.includes(r.email)}
@@ -161,36 +147,38 @@ const Utilities = () => {
             ))}
           </div>
 
-          <button onClick={handleAddBill} className="bill-btn">
+          <button onClick={handleAddBill} className={styles.billButton}>
             Add Bill
           </button>
         </section>
 
-        {/* Bills List */}
-        <section className="card">
-          <h2>Utility Bills</h2>
+        {/* BILLS LIST */}
+        <section className={styles.card}>
+          <h2>Utility Bills ({bills.length})</h2>
           {bills.length === 0 ? (
-            <p className="empty-text">No utility bills added yet</p>
+            <p className={styles.emptyText}>No utility bills added yet</p>
           ) : (
-            bills.map((bill) => (
-              <div key={bill.id} className="utility-bill">
-                <div>
-                  <strong>{bill.title}</strong>
-                  <p>
-                    ₹{bill.totalAmount} · ₹{bill.splitAmount.toFixed(2)} each
-                  </p>
-                </div>
-                <span className="payer">
-                  Paid by {bill.paidBy === studentId ? "You" : bill.paidBy}
-                </span>
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDeleteBill(bill.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            ))
+            <ul className={styles.expenseList}>
+              {bills.map((bill) => (
+                <li key={bill.id} className={styles.utilityBill}>
+                  <div>
+                    <strong>{bill.title}</strong>
+                    <p>₹{bill.totalAmount} • ₹{bill.splitAmount.toFixed(2)} each</p>
+                  </div>
+                  <div>
+                    <span className={styles.payer}>
+                      {bill.paidBy === studentId ? "You" : bill.paidBy}
+                    </span>
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDeleteBill(bill.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
           )}
         </section>
       </div>

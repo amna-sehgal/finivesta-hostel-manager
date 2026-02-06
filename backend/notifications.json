@@ -1,6 +1,46 @@
 {
   "notifications": [
     {
+      "id": "1770052480729",
+      "type": "manual",
+      "title": "Mess closed",
+      "message": "Lunch not available",
+      "receiver": "students",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-02T17:14:40.729Z"
+    },
+    {
+      "id": "1770052419497",
+      "type": "outpass",
+      "title": "Outpass Approved",
+      "message": "Your outpass from 2026-02-17 to 2026-02-20 has been approved.",
+      "receiver": "student",
+      "studentEmail": "abc@gm.com",
+      "read": false,
+      "createdAt": "2026-02-02T17:13:39.497Z"
+    },
+    {
+      "id": "1770052346130",
+      "type": "complaint",
+      "title": "Complaint Resolved",
+      "message": "Your WiFi complaint has been resolved.",
+      "receiver": "student",
+      "studentEmail": "student@mail.com",
+      "read": false,
+      "createdAt": "2026-02-02T17:12:26.130Z"
+    },
+    {
+      "id": "1770052311476",
+      "type": "complaint",
+      "title": "New Complaint Raised",
+      "message": "WiFi complaint raised by Student",
+      "receiver": "warden",
+      "studentEmail": null,
+      "read": false,
+      "createdAt": "2026-02-02T17:11:51.476Z"
+    },
+    {
       "id": "1769953020251",
       "type": "complaint",
       "title": "Complaint Resolved",

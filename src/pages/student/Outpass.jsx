@@ -3,7 +3,7 @@ import Navbar from "../../components/common/sNavbar";
 import { FaIdCard } from "react-icons/fa";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./Outpass.css";
+import styles from "./Outpass.module.css";
 
 function Outpass() {
   const [leaveRequests, setLeaveRequests] = useState([]);
@@ -75,20 +75,20 @@ function Outpass() {
   return (
     <>
       <Navbar />
-      <div className="outpass-root">
+      <div className={styles.outpassRoot}>
         {/* HEADER */}
-        <div className="page-header">
-          <FaIdCard className="header-icon" />
+        <div className={styles.pageHeader}>
+          <FaIdCard className={styles.headerIcon} />
           <div>
             <h2>Outpass / Leave Requests</h2>
-            <p className="header-subtitle">
+            <p className={styles.headerSubtitle}>
               Request your leave and track approvals
             </p>
           </div>
         </div>
 
         {/* FORM */}
-        <form className="outpass-form" onSubmit={handleSubmit}>
+        <form className={styles.outpassForm} onSubmit={handleSubmit}>
           <label>Reason for Leave</label>
           <textarea
             placeholder="Enter your reason for leave..."
@@ -97,11 +97,11 @@ function Outpass() {
               setFormData({ ...formData, reason: e.target.value })
             }
             required
-            className="reason-input"
+            className={styles.reasonInput}
           />
 
-          <div className="date-inputs">
-            <div className="date-picker-wrapper">
+          <div className={styles.dateInputs}>
+            <div className={styles.datePickerWrapper}>
               <label>Start Date</label>
               <DatePicker
                 selected={formData.fromDate}
@@ -109,12 +109,12 @@ function Outpass() {
                   setFormData({ ...formData, fromDate: date })
                 }
                 placeholderText="Select start date"
-                className="custom-datepicker"
+                className={styles.customDatePicker}
                 dateFormat="dd/MM/yyyy"
                 showPopperArrow={false}
               />
             </div>
-            <div className="date-picker-wrapper">
+            <div className={styles.datePickerWrapper}>
               <label>End Date</label>
               <DatePicker
                 selected={formData.toDate}
@@ -122,14 +122,14 @@ function Outpass() {
                   setFormData({ ...formData, toDate: date })
                 }
                 placeholderText="Select end date"
-                className="custom-datepicker"
+                className={styles.customDatePicker}
                 dateFormat="dd/MM/yyyy"
                 showPopperArrow={false}
               />
             </div>
           </div>
 
-          <label className="parent-approval">
+          <label className={styles.parentApprovalLabel}>
             <input
               type="checkbox"
               checked={formData.parentApproval}
@@ -143,15 +143,15 @@ function Outpass() {
             Parent Approval Obtained
           </label>
 
-          <button type="submit" className="submit-btn">
+          <button type="submit" className={styles.submitButton}>
             Submit Leave Request
           </button>
         </form>
 
         {/* LEAVE REQUESTS */}
-        <div className="leave-grid">
+        <div className={styles.leaveGrid}>
           {leaveRequests.map((req) => (
-            <div key={req.id} className="leave-card">
+            <div key={req.id} className={styles.leaveCard}>
               <h4>{req.reason}</h4>
               <p>
                 <strong>From:</strong> {req.fromDate}
@@ -162,7 +162,7 @@ function Outpass() {
               <p>
                 Parent Approval: {req.parentApproval ? "✅" : "❌"}
               </p>
-              <span className={`status-badge ${req.status.toLowerCase()}`}>
+              <span className={`${styles.statusBadge} ${styles[req.status.toLowerCase()]}`}>
                 {req.status === "Pending"
                   ? "⏳ Pending"
                   : req.status === "Approved"

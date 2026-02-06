@@ -162,14 +162,12 @@ const Expenses = () => {
               placeholder="Enter amount (₹)"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              disabled={remaining <= 0}
-            />
+              disabled={budget > 0 && remaining <= 0} />
 
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              disabled={remaining <= 0}
-            >
+              disabled={budget > 0 && remaining <= 0}            >
               <option value="">Select category</option>
               {categories.map((cat) => (
                 <option key={cat}>{cat}</option>
@@ -181,11 +179,14 @@ const Expenses = () => {
               placeholder="Optional note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              disabled={remaining <= 0}
-            />
+              disabled={budget > 0 && remaining <= 0} />
           </div>
 
-          <button onClick={handleAddExpense} disabled={remaining <= 0}>
+          <button
+            onClick={handleAddExpense}
+            disabled={budget > 0 && remaining <= 0}
+          >
+
             Add Expense
           </button>
         </section>

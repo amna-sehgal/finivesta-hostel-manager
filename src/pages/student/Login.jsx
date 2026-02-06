@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import { FiMail, FiLock } from "react-icons/fi";
@@ -10,6 +10,23 @@ export default function Login() {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Apply animation classes after component mounts
+    const card = document.querySelector(".login-card");
+    const inputs = document.querySelectorAll(".input-group");
+    const btn = document.querySelector(".login-btn");
+    const footer = document.querySelector(".login-footer");
+
+    setTimeout(() => {
+      card?.classList.add("animate");
+      inputs.forEach((input, idx) => {
+        setTimeout(() => input.classList.add("animate"), idx * 60);
+      });
+      setTimeout(() => btn?.classList.add("animate"), inputs.length * 60);
+      setTimeout(() => footer?.classList.add("animate"), inputs.length * 60 + 60);
+    }, 100);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

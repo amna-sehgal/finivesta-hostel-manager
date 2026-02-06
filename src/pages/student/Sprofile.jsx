@@ -8,7 +8,7 @@ import {
   FaHome,
   FaCalendarAlt,
 } from "react-icons/fa";
-import "./Sprofile.css";
+import styles from "./Sprofile.module.css";
 
 function Sprofile() {
   const [student, setStudent] = useState(null);
@@ -68,32 +68,32 @@ function Sprofile() {
   return (
     <>
       <Navbar />
-      <div className="profile-root">
+      <div className={styles.profileRoot}>
         {/* HEADER */}
-        <div className="profile-header">
-          <FaUserCircle className="profile-avatar" />
-          <div className="profile-name">
+        <div className={styles.profileHeader}>
+          <FaUserCircle className={styles.profileAvatar} />
+          <div className={styles.profileName}>
             <h1>{student.fullName}</h1>
             <p>Student, {student.branch}</p>
           </div>
         </div>
 
         {/* DETAILS */}
-        <div className="profile-details glass">
-          <div className="detail-item">
-            <FaEnvelope className="detail-icon" />
+        <div className={styles.profileDetails}>
+          <div className={styles.detailItem}>
+            <FaEnvelope className={styles.detailIcon} />
             <span>{student.email}</span>
           </div>
-          <div className="detail-item">
-            <FaPhoneAlt className="detail-icon" />
+          <div className={styles.detailItem}>
+            <FaPhoneAlt className={styles.detailIcon} />
             <span>{student.phone || "Not provided"}</span>
           </div>
-          <div className="detail-item">
-            <FaCalendarAlt className="detail-icon" />
+          <div className={styles.detailItem}>
+            <FaCalendarAlt className={styles.detailIcon} />
             <span>Birth Date: {student.birthDate}</span>
           </div>
-          <div className="detail-item">
-            <FaHome className="detail-icon" />
+          <div className={styles.detailItem}>
+            <FaHome className={styles.detailIcon} />
             <span>
               Hostel: {student.hostel}, Room {student.roomno}
             </span>
@@ -101,11 +101,11 @@ function Sprofile() {
         </div>
 
         {/* ACTIONS */}
-        <div className="profile-actions">
-          <button className="btn edit-btn" onClick={() => setEditOpen(true)}>
+        <div className={styles.profileActions}>
+          <button className={styles.editBtn} onClick={() => setEditOpen(true)}>
             Edit Profile
           </button>
-          <button className="btn logout-btn" onClick={handleLogout}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -113,8 +113,8 @@ function Sprofile() {
 
       {/* MODAL */}
       {editOpen && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modal}>
             <h2>Edit Profile</h2>
             <label>
               Full Name
@@ -138,9 +138,9 @@ function Sprofile() {
               Entry Date
               <input
                 type="date"
-                value={formData.birthDate}
+                value={formData.entryDate}
                 onChange={(e) =>
-                  setFormData({ ...formData, birthDate: e.target.value })
+                  setFormData({ ...formData, entryDate: e.target.value })
                 }
               />
             </label>
@@ -163,12 +163,12 @@ function Sprofile() {
               />
             </label>
 
-            <div className="modal-actions">
-              <button className="btn save-btn" onClick={handleSave}>
+            <div className={styles.modalActions}>
+              <button className={styles.saveBtn} onClick={handleSave}>
                 Save
               </button>
               <button
-                className="btn cancel-btn"
+                className={styles.cancelBtn}
                 onClick={() => setEditOpen(false)}
               >
                 Cancel

@@ -37,11 +37,6 @@ function Navbar() {
           Notices
         </NavLink>
 
-        <NavLink to="/student/notices">
-          <MdNotifications />
-          Notifications
-        </NavLink>
-
         <NavLink to="/student/mess">
           <MdFoodBank />
           Mess

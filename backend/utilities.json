@@ -1,5 +1,19 @@
 {
   "rooms": {
-    "33": []
+    "33": [],
+    "308": [],
+    "354": [
+      {
+        "id": 1770052380411,
+        "title": "Wifi",
+        "totalAmount": 597,
+        "paidBy": "abc@gm.com",
+        "participants": [
+          "abc@gm.com"
+        ],
+        "splitAmount": 597,
+        "createdAt": "2026-02-02T17:13:00.411Z"
+      }
+    ]
   }
 }

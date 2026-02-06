@@ -1,6 +1,19 @@
 {
   "complaints": [
     {
+      "id": "cmp_1770052311449",
+      "studentEmail": "student@mail.com",
+      "studentName": "Student",
+      "hostel": "A Block",
+      "roomNumber": "203",
+      "category": "WiFi",
+      "description": "Wifi not working",
+      "priority": "Normal",
+      "status": "Resolved",
+      "createdAt": "2026-02-02T17:11:51.449Z",
+      "resolvedAt": "2026-02-02T17:12:26.130Z"
+    },
+    {
       "id": "cmp_1769952999527",
       "studentEmail": "student@mail.com",
       "studentName": "Student",

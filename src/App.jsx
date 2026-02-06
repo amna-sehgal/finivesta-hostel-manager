@@ -16,6 +16,8 @@ import Sprofile from "./pages/student/Sprofile";
 import Notices from "./pages/student/Notices";
 import Utilities from "./pages/student/Utilities";
 import EmergencySOS from "./pages/student/Emergency";
+import Features from "./pages/public/Features";
+import About from "./pages/public/About";
 // ---------------- Warden Pages (Lazy) ----------------
 import { lazy, Suspense } from "react";
 import Expenses from "./pages/student/Expenses";
@@ -52,6 +54,8 @@ function App() {
         <Route path= '/student/Notices' element={<Notices />} />
         <Route path= '/student/expenses' element={<Expenses />} />
         <Route path= '/student/utilities' element={<Utilities />} />
+        <Route path="/features" element={<Features />} />
+        <Route path="/about" element={<About/>} />
 
         {/* ---------------- Warden Routes ---------------- */}
         <Route

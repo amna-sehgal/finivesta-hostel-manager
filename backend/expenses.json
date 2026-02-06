@@ -31,6 +31,29 @@
           "date": "2026-02-02T06:28:03.356Z"
         }
       ]
+    },
+    "abc@gm.com": {
+      "monthlyBudget": 7998,
+      "expenses": [
+        {
+          "id": 1770052225042,
+          "amount": 200,
+          "category": "Personal",
+          "note": "",
+          "date": "2026-02-02T17:10:25.011Z"
+        },
+        {
+          "id": 1770052240314,
+          "amount": 600,
+          "category": "Food",
+          "note": "",
+          "date": "2026-02-02T17:10:40.272Z"
+        }
+      ]
+    },
+    "pqr@abc.com": {
+      "monthlyBudget": 6000,
+      "expenses": []
     }
   }
 }

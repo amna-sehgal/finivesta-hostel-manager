@@ -16,7 +16,7 @@ import {
 
 import { FaTruck, FaCalendarAlt } from "react-icons/fa";
 
-import "./Laundry.css";
+import styles from "./Laundry.module.css";
 
 function Laundry() {
   const [selectedType, setSelectedType] = useState(null);
@@ -113,10 +113,10 @@ function Laundry() {
     <>
       <Navbar />
 
-      <div className="laundry-root">
+      <div className={styles.laundryRoot}>
         {/* HEADER */}
-        <div className="laundry-header">
-          <GiWashingMachine className="laundry-icon" />
+        <div className={styles.laundryHeader}>
+          <GiWashingMachine className={styles.laundryIcon} />
           <div>
             <h1>Laundry Services</h1>
             <p>Schedule, track & manage your laundry easily</p>
@@ -124,20 +124,20 @@ function Laundry() {
         </div>
 
         {/* STATUS STRIP */}
-        <div className="laundry-status">
-          <div className="status-item">
+        <div className={styles.laundryStatus}>
+          <div className={styles.statusItem}>
             <HiOutlineArchiveBox />
             <span>Pending Bags</span>
             <strong>{pendingCount}</strong>
           </div>
 
-          <div className="status-item">
+          <div className={styles.statusItem}>
             <HiOutlineTruck />
             <span>Processing</span>
             <strong>{processingCount > 0 ? "Yes" : "No"}</strong>
           </div>
 
-          <div className="status-item">
+          <div className={styles.statusItem}>
             <HiOutlineCalendarDays />
             <span>Next Pickup</span>
             <strong>
@@ -156,13 +156,13 @@ function Laundry() {
         </div>
 
         {/* SCHEDULE */}
-        <div className="glass laundry-schedule">
+        <div className={`${styles.glass} ${styles.laundrySchedule}`}>
           <h2>
             <FaCalendarAlt />
             Weekly Schedule
           </h2>
 
-          <div className="schedule-row">
+          <div className={styles.scheduleRow}>
             <div>
               <span>Pickup Days</span>
               <strong>Mon • Thu</strong>
@@ -181,15 +181,14 @@ function Laundry() {
         </div>
 
         {/* REQUEST */}
-        <div className="glass laundry-request">
+        <div className={`${styles.glass} ${styles.laundryRequest}`}>
           <h2>Request Laundry Pickup</h2>
 
-          <div className="cloth-types">
+          <div className={styles.clothTypes}>
             {clothTypes.map((item) => (
               <button
                 key={item.label}
-                className={`cloth-chip ${selectedType === item.label ? "active" : ""
-                  }`}
+                className={`${styles.clothChip} ${selectedType === item.label ? styles.active : ""}`}
                 onClick={() =>
                   setSelectedType(
                     selectedType === item.label ? null : item.label
@@ -203,32 +202,32 @@ function Laundry() {
           </div>
 
           <textarea
-            className="laundry-input"
+            className={styles.laundryInput}
             placeholder="Any special instructions? (optional)"
           />
 
-          <button className="pickup-btn" onClick={handleSchedulePickup}>
+          <button className={styles.pickupBtn} onClick={handleSchedulePickup}>
             <FaTruck />
             Schedule Pickup
           </button>
         </div>
 
         {/* ACTIVE REQUESTS */}
-        <div className="laundry-active">
+        <div className={styles.laundryActive}>
           <h2>Active Requests</h2>
 
-          <div className="laundry-cards">
+          <div className={styles.laundryCards}>
             {requests.map((req) => (
-              <div key={req.id} className="glass laundry-card">
+              <div key={req.id} className={`${styles.glass} ${styles.laundryCard}`}>
                 <h3>{req.type}</h3>
 
-                <span className={`status-tag ${req.status.toLowerCase()}`}>
+                <span className={`${styles.statusTag} ${styles[req.status.toLowerCase()]}`}>
                   {req.status}
                 </span>
 
                 {req.status === "Pending" && (
                   <button
-                    className="cancel-btn"
+                    className={styles.cancelBtn}
                     onClick={() => handleCancelRequest(req.id)}
                   >
                     Cancel

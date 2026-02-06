@@ -13,7 +13,6 @@ import {
   FaIdCard,
   FaClipboardList,
   FaStar,
-  FaUserCircle,
 } from "react-icons/fa";
 import { HiBadgeCheck, HiSparkles } from "react-icons/hi";
 
@@ -21,179 +20,150 @@ import "./Dashboard.css";
 
 function Dashboard() {
   const [student, setStudent] = useState(null);
-  const [animate, setAnimate] = useState(false);
   const [openSOS, setOpenSOS] = useState(false);
   const [activeCount, setActiveCount] = useState(0);
+  const [loaded, setLoaded] = useState(false);
 
   const navigate = useNavigate();
 
-  // 1️⃣ Load student
   useEffect(() => {
     const storedStudent = localStorage.getItem("student");
-    if (storedStudent) {
-      setStudent(JSON.parse(storedStudent));
-      setTimeout(() => setAnimate(true), 100);
-    }
+    if (storedStudent) setStudent(JSON.parse(storedStudent));
+    setTimeout(() => setLoaded(true), 150);
   }, []);
 
-  // 2️⃣ Fetch complaints
+  useEffect(() => {
+    const els = document.querySelectorAll(".reveal");
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("show");
+      });
+    }, { threshold: .12 });
+
+    els.forEach(el => observer.observe(el));
+  }, []);
+
   useEffect(() => {
     if (!student) return;
 
     fetch(`http://localhost:5000/api/complaints/student/${student.email}`)
       .then(res => res.json())
       .then(data => {
-        const active = data.complaints.filter(
-          c => c.status !== "Resolved"
-        );
+        const active = data.complaints.filter(c => c.status !== "Resolved");
         setActiveCount(active.length);
       })
       .catch(err => console.error(err));
   }, [student]);
 
-  if (!student) {
-    return <p style={{ padding: "20px" }}>Loading...</p>;
-  }
-
-  const handleSOS = () => setOpenSOS(true);
+  if (!student) return <p style={{ padding: 20 }}>Loading...</p>;
 
   return (
     <>
       <Navbar />
-
       <div className="dashboard-root">
 
         {/* HERO */}
         <div className="hero">
-          <div>
-            <div className="welcome-text">
-              <FaUserCircle className="welcome-icon" />
-              <h1>
-                Welcome, {student.fullName} <HiSparkles className="sparkle" />
+          <div className="hero-left">
+
+            <div>
+              <h1 className="welcome-big">
+                Welcome back, {student.fullName}
+                <HiSparkles className="sparkle" />
               </h1>
+
+              <p>
+                Room {student.roomno} · {student.hostel}
+              </p>
+
+              <div className="hero-tags">
+                <span className="tag safe">
+                  <MdSecurity /> Safe Hostel
+                </span>
+                <span className="tag verified">
+                  <HiBadgeCheck /> Verified
+                </span>
+              </div>
             </div>
-            <p>
-              Room {student.roomno} · {student.hostel}
-            </p>
           </div>
 
-          <div className="hero-status">
-            <span className="safe">
-              <MdSecurity /> Hostel Safe
-            </span>
-            <span className="verified">
-              <HiBadgeCheck /> Verified Student
-            </span>
-          </div>
+          <button className="sos-top" onClick={() => setOpenSOS(true)}>
+            🚨 Emergency
+          </button>
         </div>
 
-        {/* QUICK STATS */}
-        <div className={`stats-row ${animate ? "fade-up" : ""}`}>
-          <div className="stat-box stat-hover">
-            <MdReportProblem className="stat-icon" />
+        {/* STATS */}
+        <div className={`stats-row ${loaded ? "show" : ""}`} reveal>
+          <div className="stat-card">
+            <MdReportProblem />
             <div>
-              <strong>{activeCount}</strong>
+              <h2>{activeCount}</h2>
               <p>Active Complaints</p>
             </div>
           </div>
 
-          <div className="stat-box stat-hover">
-            <FaIdCard className="stat-icon" />
+          <div className="stat-card">
+            <FaIdCard />
             <div>
+              <h2>3 / 5</h2>
               <p>Leave Balance</p>
-              <div className="leave-circles">
-                <span className="circle filled"></span>
-                <span className="circle filled"></span>
-                <span className="circle filled"></span>
-                <span className="circle"></span>
-                <span className="circle"></span>
-              </div>
-              <small style={{ color: "#555" }}>3 / 5 remaining</small>
             </div>
           </div>
 
-          <div className="stat-box stat-hover">
+          <div className="stat-card">
+            <FaStar />
             <div>
-              <div className="mess-stars">
-                <FaStar className="star" />
-                <FaStar className="star" />
-                <FaStar className="star" />
-                <FaStar className="star" />
-                <FaStar className="star faded" />
-              </div>
+              <h2>4.2</h2>
               <p>Mess Rating</p>
-              <small style={{ color: "#555" }}>4.2 avg (Today)</small>
             </div>
           </div>
         </div>
 
-        {/* ACTION CARDS */}
-        <div className={`actions-grid ${animate ? "fade-up" : ""}`}>
-          <div
-            className="action-card purple"
-            onClick={() => navigate("/student/raise-complaint")}
-          >
+        {/* ACTIONS */}
+        <div className={`actions-grid ${loaded ? "show" : ""}`} reveal>
+
+          <div className="action-card" onClick={() => navigate("/student/raise-complaint")}>
             <MdReportProblem />
             <h3>Raise Complaint</h3>
-            <span>Report hostel issues</span>
+            <span>Report hostel issues instantly</span>
           </div>
 
-          <div
-            className="action-card blue"
-            onClick={() => navigate("/student/my-complaints")}
-          >
+          <div className="action-card" onClick={() => navigate("/student/my-complaints")}>
             <FaClipboardList />
             <h3>My Complaints</h3>
-            <span>Track status & history</span>
+            <span>Track all requests</span>
           </div>
 
-          <div
-            className="action-card green"
-            onClick={() => navigate("/student/outpass")}
-          >
+          <div className="action-card" onClick={() => navigate("/student/outpass")}>
             <FaIdCard />
             <h3>Outpass</h3>
             <span>Apply for leave</span>
           </div>
 
-          {/* 🆕 UTILITIES CARD */}
-          <div
-            className="action-card orange"
-            onClick={() => navigate("/student/utilities")}
-          >
+          <div className="action-card" onClick={() => navigate("/student/utilities")}>
             <MdElectricalServices />
             <h3>Utilities</h3>
-            <span>Electricity · Water · WiFi</span>
+            <span>Electricity · WiFi · Water</span>
           </div>
 
-          <div
-            className="action-card gray"
-            onClick={() => navigate("/student/notices")}
-          >
+          <div className="action-card" onClick={() => navigate("/student/notices")}>
             <MdCampaign />
             <h3>Notices</h3>
-            <span>Hostel updates</span>
+            <span>Hostel announcements</span>
           </div>
+
         </div>
 
         {/* ALERTS */}
-        <div style={{ marginBottom: "24px" }}>
-          <h3 style={{ marginBottom: "10px" }}>🔔 Recent Alerts</h3>
-          <ul style={{ color: "#555", paddingLeft: "18px" }}>
-            <li>Your WiFi complaint is now <strong>In Progress</strong></li>
-            <li>New notice: <strong>Mess closed on Sunday</strong></li>
+        <div className={`alerts ${loaded ? "show" : ""}`} reveal>
+          <h3>Recent Activity</h3>
+          <ul>
+            <li>Your WiFi complaint is <strong>In Progress</strong></li>
+            <li>New notice: Mess closed Sunday</li>
           </ul>
         </div>
 
-        {/* SOS */}
-        <button className="sos-button" onClick={handleSOS}>
-          🚨 Emergency Assistance
-        </button>
-
-        <EmergencySOS
-          isOpen={openSOS}
-          onClose={() => setOpenSOS(false)}
-        />
+        <EmergencySOS isOpen={openSOS} onClose={() => setOpenSOS(false)} />
       </div>
     </>
   );

@@ -68,5 +68,12 @@
     "password": "289",
     "phone": "",
     "hostel": "Hostel A"
+  },
+  {
+    "fullName": "Meena Kumari",
+    "email": "abc@gm.com",
+    "password": "789",
+    "phone": "",
+    "hostel": "Kaveri"
   }
 ]
