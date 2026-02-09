@@ -32,6 +32,11 @@ export default function Login() {
       if (!res.ok) {
         setError(data.message || "Login failed");
       } else {
+        // ✅ Save token & warden info to localStorage
+        localStorage.setItem("wardenToken", data.token);
+        localStorage.setItem("warden", JSON.stringify(data.user));
+
+        // redirect to dashboard/profile
         navigate("/warden/dashboard");
       }
     } catch (err) {
@@ -90,3 +95,4 @@ export default function Login() {
     </div>
   );
 }
+

@@ -12,9 +12,10 @@ function Navbar() {
   // Warden logout
   const handleLogout = () => {
     localStorage.removeItem("warden");
-    localStorage.removeItem("student"); // remove student too
+    localStorage.removeItem("wardenToken");
     navigate("/");
   };
+
 
 
   return (

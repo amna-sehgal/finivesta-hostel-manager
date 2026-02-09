@@ -53,14 +53,11 @@ export default function Login() {
 
       console.log("Login success:", data);
 
-      // ✅ Save all student info to localStorage
-      localStorage.setItem(
-        "student",
-        JSON.stringify(data.student)
-      );
+      // ✅ Save JWT token and student info
+      localStorage.setItem("studentToken", data.token); // token
+      localStorage.setItem("student", JSON.stringify(data.user)); // user info
 
-
-      // Redirect to profile/dashboard
+      // Redirect to dashboard/profile
       navigate("/student/dashboard");
 
     } catch (err) {
@@ -68,6 +65,7 @@ export default function Login() {
       setError("Failed to connect to backend");
     }
   };
+
 
   return (
     <div className="login-page">

@@ -33,23 +33,27 @@ function Sprofile() {
 
   const handleLogout = () => {
     localStorage.removeItem("student");
+    localStorage.removeItem("studentToken"); // remove token
     localStorage.removeItem("warden");
     navigate("/");
   };
 
   const handleSave = () => {
-    // Send updated data to backend
-    fetch(`http://localhost:5000/api/student/update/${student.email}`, {
+    const token = localStorage.getItem("studentToken"); // get JWT
+
+    fetch(`http://localhost:5000/api/student/update`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}` // <-- send token
+      },
       body: JSON.stringify(formData),
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.student) {
-          // Update state & localStorage only after successful server update
-          setStudent(data.student);
-          localStorage.setItem("student", JSON.stringify(data.student));
+        if (data) {
+          setStudent(data); // backend returns updated student
+          localStorage.setItem("student", JSON.stringify(data));
           setEditOpen(false);
         } else {
           alert(data.message || "Failed to update profile");
@@ -60,6 +64,7 @@ function Sprofile() {
         alert("Server error while updating profile");
       });
   };
+
 
   if (!student) {
     return <p style={{ padding: "20px" }}>Loading...</p>;
@@ -90,7 +95,7 @@ function Sprofile() {
           </div>
           <div className={styles.detailItem}>
             <FaCalendarAlt className={styles.detailIcon} />
-            <span>Birth Date: {student.birthDate}</span>
+            <span>Entry Date: {student.entryDate}</span>
           </div>
           <div className={styles.detailItem}>
             <FaHome className={styles.detailIcon} />
@@ -182,6 +187,7 @@ function Sprofile() {
 }
 
 export default Sprofile;
+
 
 
 

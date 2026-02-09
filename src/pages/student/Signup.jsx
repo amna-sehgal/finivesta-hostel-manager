@@ -93,16 +93,18 @@ function Signup() {
         return;
       }
 
-      // ⭐ THIS WAS MISSING
-      localStorage.setItem("student", JSON.stringify(data.student));
+      // ✅ Save JWT token and student info
+      localStorage.setItem("studentToken", data.token); // <-- token
+      localStorage.setItem("student", JSON.stringify(data.user)); // <-- user info
 
-      // redirect
+      // redirect to dashboard
       navigate("/student/dashboard");
 
     } catch (err) {
       alert("Backend not running");
     }
   };
+
 
 
   return (
