@@ -11,13 +11,15 @@ import styles from "./Mess.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+const API = "http://localhost:5000/api/mess";
+
 function Mess() {
     const [rating, setRating] = useState(0);
     const [selectedChip, setSelectedChip] = useState(null);
     const [selectedFood, setSelectedFood] = useState(null);
     const [menu, setMenu] = useState({});
     const [pollOptions, setPollOptions] = useState([]);
-
+    const [visible, setVisible] = useState(false);
 
     const feedbackChips = [
         { label: "Tasty 😋", color: "green" },
@@ -26,35 +28,23 @@ function Mess() {
         { label: "Late Serving 🕒", color: "orange" },
         { label: "Clean & Hygienic 🧼", color: "teal" },
     ];
-    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         setTimeout(() => setVisible(true), 200);
     }, []);
 
-
-    // Fetch today's menu
+    // 🔵 FETCH MENU + POLL
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/mess/student")
-            .then((res) => setMenu(res.data.menu))
-            .catch(console.error);
-    }, []);
-    useEffect(() => {
-        axios.get("http://localhost:5000/api/mess/student")
+        axios.get(`${API}/student`)
             .then(res => {
-                setMenu(res.data.menu);
+                setMenu(res.data.menu || {});
                 setPollOptions(res.data.pollOptions || []);
             })
-            .catch(console.error);
+            .catch(err => console.error("Menu fetch error", err));
     }, []);
 
-
-    const submitFeedback = () => {
-        console.log("SENDING →", {
-            rating,
-            selectedFood
-        });
+    // 🔵 SUBMIT FEEDBACK
+    const submitFeedback = async () => {
         const student = JSON.parse(localStorage.getItem("student"));
 
         if (!student) {
@@ -67,20 +57,22 @@ function Mess() {
             return;
         }
 
-        axios
-            .post("http://localhost:5000/api/mess/student/feedback", {
+        try {
+            await axios.post(`${API}/student/feedback`, {
                 studentName: student.fullName,
                 rating,
                 feedback: selectedChip,
                 pollChoice: selectedFood,
-            })
-            .then(() => {
-                alert("Feedback submitted successfully!");
-                setRating(0);
-                setSelectedChip(null);
-                setSelectedFood(null);
-            })
-            .catch(() => alert("Something went wrong"));
+            });
+
+            alert("Feedback submitted successfully!");
+            setRating(0);
+            setSelectedChip(null);
+            setSelectedFood(null);
+        } catch (err) {
+            console.error(err);
+            alert("Something went wrong");
+        }
     };
 
     return (
@@ -88,7 +80,6 @@ function Mess() {
             <Navbar />
 
             <div className={styles.messRoot}>
-                {/* HEADER */}
                 <div className={styles.messHeader}>
                     <FaUtensils className={styles.messIcon} />
                     <div>
@@ -192,4 +183,3 @@ function Mess() {
 }
 
 export default Mess;
-

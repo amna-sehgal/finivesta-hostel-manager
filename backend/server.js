@@ -4,7 +4,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import studentRoutes from "./routes/studentRoutes.js";
 import wardenRoutes from "./routes/wardenRoutes.js";
-
+import messRoutes from "./routes/messRoutes.js";
+import laundryRoutes from "./routes/laundryRoutes.js";
 
 
 dotenv.config();
@@ -24,6 +25,8 @@ app.get("/", (req, res) => {
 
 app.use("/api/student", studentRoutes);
 app.use("/api/warden", wardenRoutes);
+app.use("/api/mess", messRoutes);
+app.use("/api/laundry", laundryRoutes);
 
 
 const PORT = process.env.PORT || 5000;

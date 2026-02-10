@@ -93,7 +93,7 @@ const Laundry = () => {
       const data = await res.json();
       if (res.ok) {
         setRequests((prev) =>
-          prev.map((r) => (r.id === id ? data.request : r))
+          prev.map((r) => (r._id === id ? data.request : r))
         );
       }
     } catch (err) {
@@ -113,7 +113,7 @@ const Laundry = () => {
       const data = await res.json();
       if (res.ok) {
         setRequests((prev) =>
-          prev.map((r) => (r.id === id ? data.request : r))
+          prev.map((r) => (r._id === id ? data.request : r))
         );
       }
     } catch (err) {
@@ -283,7 +283,7 @@ const Laundry = () => {
             ) : (
               <div className="request-list">
                 {requests.map((req) => (
-                  <div key={req.id} className="request-item">
+                  <div key={req._id} className="request-item">
                     <div className="request-info">
                       <h4>{req.type}</h4>
                       <p><strong>Student:</strong> {req.studentEmail}</p>
@@ -305,7 +305,7 @@ const Laundry = () => {
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            updateStatus(req.id, "Processing");
+                            updateStatus(req._id, "Processing");
                           }}
                         >
                           Mark Processing
@@ -320,7 +320,7 @@ const Laundry = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setSelectedRequestId(req.id);
+                              setSelectedRequestId(req._id);
                               setShowPickupModal(true);
                             }}
                           >
@@ -332,7 +332,7 @@ const Laundry = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              updateStatus(req.id, "Done");
+                              updateStatus(req._id, "Done");
                             }}
                           >
                             Done
@@ -348,7 +348,7 @@ const Laundry = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              setSelectedRequestId(req.id);
+                              setSelectedRequestId(req._id);
                               setShowPickupModal(true);
                             }}
                           >
@@ -360,7 +360,7 @@ const Laundry = () => {
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              updateStatus(req.id, "Done");
+                              updateStatus(req._id, "Done");
                             }}
                           >
                             Done

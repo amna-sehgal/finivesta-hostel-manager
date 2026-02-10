@@ -92,7 +92,7 @@ function Laundry() {
 
       if (res.ok) {
         setRequests((prev) =>
-          prev.filter((r) => r.id !== requestId)
+          prev.filter((r) => r._id !== requestId)
         );
         alert("Laundry request cancelled");
       } else {
@@ -218,7 +218,7 @@ function Laundry() {
 
           <div className={styles.laundryCards}>
             {requests.map((req) => (
-              <div key={req.id} className={`${styles.glass} ${styles.laundryCard}`}>
+              <div key={req._id} className={`${styles.glass} ${styles.laundryCard}`}>
                 <h3>{req.type}</h3>
 
                 <span className={`${styles.statusTag} ${styles[req.status.toLowerCase()]}`}>
@@ -228,7 +228,7 @@ function Laundry() {
                 {req.status === "Pending" && (
                   <button
                     className={styles.cancelBtn}
-                    onClick={() => handleCancelRequest(req.id)}
+                    onClick={() => handleCancelRequest(req._id)}
                   >
                     Cancel
                   </button>
