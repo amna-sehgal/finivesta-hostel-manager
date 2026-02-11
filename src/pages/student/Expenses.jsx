@@ -17,7 +17,7 @@ const BASE_URL = "http://localhost:5000";
 
 const Expenses = () => {
   const student = JSON.parse(localStorage.getItem("student"));
-  const studentId = student?.email; // 🔑 student-specific key
+  const studentId = student?.email;
 
   const [budget, setBudget] = useState(0);
   const [amount, setAmount] = useState("");
@@ -25,30 +25,32 @@ const Expenses = () => {
   const [note, setNote] = useState("");
   const [expenses, setExpenses] = useState([]);
 
-  /* ---------- CALCULATE SPENT AND REMAINING ---------- */
   const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0);
   const remaining = budget - totalSpent;
 
-  /* ---------- CALCULATE DAYS LEFT AND DAILY BUDGET ---------- */
   const today = new Date();
   const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-  const daysLeft = lastDayOfMonth.getDate() - today.getDate() + 1; // +1 includes today
+  const daysLeft = lastDayOfMonth.getDate() - today.getDate() + 1;
   const dailyBudget = remaining > 0 ? (remaining / daysLeft).toFixed(2) : 0;
 
-  /* ---------- LOAD DATA FOR SPECIFIC STUDENT ---------- */
-  useEffect(() => {
+  /* ---------- LOAD DATA ---------- */
+  const fetchExpenses = async () => {
     if (!studentId) return;
+    try {
+      const res = await fetch(`${BASE_URL}/api/expenses/${studentId}`);
+      const data = await res.json();
+      setBudget(data.monthlyBudget || 0);
+      setExpenses(data.expenses || []);
+    } catch (err) {
+      console.error("Expense load error", err);
+    }
+  };
 
-    fetch(`${BASE_URL}/api/expenses/${studentId}`)
-      .then((res) => res.json())
-      .then((data) => {
-        setBudget(data.monthlyBudget || 0);
-        setExpenses(data.expenses || []);
-      })
-      .catch((err) => console.error("Expense load error", err));
+  useEffect(() => {
+    fetchExpenses();
   }, [studentId]);
 
-  /* ---------- SAVE BUDGET FOR SPECIFIC STUDENT ---------- */
+  /* ---------- SAVE BUDGET ---------- */
   const handleBudgetChange = async (value) => {
     const newBudget = Number(value);
     setBudget(newBudget);
@@ -64,7 +66,7 @@ const Expenses = () => {
     }
   };
 
-  /* ---------- ADD EXPENSE FOR SPECIFIC STUDENT ---------- */
+  /* ---------- ADD EXPENSE ---------- */
   const handleAddExpense = async () => {
     if (!amount || !category) return;
 
@@ -84,12 +86,23 @@ const Expenses = () => {
 
       const savedExpense = await res.json();
       setExpenses([...expenses, savedExpense]);
-
       setAmount("");
       setCategory("");
       setNote("");
     } catch (err) {
       console.error("Add expense error", err);
+    }
+  };
+
+  /* ---------- DELETE EXPENSE ---------- */
+  const handleDeleteExpense = async (id) => {
+    try {
+      await fetch(`${BASE_URL}/api/expenses/${studentId}/${id}`, {
+        method: "DELETE",
+      });
+      setExpenses(expenses.filter((e) => e._id !== id));
+    } catch (err) {
+      console.error("Delete expense error", err);
     }
   };
 
@@ -162,12 +175,14 @@ const Expenses = () => {
               placeholder="Enter amount (₹)"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              disabled={budget > 0 && remaining <= 0} />
+              disabled={budget > 0 && remaining <= 0}
+            />
 
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              disabled={budget > 0 && remaining <= 0}            >
+              disabled={budget > 0 && remaining <= 0}
+            >
               <option value="">Select category</option>
               {categories.map((cat) => (
                 <option key={cat}>{cat}</option>
@@ -179,14 +194,14 @@ const Expenses = () => {
               placeholder="Optional note"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              disabled={budget > 0 && remaining <= 0} />
+              disabled={budget > 0 && remaining <= 0}
+            />
           </div>
 
           <button
             onClick={handleAddExpense}
             disabled={budget > 0 && remaining <= 0}
           >
-
             Add Expense
           </button>
         </section>
@@ -200,9 +215,15 @@ const Expenses = () => {
           ) : (
             <ul className="expense-list">
               {expenses.map((e) => (
-                <li key={e.id}>
+                <li key={e._id}>
                   <span>{e.category}</span>
                   <span>₹{e.amount}</span>
+                  <button
+                    className="delete-btn"
+                    onClick={() => handleDeleteExpense(e._id)}
+                  >
+                    ❌
+                  </button>
                 </li>
               ))}
             </ul>
@@ -214,5 +235,3 @@ const Expenses = () => {
 };
 
 export default Expenses;
-
-

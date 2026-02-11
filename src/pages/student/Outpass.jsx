@@ -21,7 +21,16 @@ function Outpass() {
     if (!student?.email) return;
     fetch(`http://localhost:5000/api/outpass/student/${student.email}`)
       .then((res) => res.json())
-      .then((data) => setLeaveRequests(data.requests || []))
+      .then((data) =>
+        setLeaveRequests(
+          (data.requests || []).map((r) => ({
+            ...r,
+            id: r._id, // MongoDB ObjectId
+            fromDate: new Date(r.fromDate).toLocaleDateString(),
+            toDate: new Date(r.toDate).toLocaleDateString(),
+          }))
+        )
+      )
       .catch(console.error);
   }, [student]);
 
@@ -41,9 +50,9 @@ function Outpass() {
             fromDate: formData.fromDate.toISOString().split("T")[0],
             toDate: formData.toDate.toISOString().split("T")[0],
             parentApproval: formData.parentApproval,
-            studentEmail: student.email, // 🔥 THIS WAS MISSING
+            studentEmail: student.email,
+            studentName: student.name, // pass name for warden display
           }),
-
         }
       );
 
@@ -54,11 +63,15 @@ function Outpass() {
       }
 
       const data = await res.json();
-      setLeaveRequests([data.request, ...leaveRequests]);
+      const req = {
+        ...data.request,
+        id: data.request._id,
+        fromDate: new Date(data.request.fromDate).toLocaleDateString(),
+        toDate: new Date(data.request.toDate).toLocaleDateString(),
+      };
+      setLeaveRequests([req, ...leaveRequests]);
 
-      // ✅ Alert on successful submission
       alert("Leave request submitted successfully!");
-
       setFormData({
         reason: "",
         fromDate: null,
@@ -71,12 +84,10 @@ function Outpass() {
     }
   };
 
-
   return (
     <>
       <Navbar />
       <div className={styles.outpassRoot}>
-        {/* HEADER */}
         <div className={styles.pageHeader}>
           <FaIdCard className={styles.headerIcon} />
           <div>
@@ -87,7 +98,6 @@ function Outpass() {
           </div>
         </div>
 
-        {/* FORM */}
         <form className={styles.outpassForm} onSubmit={handleSubmit}>
           <label>Reason for Leave</label>
           <textarea
@@ -148,7 +158,6 @@ function Outpass() {
           </button>
         </form>
 
-        {/* LEAVE REQUESTS */}
         <div className={styles.leaveGrid}>
           {leaveRequests.map((req) => (
             <div key={req.id} className={styles.leaveCard}>
@@ -162,12 +171,14 @@ function Outpass() {
               <p>
                 Parent Approval: {req.parentApproval ? "✅" : "❌"}
               </p>
-              <span className={`${styles.statusBadge} ${styles[req.status.toLowerCase()]}`}>
+              <span
+                className={`${styles.statusBadge} ${styles[req.status.toLowerCase()]}`}
+              >
                 {req.status === "Pending"
                   ? "⏳ Pending"
                   : req.status === "Approved"
-                    ? "✅ Approved"
-                    : "❌ Rejected"}
+                  ? "✅ Approved"
+                  : "❌ Rejected"}
               </span>
             </div>
           ))}
@@ -178,6 +189,7 @@ function Outpass() {
 }
 
 export default Outpass;
+
 
 
 

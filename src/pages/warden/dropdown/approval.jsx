@@ -7,43 +7,24 @@ const Approval = () => {
   const titleRef = useRef();
   const analyticsRef = useRef();
 
-  const [requests, setRequests] = useState([]); // all requests
+  const [requests, setRequests] = useState([]);
   const [pending, setPending] = useState([]);
 
   useEffect(() => {
     // Animations
-    gsap.to(titleRef.current, {
-      opacity: 1,
-      y: 0,
-      duration: 0.6,
-      ease: "power3.out",
-    });
+    gsap.to(titleRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
+    gsap.to(analyticsRef.current.children, { opacity: 1, y: 0, stagger: 0.1, duration: 0.3, delay: 0.2, ease: "power2.out" });
+    gsap.to(".approval-card", { opacity: 1, y: 0, stagger: 0.12, duration: 0.4, delay: 0.2, ease: "power3.out" });
 
-    gsap.to(analyticsRef.current.children, {
-      opacity: 1,
-      y: 0,
-      stagger: 0.1,
-      duration: 0.3,
-      delay: 0.2,
-      ease: "power2.out",
-    });
-
-    gsap.to(".approval-card", {
-      opacity: 1,
-      y: 0,
-      stagger: 0.12,
-      duration: 0.4,
-      delay: 0.2,
-      ease: "power3.out",
-    });
-
-    // Fetch all pending requests
     fetch("http://localhost:5000/api/outpass/warden/pending")
       .then((res) => res.json())
       .then((data) => {
-        const allPending = data.requests || [];
+        const allPending = (data.requests || []).map((r) => ({
+          ...r,
+          id: r._id, // MongoDB _id
+        }));
         setPending(allPending);
-        setRequests(allPending); // for analytics & filtering
+        setRequests(allPending);
       })
       .catch(console.error);
   }, []);
@@ -58,13 +39,12 @@ const Approval = () => {
       .then((updated) => {
         setPending((prev) => prev.filter((p) => p.id !== id));
         setRequests((prev) =>
-          prev.map((r) => (r.id === id ? updated.request : r))
+          prev.map((r) => (r.id === id ? { ...updated.request, id: updated.request._id } : r))
         );
       })
       .catch(console.error);
   };
 
-  // Analytics counts
   const approvedCount = requests.filter((r) => r.status === "Approved").length;
   const rejectedCount = requests.filter((r) => r.status === "Rejected").length;
   const aiFlaggedCount = requests.filter((r) => r.status === "High Risk").length;
@@ -80,7 +60,6 @@ const Approval = () => {
           </p>
         </div>
 
-        {/* ================== ANALYTICS ================== */}
         <div className="analytics-grid" ref={analyticsRef}>
           <div className="analytics-card blue">
             <h3>Pending Requests</h3>
@@ -100,27 +79,19 @@ const Approval = () => {
           </div>
         </div>
 
-        {/* ================== FEATURE CARDS ================== */}
         <div className="approval-grid">
-          {/* ================= PENDING REQUESTS ================= */}
           <div className="approval-card">
             <h2>Pending Outpass Requests</h2>
             <p>Requests awaiting your approval with reason and duration.</p>
             <ul className="status-list">
               {pending.map((req) => (
                 <li key={req.id}>
-                  {req.studentName} – {req.reason} ({req.fromDate} to {req.toDate})
+                  {req.studentName || req.studentEmail} – {req.reason} ({new Date(req.fromDate).toLocaleDateString()} to {new Date(req.toDate).toLocaleDateString()})
                   <div className="action-buttons">
-                    <button
-                      className="approve"
-                      onClick={() => updateStatus(req.id, "Approved")}
-                    >
+                    <button className="approve" onClick={() => updateStatus(req.id, "Approved")}>
                       Approve
                     </button>
-                    <button
-                      className="reject"
-                      onClick={() => updateStatus(req.id, "Rejected")}
-                    >
+                    <button className="reject" onClick={() => updateStatus(req.id, "Rejected")}>
                       Reject
                     </button>
                   </div>
@@ -129,21 +100,19 @@ const Approval = () => {
             </ul>
           </div>
 
-          {/* ================= PARENT VERIFICATION ================= */}
           <div className="approval-card">
             <h2>Parent Verification</h2>
             <p>Check whether guardian has approved the outpass request.</p>
             <ul className="status-list">
               {requests.map((req) => (
                 <li key={req.id}>
-                  {req.parentApproval ? "✔ Verified" : "⏳ Awaiting Consent"} – {req.studentName}
+                  {req.parentApproval ? "✔ Verified" : "⏳ Awaiting Consent"} – {req.studentName || req.studentEmail}
                 </li>
               ))}
             </ul>
             <button className="secondary-btn">Resend Verification</button>
           </div>
 
-          {/* ================= AI RISK / EXCEPTIONS ================= */}
           <div className="approval-card">
             <h2>AI Risk & Exceptions</h2>
             <p>Automatically flags unusual patterns or overdue requests.</p>
@@ -155,7 +124,6 @@ const Approval = () => {
             </div>
           </div>
 
-          {/* ================= QR PASS PREVIEW ================= */}
           <div className="approval-card">
             <h2>QR Outpass</h2>
             <p>Encrypted QR for approved students, usable at gates.</p>
@@ -169,3 +137,4 @@ const Approval = () => {
 };
 
 export default Approval;
+
