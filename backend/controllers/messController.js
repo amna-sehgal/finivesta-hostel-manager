@@ -6,11 +6,30 @@ function getTodayDay() {
   return days[new Date().getDay()];
 }
 
+async function ensureMenuDoc() {
+  let menuDoc = await MessMenu.findOne();
+  if (!menuDoc) {
+    menuDoc = await MessMenu.create({
+      weekly: {
+        Monday:   { breakfast: "Poha 🥣",            lunch: "Dal Rice 🍛",         dinner: "Paneer Butter Masala 🥘" },
+        Tuesday:  { breakfast: "Idli ⚪",            lunch: "Rajma Rice 🍛",       dinner: "Chole Bhature 🥯" },
+        Wednesday:{ breakfast: "Paratha 🫓",         lunch: "Kadhi Chawal 🍚",     dinner: "Aloo Gobi 🥦" },
+        Thursday: { breakfast: "Upma 🍛",            lunch: "Sambar Rice 🥣",      dinner: "Veg Biryani 🍚" },
+        Friday:   { breakfast: "Dosa 🥞",            lunch: "Dal Makhani 🍲",      dinner: "Mix Veg 🥗" },
+        Saturday: { breakfast: "Chole Kulche 🥯",    lunch: "Paneer Rice 🍚",      dinner: "Malai Kofta 🍲" },
+        Sunday:   { breakfast: "Aloo Puri 🥘",       lunch: "Jeera Rice 🍚",       dinner: "Shahi Paneer 🧀" }
+      },
+      pollOptions: ["pasta","rajma rice","shahi paneer","chole kulche"]
+    });
+  }
+  return menuDoc;
+}
+
 // ---------------- STUDENT ----------------
 
 export const getStudentMess = async (req, res) => {
   try {
-    const menuDoc = await MessMenu.findOne();
+    const menuDoc = await ensureMenuDoc();
     const feedbackData = await MessFeedback.find();
 
     const today = getTodayDay();
@@ -48,7 +67,7 @@ export const submitFeedback = async (req, res) => {
 
 export const getWardenData = async (req, res) => {
   try {
-    const menuDoc = await MessMenu.findOne();
+    const menuDoc = await ensureMenuDoc();
     const feedbackData = await MessFeedback.find();
 
     // Poll results today
@@ -95,7 +114,8 @@ export const updateMenu = async (req, res) => {
   try {
     const { weeklyMenu } = req.body;
 
-    await MessMenu.findOneAndUpdate({}, { weekly: weeklyMenu });
+    const doc = await ensureMenuDoc();
+    await MessMenu.findByIdAndUpdate(doc._id, { weekly: weeklyMenu });
 
     res.json({ message: "Menu updated" });
   } catch {
@@ -124,7 +144,8 @@ export const resetToday = async (req, res) => {
 export const updatePoll = async (req, res) => {
   const { options } = req.body;
 
-  await MessMenu.findOneAndUpdate({}, { pollOptions: options });
+  const doc = await ensureMenuDoc();
+  await MessMenu.findByIdAndUpdate(doc._id, { pollOptions: options });
 
   res.json({ message: "Poll updated" });
 };

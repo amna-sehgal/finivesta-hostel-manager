@@ -23,7 +23,8 @@ function Laundry() {
   const [requests, setRequests] = useState([]);
 
   // Replace with actual student email from auth/localStorage
-  const studentEmail = localStorage.getItem("studentEmail") || "student@example.com";
+  const studentEmail = JSON.parse(localStorage.getItem("student"))?.email || "student@example.com";
+  const [instructions, setInstructions] = useState("");
 
   const clothTypes = [
     { label: "Regular Clothes", icon: <GiClothes /> },
@@ -34,7 +35,7 @@ function Laundry() {
   // Fetch student laundry requests
   useEffect(() => {
     const fetchRequests = () => {
-      fetch(`/api/laundry/student/${studentEmail}`)
+      fetch(`http://localhost:5000/api/laundry/student/${studentEmail}`)
         .then((res) => res.json())
         .then((data) => setRequests(data.requests))
         .catch((err) => console.error(err));
@@ -53,7 +54,7 @@ function Laundry() {
     const instructions = document.querySelector(".laundry-input").value;
 
     try {
-      const res = await fetch("/api/laundry/student/request", {
+      const res = await fetch("http://localhost:5000/api/laundry/student/request", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -67,7 +68,7 @@ function Laundry() {
       if (res.ok) {
         setRequests((prev) => [...prev, data.request]);
         setSelectedType(null);
-        document.querySelector(".laundry-input").value = "";
+        setInstructions("");
         alert("Laundry request scheduled!");
       } else {
         alert(data.message);
@@ -84,7 +85,7 @@ function Laundry() {
 
     try {
       const res = await fetch(
-        `/api/laundry/student/cancel/${requestId}`,
+        `http://localhost:5000/api/laundry/student/cancel/${requestId}`,
         { method: "PATCH" }
       );
 
@@ -204,6 +205,8 @@ function Laundry() {
           <textarea
             className={styles.laundryInput}
             placeholder="Any special instructions? (optional)"
+            value={instructions}
+            onChange={(e) => setInstructions(e.target.value)}
           />
 
           <button className={styles.pickupBtn} onClick={handleSchedulePickup}>

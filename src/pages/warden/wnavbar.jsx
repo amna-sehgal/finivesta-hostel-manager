@@ -1,116 +1,106 @@
-import './wnavbar.css';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import styles from "./wnavbar.module.css";
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Close dropdown when a link is clicked
   const handleLinkClick = () => setIsDropdownOpen(false);
 
-  // Warden logout
   const handleLogout = () => {
     localStorage.removeItem("warden");
     localStorage.removeItem("wardenToken");
     navigate("/");
   };
 
-
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
-      {/* Top Navbar */}
-      <nav className="navbar navbar-top">
-        <div className="navbar-logo">
-          <Link to='/'>
-            <span className="logo-text">StayMate</span>
-          </Link>
-        </div>
+      {/* NAVBAR */}
+      <nav className={styles.navbar}>
+        <Link to="/" className={styles.logo}>
+          StayMate
+        </Link>
 
-        <div className="navbar-items">
-          <Link to="/warden/dashboard" className="nav-item home-btn">
-            <span className="icon">🏠</span>
-            <span className="label">Home</span>
-          </Link>
-
-          <Link to="/warden/notification" className="nav-item notification-btn">
-            <span className="icon">🔔</span>
-            <span className="label">Notifications</span>
-            <span className="badge">3</span>
-          </Link>
-
-          <Link to="/warden/profile" className="nav-item profile-btn">
-            <span className="icon">👤</span>
-            <span className="label">Profile</span>
-          </Link>
-
-          {/* Hamburger dropdown */}
-          <button
-            className="nav-item dropdown-toggle"
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            aria-label="Open dropdown menu"
+        <div className={styles.links}>
+          <Link
+            to="/warden/dashboard"
+            className={`${styles.link} ${isActive("/warden/dashboard") ? styles.active : ""}`}
           >
-            <span className="hamburger-lines">
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-              <span className="hamburger-line"></span>
-            </span>
+            🏠 Home
+          </Link>
+
+          <Link
+            to="/warden/notification"
+            className={`${styles.link} ${isActive("/warden/notification") ? styles.active : ""}`}
+          >
+            🔔 Notices
+          </Link>
+
+          <Link
+            to="/warden/profile"
+            className={`${styles.link} ${isActive("/warden/profile") ? styles.active : ""}`}
+          >
+            👤 Profile
+          </Link>
+
+          <button
+            className={styles.hamburger}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            ☰
           </button>
         </div>
       </nav>
 
-      {/* Dropdown Side Panel */}
-      <div className={`dropdown-sidepanel${isDropdownOpen ? ' open' : ''}`}>
-        <div className="dropdown-sidepanel-content dashboard-theme">
-          <div className="dropdown-title">
-            <span className="dropdown-title-icon">📚</span>
-            <span className="dropdown-title-text">StayMate</span>
-          </div>
+      {/* SIDEPANEL */}
+      <div className={`${styles.sidepanel} ${isDropdownOpen ? styles.open : ""}`}>
+        <div className={styles.panelContent}>
+          <div className={styles.panelTitle}>StayMate</div>
 
-          {/* Dropdown Links */}
-          <Link to="/warden/approval" className="dropdown-item" onClick={handleLinkClick}>
+          <Link to="/warden/approval" onClick={handleLinkClick} className={styles.item}>
             📝 Outpass Approval
           </Link>
 
-          <Link to="/warden/complaint" className="dropdown-item dropdown-anim" onClick={handleLinkClick}>
-            📢 Complaint Management
+          <Link to="/warden/complaint" onClick={handleLinkClick} className={styles.item}>
+            📢 Complaints
           </Link>
 
-          <Link to="/warden/mess" className="dropdown-item dropdown-anim" onClick={handleLinkClick}>
-            🍽️ Mess Control Panel
+          <Link to="/warden/mess" onClick={handleLinkClick} className={styles.item}>
+            🍽️ Mess
           </Link>
 
-          <Link to="/warden/laundry" className="dropdown-item dropdown-anim" onClick={handleLinkClick}>
-            🧺 Laundry Management
+          <Link to="/warden/laundry" onClick={handleLinkClick} className={styles.item}>
+            🧺 Laundry
           </Link>
 
-          <Link to="/warden/safety" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.25s' }}>
-            🛡️ Safety Control Room
+          <Link to="/warden/safety" onClick={handleLinkClick} className={styles.item}>
+            🛡️ Safety
           </Link>
 
-          <div className="dropdown-divider"></div>
+          <div className={styles.divider}></div>
 
-          <Link to="/warden/settings" className="dropdown-item dropdown-anim" onClick={handleLinkClick} style={{ animationDelay: '0.30s' }}>
+          <Link to="/warden/settings" onClick={handleLinkClick} className={styles.item}>
             ⚙️ Settings
           </Link>
 
-          {/* Logout */}
-          <button
-            className="dropdown-item dropdown-anim logout-btn"
-            onClick={handleLogout}
-            style={{ animationDelay: '0.35s' }}
-          >
-            🚪 Log Out
+          <button onClick={handleLogout} className={`${styles.item} ${styles.logout}`}>
+            🚪 Logout
           </button>
         </div>
 
-        {/* Backdrop to close dropdown */}
-        <div className="dropdown-sidepanel-backdrop" onClick={() => setIsDropdownOpen(false)}></div>
+        <div
+          className={styles.backdrop}
+          onClick={() => setIsDropdownOpen(false)}
+        ></div>
       </div>
     </>
   );
 }
 
 export default Navbar;
+
 

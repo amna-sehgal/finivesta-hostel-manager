@@ -6,6 +6,7 @@ import styles from "./Notices.module.css";
 function Notices() {
   const [notices, setNotices] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [clearedAt, setClearedAt] = useState(null);
 
   const student = JSON.parse(localStorage.getItem("student"));
 
@@ -18,14 +19,19 @@ function Notices() {
     fetch(`http://localhost:5000/api/notifications/student/${student.email}`)
       .then((res) => res.json())
       .then((data) => {
-        setNotices(
-          (data.notifications || []).map((n) => ({
-            id: n.id,
+        const items = (data.notifications || []).map((n) => ({
+            id: n._id,
             title: n.title,
             description: n.message,
             date: new Date(n.createdAt).toLocaleDateString("en-GB"),
-          }))
-        );
+          }));
+        const filtered = clearedAt
+          ? items.filter((n) => {
+              const original = (data.notifications || []).find(x => x._id === n.id);
+              return original && new Date(original.createdAt) > clearedAt;
+            })
+          : items;
+        setNotices(filtered);
       })
       .catch(console.error);
   };
@@ -37,6 +43,7 @@ function Notices() {
   }, [student]);
 
   const handleClearAll = () => {
+    setClearedAt(new Date());
     setNotices([]);
   };
 

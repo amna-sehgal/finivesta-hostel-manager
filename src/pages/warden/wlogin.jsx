@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./wlogin.css";
+import styles from "./wlogin.module.css";
 import { FiMail, FiLock } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
+import { useEffect } from "react";
+
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -32,11 +34,8 @@ export default function Login() {
       if (!res.ok) {
         setError(data.message || "Login failed");
       } else {
-        // ✅ Save token & warden info to localStorage
         localStorage.setItem("wardenToken", data.token);
         localStorage.setItem("warden", JSON.stringify(data.user));
-
-        // redirect to dashboard/profile
         navigate("/warden/dashboard");
       }
     } catch (err) {
@@ -44,21 +43,43 @@ export default function Login() {
     }
   };
 
-  return (
-    <div className="login-page">
-      <div className="login-card">
+  useEffect(() => {
+    const card = document.querySelector(`.${styles.card}`);
+    const inputs = document.querySelectorAll(`.${styles.inputGroup}`);
+    const btn = document.querySelector(`.${styles.button}`);
+    const footer = document.querySelector(`.${styles.footer}`);
 
-        {/* Header */}
-        <div className="login-header">
-          <HiSparkles className="sparkle-icon" />
-          <h1>Welcome Back</h1>
-          <p>Login to manage hostel services</p>
+    setTimeout(() => {
+      card?.classList.add("animate");
+
+      inputs.forEach((el, i) => {
+        setTimeout(() => el.classList.add("animate"), i * 80);
+      });
+
+      setTimeout(() => btn?.classList.add("animate"), 300);
+      setTimeout(() => footer?.classList.add("animate"), 450);
+    }, 100);
+  }, []);
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.card}>
+
+        {/* header */}
+        <div className={styles.header}>
+          <div className={styles.sparkleWrap}>
+            <HiSparkles className={styles.sparkle} />
+          </div>
+
+          <h1 className={styles.title}>Welcome Back</h1>
+          <p className={styles.subtitle}>Login to manage hostel services</p>
         </div>
 
-        {/* Form */}
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <FiMail className="input-icon" />
+        {/* form */}
+        <form onSubmit={handleSubmit} className={styles.form}>
+
+          <div className={styles.inputGroup}>
+            <FiMail className={styles.icon} />
             <input
               type="email"
               placeholder="College Email ID"
@@ -67,8 +88,8 @@ export default function Login() {
             />
           </div>
 
-          <div className="input-group">
-            <FiLock className="input-icon" />
+          <div className={styles.inputGroup}>
+            <FiLock className={styles.icon} />
             <input
               type="password"
               placeholder="Password"
@@ -77,22 +98,22 @@ export default function Login() {
             />
           </div>
 
-          {error && <p style={{ color: "red" }}>{error}</p>}
+          {error && <p className={styles.error}>{error}</p>}
 
-          <button type="submit" className="login-btn">
+          <button type="submit" className={styles.button}>
             Login
           </button>
         </form>
 
-        {/* Footer */}
-        <div className="login-footer">
+        {/* footer */}
+        <div className={styles.footer}>
           <span>New here?</span>
           <strong onClick={() => navigate("/warden/signup")}>
             Create an account
           </strong>
         </div>
+
       </div>
     </div>
   );
 }
-

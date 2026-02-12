@@ -18,7 +18,10 @@ function MyComplaints() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/complaints/student/student@mail.com")
+    const student = JSON.parse(localStorage.getItem("student"));
+    const email = student?.email;
+    if (!email) return;
+    fetch(`http://localhost:5000/api/complaints/student/${email}`)
       .then((res) => res.json())
       .then((data) => {
         setComplaints(data.complaints || []);

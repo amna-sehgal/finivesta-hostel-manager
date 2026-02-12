@@ -1,18 +1,19 @@
-/* ================================================
-   SIGNUP PAGE – STAYMATE THEME
-   Matches Home.css with deep navy, cyan-violet
-   accent gradient, frosted-glass cards
-   ================================================ */
 
 .signup-root {
-  --clr-bg:         #0a0e1a;        /* deep navy */
-  --clr-surface:    #111827;        /* card bg   */
-  --clr-surface-2:  #1a2234;        /* lighter   */
-  --clr-border:     rgba(56,189,248,.15);
-  --clr-accent-1:   #2cb5f0;        /* cyan      */
-  --clr-accent-2:   #835fef;        /* violet    */
-  --clr-accent-3:   #f2449e;        /* pink      */
-  --clr-text:       #e2e8f0;
+  --clr-bg: #0a0e1a;
+  /* deep navy */
+  --clr-surface: #111827;
+  /* card bg   */
+  --clr-surface-2: #1a2234;
+  /* lighter   */
+  --clr-border: rgba(56, 189, 248, .15);
+  --clr-accent-1: #2cb5f0;
+  /* cyan      */
+  --clr-accent-2: #835fef;
+  /* violet    */
+  --clr-accent-3: #f2449e;
+  /* pink      */
+  --clr-text: #e2e8f0;
   --clr-text-muted: #94a3b8;
 
   min-height: 100vh;
@@ -33,9 +34,10 @@
   left: -200px;
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(14,165,233,.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(14, 165, 233, .18) 0%, transparent 70%);
   pointer-events: none;
 }
+
 .signup-root::after {
   content: "";
   position: fixed;
@@ -43,7 +45,7 @@
   right: -180px;
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle, rgba(99,102,241,.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(99, 102, 241, .18) 0%, transparent 70%);
   pointer-events: none;
 }
 
@@ -53,11 +55,11 @@
   max-width: 620px;
   padding: 50px 35px;
   border-radius: 42px;
-  background: rgba(255,255,255,.08);
+  background: rgba(255, 255, 255, .08);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--clr-border);
-  box-shadow: 0 25px 60px rgba(15,23,42,.25);
+  box-shadow: 0 25px 60px rgba(15, 23, 42, .25);
   text-align: center;
   position: relative;
   z-index: 1;
@@ -66,7 +68,7 @@
   transform: translateY(40px);
 }
 
-.signup-card.animate {
+.signup-card:global(.animate) {
   animation: cardSlideIn 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -76,9 +78,8 @@
   margin-bottom: 8px;
   font-weight: 700;
   background: linear-gradient(135deg,
-    var(--clr-accent-1),
-    var(--clr-accent-2)
-  );
+      var(--clr-accent-1),
+      var(--clr-accent-2));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -111,7 +112,8 @@
   opacity: 0;
   transform: translateY(30px);
 }
-.input-group.animate {
+
+.input-group:global(.animate) {
   animation: fieldSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -123,7 +125,7 @@
   font-size: 16px;
   outline: none;
   border: 1px solid var(--clr-border);
-  background: rgba(10,14,26,.9) !important;
+  background: rgba(10, 14, 26, .9) !important;
   color: var(--clr-text) !important;
   transition: border .25s, background .25s;
   box-sizing: border-box;
@@ -133,7 +135,7 @@
 .signup-form input:-webkit-autofill,
 .signup-form input:-webkit-autofill:hover,
 .signup-form input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px rgba(10,14,26,.9) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px rgba(10, 14, 26, .9) inset !important;
   -webkit-text-fill-color: var(--clr-text) !important;
   caret-color: var(--clr-text) !important;
 }
@@ -150,7 +152,7 @@
   font-size: 16px;
   outline: none;
   border: 1px solid var(--clr-border);
-  background: rgba(10,14,26,.9);
+  background: rgba(10, 14, 26, .9);
   color: var(--clr-text);
   transition: border .25s, background .25s;
   cursor: pointer;
@@ -165,7 +167,7 @@
 }
 
 .input-group select option {
-  background: rgba(10,14,26,.95);
+  background: rgba(10, 14, 26, .95);
   color: var(--clr-text);
   padding: 8px;
 }
@@ -173,7 +175,7 @@
 .signup-form input:focus,
 .input-group select:focus {
   border-color: var(--clr-accent-1);
-  background: rgba(10,14,26,.95);
+  background: rgba(10, 14, 26, .95);
   outline: none;
 }
 
@@ -197,9 +199,8 @@
   font-size: 16px;
   cursor: pointer;
   background: linear-gradient(135deg,
-    var(--clr-accent-1),
-    var(--clr-accent-2)
-  );
+      var(--clr-accent-1),
+      var(--clr-accent-2));
   color: #fff;
   transition: transform .25s, box-shadow .25s;
   letter-spacing: .03em;
@@ -208,13 +209,13 @@
   transform: translateY(30px);
 }
 
-.signup-btn.animate {
+.signup-btn:global(.animate) {
   animation: fieldSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
 .signup-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(99,102,241,.35);
+  box-shadow: 0 12px 30px rgba(99, 102, 241, .35);
 }
 
 .signup-btn:active {
@@ -230,7 +231,8 @@
   opacity: 0;
   transform: translateY(20px);
 }
-.login-link.animate {
+
+.login-link:global(.animate) {
   animation: fieldSlideIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
@@ -240,6 +242,7 @@
   font-weight: 600;
   transition: color .2s;
 }
+
 .login-link a:hover {
   color: var(--clr-accent-2);
   text-decoration: underline;
@@ -254,8 +257,17 @@
 }
 
 @keyframes sparkle {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.1); }
+
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
 }
 
 /* ── ANIMATIONS ── */
@@ -264,6 +276,7 @@
     opacity: 0;
     transform: translateY(40px) scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -275,41 +288,86 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
+:global(.animate) {
+  /* This class is used by JS to trigger animations */
+}
+
 /* ─── RESPONSIVE ─── */
 @media (max-width: 600px) {
-  .signup-root { padding: 16px; }
-  .signup-card { padding: 36px 24px; border-radius: 32px; }
-  .signup-card h1 { font-size: 22px; }
+  .signup-root {
+    padding: 16px;
+  }
+
+  .signup-card {
+    padding: 36px 24px;
+    border-radius: 32px;
+  }
+
+  .signup-card h1 {
+    font-size: 22px;
+  }
+
   .signup-form input,
-  .input-group select { height: 52px; font-size: 14px; }
+  .input-group select {
+    height: 52px;
+    font-size: 14px;
+  }
 }
+
 /* ======================================
    SEQUENTIAL INPUT ANIMATION (STAGGER)
    ====================================== */
 
 /* base delay for first input */
-.input-group.animate:nth-child(1) { animation-delay: 0.1s; }
-.input-group.animate:nth-child(2) { animation-delay: 0.18s; }
-.input-group.animate:nth-child(3) { animation-delay: 0.26s; }
-.input-group.animate:nth-child(4) { animation-delay: 0.34s; }
-.input-group.animate:nth-child(5) { animation-delay: 0.42s; }
-.input-group.animate:nth-child(6) { animation-delay: 0.50s; }
-.input-group.animate:nth-child(7) { animation-delay: 0.58s; }
-.input-group.animate:nth-child(8) { animation-delay: 0.66s; }
-.input-group.animate:nth-child(9) { animation-delay: 0.74s; }
+.input-group:global(.animate):nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.input-group:global(.animate):nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.input-group:global(.animate):nth-child(3) {
+  animation-delay: 0.26s;
+}
+
+.input-group:global(.animate):nth-child(4) {
+  animation-delay: 0.34s;
+}
+
+.input-group:global(.animate):nth-child(5) {
+  animation-delay: 0.42s;
+}
+
+.input-group:global(.animate):nth-child(6) {
+  animation-delay: 0.50s;
+}
+
+.input-group:global(.animate):nth-child(7) {
+  animation-delay: 0.58s;
+}
+
+.input-group:global(.animate):nth-child(8) {
+  animation-delay: 0.66s;
+}
+
+.input-group:global(.animate):nth-child(9) {
+  animation-delay: 0.74s;
+}
 
 /* button appears after inputs */
-.signup-btn.animate {
+.signup-btn:global(.animate) {
   animation-delay: 0.9s;
 }
 
 /* login link last */
-.login-link.animate {
+.login-link:global(.animate) {
   animation-delay: 1.05s;
 }

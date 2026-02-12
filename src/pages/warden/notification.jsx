@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { gsap } from "gsap";
-import "./notification.css";
+import styles from "./notification.module.css";
 import Navbar from "./wnavbar";
 
 const Notification = () => {
@@ -9,9 +9,9 @@ const Notification = () => {
     message: "",
     studentEmail: "",
   });
+
   const [notices, setNotices] = useState([]);
 
-  // Fetch all notices
   const fetchNotices = () => {
     fetch("http://localhost:5000/api/notifications/warden")
       .then((res) => res.json())
@@ -21,8 +21,9 @@ const Notification = () => {
 
   useEffect(() => {
     fetchNotices();
+
     gsap.fromTo(
-      ".notification-card",
+      `.${styles.card}`,
       { y: 40, opacity: 0 },
       {
         y: 0,
@@ -30,13 +31,13 @@ const Notification = () => {
         stagger: 0.1,
         duration: 0.6,
         ease: "power3.out",
-        clearProps: "opacity,transform",
       }
     );
   }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     if (!formData.title || !formData.message) {
       alert("Please fill all fields");
       return;
@@ -46,6 +47,8 @@ const Notification = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        type: "manual",
+        receiver: formData.studentEmail ? "student" : "students",
         title: formData.title,
         message: formData.message,
         studentEmail: formData.studentEmail || null,
@@ -67,109 +70,109 @@ const Notification = () => {
       .catch(console.error);
   };
 
-  /* 🔹 SEPARATION LOGIC */
   const incomingNotifications = notices.filter(
     (n) => n.type === "complaint" && n.receiver === "warden"
   );
 
-  const postedNotices = notices.filter(
-    (n) => n.type === "manual"
-  );
+  const postedNotices = notices.filter((n) => n.type === "manual");
 
   return (
     <>
       <Navbar />
 
-      <div className="notification-container">
-        <h1 className="notification-title">Notice Management</h1>
-        <p className="notification-subtitle">
-          Create and publish notices for students
-        </p>
+      <div className={styles.root}>
+        <div className={styles.header}>
+          <span className={styles.icon}>📢</span>
+          <div>
+            <h1>Notice Management</h1>
+            <p>Create and manage hostel notices</p>
+          </div>
+        </div>
 
-        <div className="notification-grid">
-          {/* CREATE NOTICE */}
-          <div className="notification-card system">
-            <div className="notification-header">
-              <span className="notification-icon">📝</span>
+        <div className={styles.grid}>
+          {/* CREATE */}
+          <div className={`${styles.card} ${styles.system}`}>
+            <div className={styles.cardHeader}>
+              <span>📝</span>
               <h2>Create Notice</h2>
             </div>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.form}>
               <input
-                className="notification-item"
+                className={styles.input}
                 placeholder="Notice title"
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
                 }
               />
+
               <textarea
-                className="notification-item"
+                className={styles.input}
                 placeholder="Notice message"
                 value={formData.message}
                 onChange={(e) =>
                   setFormData({ ...formData, message: e.target.value })
                 }
               />
+
               <input
-                className="notification-item"
-                placeholder="Student Email (optional)"
+                className={styles.input}
+                placeholder="Student email (optional)"
                 value={formData.studentEmail}
                 onChange={(e) =>
                   setFormData({ ...formData, studentEmail: e.target.value })
                 }
               />
-              <button type="submit" className="submit-btn">
+
+              <button type="submit" className={styles.submitBtn}>
                 Post Notice
               </button>
             </form>
           </div>
 
-          {/* INCOMING COMPLAINTS */}
-          <div className="notification-card alert">
-            <div className="notification-header">
-              <span className="notification-icon">📥</span>
+          {/* INCOMING */}
+          <div className={`${styles.card} ${styles.alert}`}>
+            <div className={styles.cardHeader}>
+              <span>📥</span>
               <h2>Incoming Complaints</h2>
             </div>
 
             {incomingNotifications.length === 0 ? (
-              <p className="notification-item">No incoming complaints</p>
+              <p className={styles.empty}>No incoming complaints</p>
             ) : (
-              <ul className="notification-list">
+              <ul className={styles.list}>
                 {incomingNotifications.map((n) => (
-                  <li key={n.id} className="notification-item">
-                    <div className="notice-text">
-                      <strong>{n.title}</strong>
-                      <p>{n.message}</p>
-                    </div>
+                  <li key={n._id} className={styles.listItem}>
+                    <strong>{n.title}</strong>
+                    <p>{n.message}</p>
                   </li>
                 ))}
               </ul>
             )}
           </div>
 
-          {/* POSTED NOTICES */}
-          <div className="notification-card alert">
-            <div className="notification-header">
-              <span className="notification-icon">📢</span>
+          {/* POSTED */}
+          <div className={`${styles.card} ${styles.alert}`}>
+            <div className={styles.cardHeader}>
+              <span>📢</span>
               <h2>Posted Notices</h2>
             </div>
 
             {postedNotices.length === 0 ? (
-              <p className="notification-item">No notices posted yet</p>
+              <p className={styles.empty}>No notices posted</p>
             ) : (
-              <ul className="notification-list">
+              <ul className={styles.list}>
                 {postedNotices.map((n) => (
-                  <li key={n.id} className="notification-item">
-                    <div className="notice-text">
+                  <li key={n._id} className={styles.listItem}>
+                    <div>
                       <strong>{n.title}</strong>
                       <p>{n.message}</p>
                     </div>
 
                     <button
-                      type="button"
-                      className="cancel-btn"
-                      onClick={() => handleDelete(n.id)}
+                      onClick={() => handleDelete(n._id)}
+                      className={styles.deleteBtn}
                     >
                       Cancel
                     </button>
@@ -185,4 +188,5 @@ const Notification = () => {
 };
 
 export default Notification;
+
 

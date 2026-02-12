@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import styles from "./Login.module.css";
 import { FiMail, FiLock } from "react-icons/fi";
 import { HiSparkles } from "react-icons/hi2";
 
@@ -12,17 +12,20 @@ export default function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Apply animation classes after component mounts
-    const card = document.querySelector(".login-card");
-    const inputs = document.querySelectorAll(".input-group");
-    const btn = document.querySelector(".login-btn");
-    const footer = document.querySelector(".login-footer");
+    const card = document.querySelector("." + styles["login-card"]);
+    const inputs = document.querySelectorAll("." + styles["input-group"]);
+    const btn = document.querySelector("." + styles["login-btn"]);
+    const footer = document.querySelector("." + styles["login-footer"]);
 
     setTimeout(() => {
       card?.classList.add("animate");
+
       inputs.forEach((input, idx) => {
-        setTimeout(() => input.classList.add("animate"), idx * 60);
+        setTimeout(() => {
+          input.classList.add("animate");
+        }, idx * 60);
       });
+
       setTimeout(() => btn?.classList.add("animate"), inputs.length * 60);
       setTimeout(() => footer?.classList.add("animate"), inputs.length * 60 + 60);
     }, 100);
@@ -51,34 +54,28 @@ export default function Login() {
         return;
       }
 
-      console.log("Login success:", data);
+      localStorage.setItem("studentToken", data.token);
+      localStorage.setItem("student", JSON.stringify(data.user));
 
-      // ✅ Save JWT token and student info
-      localStorage.setItem("studentToken", data.token); // token
-      localStorage.setItem("student", JSON.stringify(data.user)); // user info
-
-      // Redirect to dashboard/profile
       navigate("/student/dashboard");
-
     } catch (err) {
       console.error(err);
       setError("Failed to connect to backend");
     }
   };
 
-
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <div className="login-header">
-          <HiSparkles className="sparkle-icon" />
+    <div className={styles["login-page"]}>
+      <div className={styles["login-card"]}>
+        <div className={styles["login-header"]}>
+          <HiSparkles className={styles["sparkle-icon"]} />
           <h1>Welcome Back</h1>
           <p>Login to manage your hostel services</p>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="input-group">
-            <FiMail className="input-icon" />
+        <form className={styles["login-form"]} onSubmit={handleSubmit}>
+          <div className={styles["input-group"]}>
+            <FiMail className={styles["input-icon"]} />
             <input
               type="email"
               placeholder="College Email ID"
@@ -87,8 +84,8 @@ export default function Login() {
             />
           </div>
 
-          <div className="input-group">
-            <FiLock className="input-icon" />
+          <div className={styles["input-group"]}>
+            <FiLock className={styles["input-icon"]} />
             <input
               type="password"
               placeholder="Password"
@@ -97,19 +94,16 @@ export default function Login() {
             />
           </div>
 
-          {error && <p style={{ color: "red", fontSize: "14px" }}>{error}</p>}
+          {error && <p className={styles["error-text"]}>{error}</p>}
 
-          <button type="submit" className="login-btn">
+          <button type="submit" className={styles["login-btn"]}>
             Login
           </button>
         </form>
 
-        <div className="login-footer">
+        <div className={styles["login-footer"]}>
           <span>New here?</span>
-          <strong
-            style={{ cursor: "pointer" }}
-            onClick={() => navigate("/student/signup")}
-          >
+          <strong onClick={() => navigate("/student/signup")}>
             Create an account
           </strong>
         </div>

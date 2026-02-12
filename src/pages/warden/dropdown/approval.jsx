@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
-import "./approval.css";
+import styles from "./approval.module.css";
 import Navbar from "../wnavbar";
 
 const Approval = () => {
@@ -11,22 +11,20 @@ const Approval = () => {
   const [pending, setPending] = useState([]);
 
   useEffect(() => {
-    // Animations
-    gsap.to(titleRef.current, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" });
-    gsap.to(analyticsRef.current.children, { opacity: 1, y: 0, stagger: 0.1, duration: 0.3, delay: 0.2, ease: "power2.out" });
-    gsap.to(".approval-card", { opacity: 1, y: 0, stagger: 0.12, duration: 0.4, delay: 0.2, ease: "power3.out" });
+    gsap.to(titleRef.current, { opacity: 1, y: 0, duration: 0.6 });
+    gsap.to(analyticsRef.current.children, { opacity: 1, y: 0, stagger: 0.1 });
+    gsap.to(`.${styles.card}`, { opacity: 1, y: 0, stagger: 0.12 });
 
     fetch("http://localhost:5000/api/outpass/warden/pending")
       .then((res) => res.json())
       .then((data) => {
         const allPending = (data.requests || []).map((r) => ({
           ...r,
-          id: r._id, // MongoDB _id
+          id: r._id,
         }));
         setPending(allPending);
         setRequests(allPending);
-      })
-      .catch(console.error);
+      });
   }, []);
 
   const updateStatus = (id, status) => {
@@ -39,10 +37,11 @@ const Approval = () => {
       .then((updated) => {
         setPending((prev) => prev.filter((p) => p.id !== id));
         setRequests((prev) =>
-          prev.map((r) => (r.id === id ? { ...updated.request, id: updated.request._id } : r))
+          prev.map((r) =>
+            r.id === id ? { ...updated.request, id: updated.request._id } : r
+          )
         );
-      })
-      .catch(console.error);
+      });
   };
 
   const approvedCount = requests.filter((r) => r.status === "Approved").length;
@@ -52,46 +51,52 @@ const Approval = () => {
   return (
     <>
       <Navbar />
-      <div className="approval-container">
-        <div className="approval-header" ref={titleRef}>
-          <h1 className="approval-title">Outpass Approval Dashboard</h1>
-          <p className="approval-subtitle">
-            Monitor, verify, and approve student outpasses from a single dashboard.
+      <div className={styles.root}>
+        <div className={styles.pageHeader} ref={titleRef}>
+          <h2>Outpass Approval Dashboard</h2>
+          <p className={styles.subtitle}>
+            Monitor, verify, and approve student outpasses
           </p>
         </div>
 
-        <div className="analytics-grid" ref={analyticsRef}>
-          <div className="analytics-card blue">
-            <h3>Pending Requests</h3>
-            <p>{pending.length}</p>
+        <div className={styles.analyticsGrid} ref={analyticsRef}>
+          <div className={styles.analyticsCard}>
+            <h4>Pending</h4>
+            <span>{pending.length}</span>
           </div>
-          <div className="analytics-card green">
-            <h3>Approved</h3>
-            <p>{approvedCount}</p>
+          <div className={styles.analyticsCard}>
+            <h4>Approved</h4>
+            <span>{approvedCount}</span>
           </div>
-          <div className="analytics-card red">
-            <h3>Rejected</h3>
-            <p>{rejectedCount}</p>
+          <div className={styles.analyticsCard}>
+            <h4>Rejected</h4>
+            <span>{rejectedCount}</span>
           </div>
-          <div className="analytics-card purple">
-            <h3>AI Flagged</h3>
-            <p>{aiFlaggedCount}</p>
+          <div className={styles.analyticsCard}>
+            <h4>AI Flagged</h4>
+            <span>{aiFlaggedCount}</span>
           </div>
         </div>
 
-        <div className="approval-grid">
-          <div className="approval-card">
-            <h2>Pending Outpass Requests</h2>
-            <p>Requests awaiting your approval with reason and duration.</p>
-            <ul className="status-list">
+        <div className={styles.grid}>
+          {/* CARD 1 */}
+          <div className={`${styles.card}`}>
+            <h3>Pending Requests</h3>
+            <ul className={styles.list}>
               {pending.map((req) => (
                 <li key={req.id}>
-                  {req.studentName || req.studentEmail} – {req.reason} ({new Date(req.fromDate).toLocaleDateString()} to {new Date(req.toDate).toLocaleDateString()})
-                  <div className="action-buttons">
-                    <button className="approve" onClick={() => updateStatus(req.id, "Approved")}>
+                  {req.studentName || req.studentEmail} – {req.reason}
+                  <div className={styles.actions}>
+                    <button
+                      className={styles.approve}
+                      onClick={() => updateStatus(req.id, "Approved")}
+                    >
                       Approve
                     </button>
-                    <button className="reject" onClick={() => updateStatus(req.id, "Rejected")}>
+                    <button
+                      className={styles.reject}
+                      onClick={() => updateStatus(req.id, "Rejected")}
+                    >
                       Reject
                     </button>
                   </div>
@@ -100,35 +105,32 @@ const Approval = () => {
             </ul>
           </div>
 
-          <div className="approval-card">
-            <h2>Parent Verification</h2>
-            <p>Check whether guardian has approved the outpass request.</p>
-            <ul className="status-list">
+          {/* CARD 2 */}
+          <div className={`${styles.card}`}>
+            <h3>Parent Verification</h3>
+            <ul className={styles.list}>
               {requests.map((req) => (
                 <li key={req.id}>
-                  {req.parentApproval ? "✔ Verified" : "⏳ Awaiting Consent"} – {req.studentName || req.studentEmail}
+                  {req.parentApproval ? "✔ Verified" : "⏳ Waiting"} –{" "}
+                  {req.studentName || req.studentEmail}
                 </li>
               ))}
             </ul>
-            <button className="secondary-btn">Resend Verification</button>
           </div>
 
-          <div className="approval-card">
-            <h2>AI Risk & Exceptions</h2>
-            <p>Automatically flags unusual patterns or overdue requests.</p>
-            <div className="risk-box low">Low Risk – Routine Leave</div>
-            <div className="risk-box medium">Medium Risk – Long Duration</div>
-            <div className="risk-box high">High Risk – Repeated Late Night Outs</div>
-            <div className="alert-box">
-              {requests.filter((r) => r.status === "High Risk").length} Overstay Alerts Pending Review
-            </div>
+          {/* CARD 3 */}
+          <div className={`${styles.card}`}>
+            <h3>AI Risk</h3>
+            <div className={styles.risk}>Low Risk</div>
+            <div className={styles.risk}>Medium Risk</div>
+            <div className={styles.riskHigh}>High Risk</div>
           </div>
 
-          <div className="approval-card">
-            <h2>QR Outpass</h2>
-            <p>Encrypted QR for approved students, usable at gates.</p>
-            <div className="qr-mock">[ QR Code Preview ]</div>
-            <button className="secondary-btn">Generate QR Pass</button>
+          {/* CARD 4 */}
+          <div className={`${styles.card}`}>
+            <h3>QR Outpass</h3>
+            <div className={styles.qr}>QR Preview</div>
+            <button className={styles.secondary}>Generate QR</button>
           </div>
         </div>
       </div>
@@ -137,4 +139,3 @@ const Approval = () => {
 };
 
 export default Approval;
-

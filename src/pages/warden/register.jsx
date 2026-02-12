@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaUserCircle, FaEnvelope, FaLock, FaPhone, FaHome } from "react-icons/fa";
-import "./register.css";
+import styles from "./register.module.css";
 import { HiSparkles } from "react-icons/hi2";
 
 export default function Signup() {
@@ -17,9 +17,26 @@ export default function Signup() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    const card = document.querySelector("." + styles["signup-card"]);
+    const inputs = document.querySelectorAll("." + styles["input-group"]);
+    const btn = document.querySelector("." + styles["signup-btn"]);
+    const link = document.querySelector("." + styles["login-link"]);
+
+    setTimeout(() => {
+      card?.classList.add("animate");
+
+      inputs.forEach((el, i) => {
+        setTimeout(() => el.classList.add("animate"), i * 80);
+      });
+
+      setTimeout(() => btn?.classList.add("animate"), inputs.length * 80);
+      setTimeout(() => link?.classList.add("animate"), inputs.length * 80 + 80);
+    }, 100);
+  }, []);
+
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,89 +66,52 @@ export default function Signup() {
       if (!res.ok) {
         setError(data.message || "Signup failed");
       } else {
-        // ✅ Save token & warden info to localStorage
         localStorage.setItem("wardenToken", data.token);
         localStorage.setItem("warden", JSON.stringify(data.user));
-
-        // redirect to dashboard/profile
         navigate("/warden/dashboard");
       }
-    } catch (err) {
+    } catch {
       setError("Backend not connected");
     }
   };
 
   return (
-    <div className="signup-root">
-      <div className="signup-card glass">
-        <HiSparkles className="sparkle-icon" />
+    <div className={styles["signup-root"]}>
+      <div className={styles["signup-card"]}>
+        <HiSparkles className={styles["sparkle-icon"]} />
+
         <h1>Welcome to StayMate</h1>
         <p>Create your warden account</p>
 
-        <form onSubmit={handleSubmit} className="signup-form">
-
-          <div className="input-group">
-            <FaUserCircle className="input-icon" />
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-            />
+        <form onSubmit={handleSubmit} className={styles["signup-form"]}>
+          <div className={styles["input-group"]}>
+            <FaUserCircle className={styles["input-icon"]} />
+            <input name="fullName" placeholder="Full Name" value={formData.fullName} onChange={handleChange}/>
           </div>
 
-          <div className="input-group">
-            <FaEnvelope className="input-icon" />
-            <input
-              type="email"
-              name="email"
-              placeholder="College Email"
-              value={formData.email}
-              onChange={handleChange}
-            />
+          <div className={styles["input-group"]}>
+            <FaEnvelope className={styles["input-icon"]} />
+            <input name="email" type="email" placeholder="College Email" value={formData.email} onChange={handleChange}/>
           </div>
 
-          <div className="input-group">
-            <FaLock className="input-icon" />
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
+          <div className={styles["input-group"]}>
+            <FaLock className={styles["input-icon"]} />
+            <input name="password" type="password" placeholder="Password" value={formData.password} onChange={handleChange}/>
           </div>
 
-          <div className="input-group">
-            <FaLock className="input-icon" />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
+          <div className={styles["input-group"]}>
+            <FaLock className={styles["input-icon"]} />
+            <input name="confirmPassword" type="password" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange}/>
           </div>
 
-          <div className="input-group">
-            <FaPhone className="input-icon" />
-            <input
-              type="tel"
-              name="phone"
-              placeholder="Phone (optional)"
-              value={formData.phone}
-              onChange={handleChange}
-            />
+          <div className={styles["input-group"]}>
+            <FaPhone className={styles["input-icon"]} />
+            <input name="phone" placeholder="Phone (optional)" value={formData.phone} onChange={handleChange}/>
           </div>
 
-          <div className="input-group">
-            <FaHome className="input-icon" />
-            <select
-              name="hostel"
-              value={formData.hostel}
-              onChange={handleChange}
-            >
+          <div className={styles["input-group"]}>
+            <FaHome className={styles["input-icon"]} />
+            <select name="hostel" value={formData.hostel} onChange={handleChange}>
               <option value="">Select Hostel</option>
               <option value="Krishna">Krishna</option>
               <option value="Kaveri">Kaveri</option>
@@ -140,18 +120,13 @@ export default function Signup() {
 
           {error && <p style={{ color: "red" }}>{error}</p>}
 
-          <button type="submit" className="signup-btn">
-            Sign Up
-          </button>
+          <button className={styles["signup-btn"]}>Sign Up</button>
         </form>
 
-        <p className="login-link">
+        <p className={styles["login-link"]}>
           Already have an account?{" "}
-          <Link to="/warden/login" className="login-link-btn">
-            Login here
-          </Link>
+          <Link to="/warden/login">Login here</Link>
         </p>
-
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import gsap from "gsap";
-import "./wdashboard.css";
+import styles from "./wdashboard.module.css";
 import Navbar from "./wnavbar";
 
 function Dashboard() {
@@ -11,8 +11,6 @@ function Dashboard() {
   const [activeComplaints, setActiveComplaints] = useState(0);
   const [sosAlert, setSosAlert] = useState(null);
 
-  /* ---------- DATA ---------- */
-
   const statsData = [
     { label: "Total Students", value: 20, max: 100, color: "#3B82F6" },
     { label: "Active Complaints", value: activeComplaints, max: 20, color: "#EF4444" },
@@ -20,14 +18,7 @@ function Dashboard() {
     { label: "Mess Rating", value: 3, max: 5, color: "#10B981" },
   ];
 
-  const ringData = [
-    { label: "Total Students", value: 20, max: 100, color: "#3B82F6" },
-    { label: "Active Complaints", value: activeComplaints, max: 20, color: "#EF4444" },
-    { label: "Critical Alerts", value: 2, max: 10, color: "#F59E0B" },
-    { label: "Mess Rating", value: 3, max: 5, color: "#10B981" },
-  ];
-
-  /* ---------- FETCH ACTIVE COMPLAINTS ---------- */
+  const ringData = statsData;
 
   useEffect(() => {
     fetch("http://localhost:5000/api/complaints/warden/active-count")
@@ -36,31 +27,15 @@ function Dashboard() {
       .catch(err => console.error(err));
   }, []);
 
-  /* ---------- GSAP ENTRY ANIMATION (ONCE) ---------- */
-
   useEffect(() => {
-    gsap.from(".dashboard-heading", {
-      opacity: 0,
-      y: -20,
-      duration: 0.8,
-      ease: "power2.out",
-    });
-
-    gsap.from(".dashboard-container", {
-      opacity: 0,
-      y: 20,
-      duration: 0.8,
-      ease: "power2.out",
-      delay: 0.2,
-    });
+    gsap.from(`.${styles.heading}`, { opacity: 0, y: -20, duration: 0.8, ease: "power2.out" });
+    gsap.from(`.${styles.container}`, { opacity: 0, y: 20, duration: 0.8, delay: 0.2, ease: "power2.out" });
   }, []);
-
-  /* ---------- GSAP RING ANIMATION (WHEN DATA CHANGES) ---------- */
 
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const rings = svgRef.current.querySelectorAll(".ring-progress");
+    const rings = svgRef.current.querySelectorAll(`.${styles.ringProgress}`);
 
     rings.forEach((ring, index) => {
       const radius = 60 + index * 40;
@@ -70,15 +45,12 @@ function Dashboard() {
       ring.style.strokeDashoffset = circumference;
 
       gsap.to(ring, {
-        strokeDashoffset:
-          circumference * (1 - ringData[index].value / ringData[index].max),
+        strokeDashoffset: circumference * (1 - ringData[index].value / ringData[index].max),
         duration: 1.4,
         ease: "power2.out",
       });
     });
   }, [activeComplaints]);
-
-  /* ---------- SOS POLLING ---------- */
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -94,36 +66,30 @@ function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  /* ---------- JSX ---------- */
-
   return (
     <>
       <Navbar />
 
-      <div className="dashboard-wrapper">
-        <div className="dashboard-heading">
+      <div className={styles.wrapper}>
+        {/* HEADER */}
+        <div className={styles.heading}>
           <h1>Warden's Dashboard</h1>
           <p>Hostel Management Overview</p>
         </div>
 
-        <div className="dashboard-container">
-          {/* Analysis Section */}
-          <div className="analysis-section">
+        <div className={styles.container}>
+          {/* ANALYSIS SECTION */}
+          <div className={styles.analysis}>
             <h2>Analysis & Statistics</h2>
-            <div className="stats-grid">
+            <div className={styles.statsGrid}>
               {statsData.map((stat, index) => (
-                <div key={index} className="stat-card">
-                  <div className="stat-label">{stat.label}</div>
-                  <div className="stat-value">
-                    {stat.value}/{stat.max}
-                  </div>
-                  <div className="stat-bar">
+                <div key={index} className={styles.statCard}>
+                  <div className={styles.statLabel}>{stat.label}</div>
+                  <div className={styles.statValue}>{stat.value}/{stat.max}</div>
+                  <div className={styles.statBar}>
                     <div
-                      className="stat-bar-fill"
-                      style={{
-                        width: `${(stat.value / stat.max) * 100}%`,
-                        backgroundColor: stat.color,
-                      }}
+                      className={styles.statFill}
+                      style={{ width: `${(stat.value / stat.max) * 100}%`, backgroundColor: stat.color }}
                     />
                   </div>
                 </div>
@@ -131,21 +97,14 @@ function Dashboard() {
             </div>
           </div>
 
-          {/* Performance Section */}
-          <div className="performance-section">
-            <div className="ring-section">
+          {/* PERFORMANCE SECTION */}
+          <div className={styles.performance}>
+            <div className={styles.ringSection}>
               <h2>Performance Rings</h2>
 
-              <svg
-                ref={svgRef}
-                viewBox="0 0 300 300"
-                className="ring-chart"
-                preserveAspectRatio="xMidYMid meet"
-              >
+              <svg ref={svgRef} viewBox="0 0 300 300" className={styles.ringChart} preserveAspectRatio="xMidYMid meet">
                 {ringData.map((ring, index) => {
                   const radius = 60 + index * 40;
-                  const circumference = 2 * Math.PI * radius;
-
                   return (
                     <g key={index}>
                       <circle
@@ -153,11 +112,9 @@ function Dashboard() {
                         cy="150"
                         r={radius}
                         fill="none"
-                        stroke="#E5E7EB"
+                        stroke="#020617"
                         strokeWidth="10"
-                        opacity="0.3"
                       />
-
                       <circle
                         cx="150"
                         cy="150"
@@ -166,13 +123,9 @@ function Dashboard() {
                         stroke={ring.color}
                         strokeWidth="10"
                         strokeLinecap="round"
-                        className="ring-progress"
-                        style={{
-                          transform: "rotate(-90deg)",
-                          transformOrigin: "150px 150px",
-                        }}
+                        className={styles.ringProgress}
+                        style={{ transform: "rotate(-90deg)", transformOrigin: "150px 150px" }}
                       />
-
                       <text
                         x="150"
                         y={150 - radius + 15}
@@ -180,11 +133,9 @@ function Dashboard() {
                         fontSize="12"
                         fill={ring.color}
                         fontWeight="700"
-                        opacity="0.8"
                       >
                         {ring.label.split(" ")[0]}
                       </text>
-
                       <text
                         x="150"
                         y={150 - radius + 28}
@@ -201,33 +152,32 @@ function Dashboard() {
               </svg>
             </div>
 
-            <div className="info-column">
-              <div className="info-card">
-                <span className="info-icon">⚡</span>
-                <span className="info-label">Power Usage</span>
-                <span className="info-value">200 units/room</span>
+            <div className={styles.infoColumn}>
+              <div className={styles.infoCard}>
+                <span className={styles.infoIcon}>⚡</span>
+                <span className={styles.infoLabel}>Power Usage</span>
+                <span className={styles.infoValue}>200 units/room</span>
               </div>
 
-              <div className="info-card">
-                <span className="info-icon">😊</span>
-                <span className="info-label">Hostel Mood</span>
-                <span className="info-value mood-happy">Happy</span>
+              <div className={styles.infoCard}>
+                <span className={styles.infoIcon}>😊</span>
+                <span className={styles.infoLabel}>Hostel Mood</span>
+                <span className={styles.infoValue}>Happy</span>
               </div>
             </div>
           </div>
         </div>
 
+        {/* SOS TOAST */}
         {sosAlert && (
-          <div className="sos-toast">
+          <div className={styles.toast}>
             <span>🚨 Emergency in Room {sosAlert.roomNumber}</span>
-            <div>
-              <button className="view-btn" onClick={() => navigate("/warden/safety")}>
-                View
-              </button>
-              <button className="close-btn" onClick={() => setSosAlert(null)}>
-                ❌
-              </button>
-            </div>
+            <button className={styles.viewBtn} onClick={() => navigate("/warden/safety")}>
+              View
+            </button>
+            <button className={styles.closeBtn} onClick={() => setSosAlert(null)}>
+              ❌
+            </button>
           </div>
         )}
       </div>

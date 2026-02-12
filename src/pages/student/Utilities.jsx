@@ -75,7 +75,7 @@ const Utilities = () => {
       await fetch(`http://localhost:5000/api/utilities/${roomId}/${billId}`, {
         method: "DELETE",
       });
-      setBills((prev) => prev.filter((bill) => bill.id !== billId));
+      setBills((prev) => prev.filter((bill) => bill._id !== billId));
     } catch (err) {
       console.error(err);
     }
@@ -160,7 +160,7 @@ const Utilities = () => {
           ) : (
             <ul className={styles.expenseList}>
               {bills.map((bill) => (
-                <li key={bill.id} className={styles.utilityBill}>
+                <li key={bill._id} className={styles.utilityBill}>
                   <div>
                     <strong>{bill.title}</strong>
                     <p>₹{bill.totalAmount} • ₹{bill.splitAmount.toFixed(2)} each</p>
@@ -171,7 +171,7 @@ const Utilities = () => {
                     </span>
                     <button
                       className={styles.deleteButton}
-                      onClick={() => handleDeleteBill(bill.id)}
+                      onClick={() => handleDeleteBill(bill._id)}
                     >
                       Delete
                     </button>
